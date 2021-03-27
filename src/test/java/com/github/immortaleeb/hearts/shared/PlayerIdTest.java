@@ -34,4 +34,12 @@ class PlayerIdTest {
 
         assertThat(playerId1.asUuid(), is(not(equalTo(playerId2.asUuid()))));
     }
+
+    @Test
+    void of_creates_a_player_id_with_the_given_uuid() {
+        String uuid = "57841f18-8ab1-4083-9e19-afdc37c23e6b";
+        PlayerId playerId = PlayerId.of(uuid);
+
+        assertThat(playerId.asString(), is(equalTo(uuid)));
+    }
 }
