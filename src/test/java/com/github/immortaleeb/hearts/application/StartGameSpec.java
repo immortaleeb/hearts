@@ -4,7 +4,6 @@ import com.github.immortaleeb.hearts.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.domain.CardsDealt;
 import com.github.immortaleeb.hearts.domain.GameEvent;
 import com.github.immortaleeb.hearts.domain.GameStarted;
-import com.github.immortaleeb.hearts.infrastructure.InMemoryGameRepository;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.PlayerId;
@@ -29,20 +28,16 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
-class StartGameSpec {
-
-    private InMemoryGameRepository gameRepository;
-    private CommandDispatcher dispatcher;
+class StartGameSpec extends GameSpec {
 
     private List<PlayerId> players;
     private GameId gameId;
 
     @BeforeEach
     void setUp() {
-        gameRepository = new InMemoryGameRepository();
-        players = PlayerIdFixtures.players();
+        super.setUp();
 
-        dispatcher = new CommandDispatcher(gameRepository);
+        players = PlayerIdFixtures.players();
         gameId = startGameWith(players);
     }
 
@@ -90,30 +85,11 @@ class StartGameSpec {
 
     // helper methods
 
-    private GameId startGameWith(List<PlayerId> players) {
-        return dispatcher.dispatch(new StartGame(players));
-    }
-
     private void assertEachHand(Map<PlayerId, List<Card>> playerHands, Matcher<Collection<? extends Card>> matcher) {
         assertThat(playerHands.get(players.get(0)), matcher);
         assertThat(playerHands.get(players.get(1)), matcher);
         assertThat(playerHands.get(players.get(2)), matcher);
         assertThat(playerHands.get(players.get(3)), matcher);
-    }
-
-    private <T extends GameEvent> void assertEvent(GameId gameId, Class<T> eventClass, Consumer<T> eventConsumer) {
-        eventConsumer.accept(getSingleEvent(gameId, eventClass));
-    }
-
-    private <T extends GameEvent> T getSingleEvent(GameId gameId, Class<T> eventClass) {
-        List<T> raisedEvents = gameRepository.getEvents(gameId)
-                .stream()
-                .filter(eventClass::isInstance)
-                .map(eventClass::cast)
-                .collect(Collectors.toList());
-
-        assertThat("Expected an event of type " + eventClass, raisedEvents, hasSize(1));
-        return eventClass.cast(raisedEvents.get(0));
     }
 
     private Matcher<Collection<? extends Card>> hasUniqueItems() {

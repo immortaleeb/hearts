@@ -15,6 +15,15 @@ public class InMemoryGameRepository implements GameRepository {
     private final Map<GameId, List<GameEvent>> raisedEvents = new HashMap<>();
 
     @Override
+    public Game load(GameId gameId) {
+        Game game = new Game(gameId);
+        for (GameEvent event : getEvents(gameId)) {
+            game.apply(event);
+        }
+        return game;
+    }
+
+    @Override
     public void save(Game game) {
         List<GameEvent> events = raisedEvents.computeIfAbsent(game.id(), id -> new ArrayList<>());
         events.addAll(game.raisedEvents());

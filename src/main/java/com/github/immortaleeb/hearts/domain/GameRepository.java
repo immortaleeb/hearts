@@ -1,7 +1,10 @@
 package com.github.immortaleeb.hearts.domain;
 
+import com.github.immortaleeb.hearts.shared.GameId;
+
 public interface GameRepository {
 
-    void save(Game game);
+    Game load(GameId gameId);
 
+    void save(Game game);
 }

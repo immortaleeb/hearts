@@ -1,7 +1,6 @@
 package com.github.immortaleeb.hearts.shared;
 
 public enum Rank {
-    ONE,
     TWO,
     THREE,
     FOUR,
@@ -13,6 +12,7 @@ public enum Rank {
     TEN,
     JACK,
     QUEEN,
+    KING,
     ACE,
     ;
 }
