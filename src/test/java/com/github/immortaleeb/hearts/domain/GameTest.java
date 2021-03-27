@@ -32,6 +32,11 @@ class GameTest {
     }
 
     @Test
+    void startWith_generates_a_game_id() {
+        assertThat(game.id(), is(notNullValue()));
+    }
+
+    @Test
     void startWith_starts_a_game() {
         assertEvent(game, GameStarted.class, event -> {
             assertThat(event.players(), is(equalTo(players)));

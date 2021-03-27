@@ -1,6 +1,7 @@
 package com.github.immortaleeb.hearts.domain;
 
 import com.github.immortaleeb.hearts.shared.Card;
+import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.ArrayList;
@@ -12,7 +13,16 @@ public class Game {
 
     private static final int CARDS_PER_HAND = 13;
 
+    private final GameId id;
     private final List<GameEvent> raisedEvents = new ArrayList<>();
+
+    private Game(GameId id) {
+        this.id = id;
+    }
+
+    public GameId id() {
+        return id;
+    }
 
     private void dealCardsFor(List<PlayerId> players) {
         Map<PlayerId, List<Card>> playerHands = dealHands(players);
@@ -32,7 +42,7 @@ public class Game {
     }
 
     public static Game startWith(List<PlayerId> players) {
-        Game game = new Game();
+        Game game = new Game(GameId.generate());
         game.raiseEvent(new GameStarted(players));
 
         game.dealCardsFor(players);
@@ -47,5 +57,4 @@ public class Game {
     private void raiseEvent(GameEvent event) {
         this.raisedEvents.add(event);
     }
-
 }
