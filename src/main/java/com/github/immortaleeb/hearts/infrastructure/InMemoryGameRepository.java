@@ -17,8 +17,11 @@ public class InMemoryGameRepository implements GameRepository {
     @Override
     public Game load(GameId gameId) {
         Game game = new Game(gameId);
+
+        System.out.println("=== load");
         for (GameEvent event : getEvents(gameId)) {
             game.apply(event);
+            System.out.println(event);
         }
         return game;
     }

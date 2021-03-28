@@ -13,4 +13,10 @@ public class RoundStarted implements GameEvent {
     public PlayerId leadingPlayer() {
         return leadingPlayer;
     }
+
+    @Override
+    public String toString() {
+        return "RoundStarted{" + "leadingPlayer=" + leadingPlayer + '}';
+    }
+
 }

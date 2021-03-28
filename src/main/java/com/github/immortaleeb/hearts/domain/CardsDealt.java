@@ -17,4 +17,10 @@ public class CardsDealt implements GameEvent {
     public Map<PlayerId, List<Card>> playerHands() {
         return playerHands;
     }
+
+    @Override
+    public String toString() {
+        return "CardsDealt{" + "playerHands=" + playerHands + '}';
+    }
+
 }

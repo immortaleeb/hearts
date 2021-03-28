@@ -28,4 +28,11 @@ public class PlayerPassedCards implements GameEvent {
     public List<Card> passedCards() {
         return passedCards;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerPassedCards{" + "fromPlayer=" + fromPlayer + ", toPlayer=" + toPlayer + ", passedCards=" +
+                passedCards + '}';
+    }
+
 }

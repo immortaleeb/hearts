@@ -14,4 +14,9 @@ public class TrickWon implements GameEvent {
         return playerId;
     }
 
+    @Override
+    public String toString() {
+        return "TrickWon{" + "playerId=" + playerId + '}';
+    }
+
 }

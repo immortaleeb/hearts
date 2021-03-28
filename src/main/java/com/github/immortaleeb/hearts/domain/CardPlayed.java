@@ -26,4 +26,11 @@ public class CardPlayed implements GameEvent {
     public PlayerId nextLeadingPlayer() {
         return nextLeadingPlayer;
     }
+
+    @Override
+    public String toString() {
+        return "CardPlayed{" + "playedBy=" + playedBy + ", card=" + card + ", nextLeadingPlayer=" + nextLeadingPlayer +
+                '}';
+    }
+
 }

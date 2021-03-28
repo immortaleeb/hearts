@@ -14,4 +14,10 @@ public class GameStarted implements GameEvent {
     public List<PlayerId> players() {
         return players;
     }
+
+    @Override
+    public String toString() {
+        return "GameStarted{" + "players=" + players + '}';
+    }
+
 }
