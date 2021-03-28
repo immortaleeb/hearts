@@ -1,6 +1,7 @@
 package com.github.immortaleeb.hearts.application;
 
 import com.github.immortaleeb.hearts.PlayerIdFixtures;
+import com.github.immortaleeb.hearts.domain.CardPlayed;
 import com.github.immortaleeb.hearts.domain.CardsDealt;
 import com.github.immortaleeb.hearts.domain.Game;
 import com.github.immortaleeb.hearts.domain.GameStarted;
@@ -19,13 +20,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.github.immortaleeb.hearts.CardFixtures.allCardsOfSuite;
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
-import static org.hamcrest.CoreMatchers.*;
+import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -45,7 +45,7 @@ public class PassCardsSpec extends GameSpec {
 
         Game game = new Game(gameId);
         game.applyNewEvent(new GameStarted(players));
-        game.applyNewEvent(new CardsDealt(fixedPlayerHands()));
+        game.applyNewEvent(new CardsDealt(fixedPlayerHands(players)));
         gameRepository.save(game);
     }
 
@@ -97,9 +97,14 @@ public class PassCardsSpec extends GameSpec {
     @Test
     void player_cannot_pass_cards_twice() {
         List<Card> cards = threeCardsOfSuite(Suite.HEARTS);
+        List<Card> otherCards = Arrays.asList(
+                Card.of(Suite.HEARTS, Rank.FIVE),
+                Card.of(Suite.HEARTS, Rank.SIX),
+                Card.of(Suite.HEARTS, Rank.SEVEN)
+        );
 
         passCards(gameId, player1(), cards);
-        assertThrows(PlayerAlreadyPassedCards.class, () -> passCards(gameId, player1(), cards));
+        assertThrows(PlayerAlreadyPassedCards.class, () -> passCards(gameId, player1(), otherCards));
     }
 
     @Test
@@ -145,14 +150,14 @@ public class PassCardsSpec extends GameSpec {
     }
 
     @Test
-    void round_starts_with_player1_when_all_cards_have_been_passed() {
+    void round_opens_with_player_who_has_two_of_spades_when_all_cards_have_been_passed() {
         passCards(gameId, player1(), threeCardsOfSuite(Suite.HEARTS));
         passCards(gameId, player2(), threeCardsOfSuite(Suite.CLUBS));
         passCards(gameId, player3(), threeCardsOfSuite(Suite.DIAMONDS));
         passCards(gameId, player4(), threeCardsOfSuite(Suite.SPADES));
 
         assertEvent(gameId, RoundStarted.class, event -> {
-            assertThat(event.leadingPlayer(), is(equalTo(player1())));
+            assertThat(event.leadingPlayer(), is(equalTo(player2())));
         });
     }
 
@@ -172,17 +177,6 @@ public class PassCardsSpec extends GameSpec {
 
     private PlayerId player4() {
         return players.get(3);
-    }
-
-    private Map<PlayerId, List<Card>> fixedPlayerHands() {
-        Map<PlayerId, List<Card>> fixedHands = new HashMap<>();
-
-        fixedHands.put(player1(), allCardsOfSuite(Suite.HEARTS));
-        fixedHands.put(player2(), allCardsOfSuite(Suite.CLUBS));
-        fixedHands.put(player3(), allCardsOfSuite(Suite.DIAMONDS));
-        fixedHands.put(player4(), allCardsOfSuite(Suite.SPADES));
-
-        return fixedHands;
     }
 
 }

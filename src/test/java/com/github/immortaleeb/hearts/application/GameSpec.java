@@ -5,7 +5,6 @@ import com.github.immortaleeb.hearts.infrastructure.InMemoryGameRepository;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.PlayerId;
-import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -36,8 +36,17 @@ class GameSpec {
         dispatcher.dispatch(new PassCards(gameId, fromPlayer, cards));
     }
 
+    protected void playCard(GameId gameId, PlayerId player, Card card) {
+        dispatcher.dispatch(new PlayCard(gameId, player, card));
+    }
+
     protected  <T extends GameEvent> void assertEvent(GameId gameId, Class<T> eventClass, Consumer<T> eventConsumer) {
         eventConsumer.accept(getSingleEvent(gameId, eventClass));
+    }
+
+    protected  <T extends GameEvent> void assertEvent(GameId gameId, Class<T> eventClass) {
+        T event = getSingleEvent(gameId, eventClass);
+        assertThat(event, is(notNullValue()));
     }
 
     protected <T extends GameEvent> void assertNoEvent(GameId gameId, Class<T> eventClass) {

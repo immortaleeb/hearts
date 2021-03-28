@@ -1,6 +1,8 @@
 package com.github.immortaleeb.hearts.shared;
 
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class Card {
 
@@ -18,6 +20,10 @@ public class Card {
 
     public Rank rank() {
         return rank;
+    }
+
+    public boolean matchesSuite(Suite suite) {
+        return this.suite.equals(suite);
     }
 
     public static Card of(Suite suite, Rank rank) {
@@ -45,4 +51,13 @@ public class Card {
     public String toString() {
         return rank + " of " + suite;
     }
+
+    public static Predicate<Card> matchingSuite(Suite suite) {
+        return card -> card.matchesSuite(suite);
+    }
+
+    public static Comparator<Card> compareByRank() {
+        return Comparator.comparingInt(card -> card.rank().ordinal());
+    }
+
 }

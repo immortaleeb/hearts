@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 
 public class CardFixtures {
 
+    public static Card twoOfClubs() {
+        return Card.of(Suite.CLUBS, Rank.TWO);
+    }
+
     public static List<Card> allCardsOfSuite(Suite suite) {
         return Arrays.stream(Rank.values())
                 .map(rank -> new Card(suite, rank))

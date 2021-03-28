@@ -5,6 +5,7 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 class Players {
@@ -19,6 +20,10 @@ class Players {
         return players.get(index);
     }
 
+    public int size() {
+        return players.size();
+    }
+
     public PlayerId choosePlayerWithOffset(PlayerId fromPlayer, int offset) {
         int fromPlayerIndex = indexOf(fromPlayer);
         int toPlayerIndex = (fromPlayerIndex + players.size() + offset) % players.size();
@@ -26,15 +31,26 @@ class Players {
         return players.get(toPlayerIndex).id();
     }
 
-    public List<Card> handOf(PlayerId playerId) {
-        return getPlayerById(playerId).hand();
+    public boolean hasCards(PlayerId playerId, List<Card> cards) {
+        return getPlayerById(playerId).hasCards(cards);
+    }
+
+    public boolean hasCard(PlayerId playerId, Card card) {
+        return getPlayerById(playerId).hasCard(card);
+    }
+
+    public boolean anyCard(PlayerId playerId, Predicate<Card> predicate) {
+        return getPlayerById(playerId).anyCard(predicate);
     }
 
     public void dealCards(Map<PlayerId, List<Card>> playerHands) {
         for (Map.Entry<PlayerId, List<Card>> entry : playerHands.entrySet()) {
-            Player player = getPlayerById(entry.getKey());
-            player.giveCards(entry.getValue());
+            giveCards(entry.getKey(), entry.getValue());
         }
+    }
+
+    public void giveCards(PlayerId player, List<Card> cards) {
+        getPlayerById(player).giveCards(cards);
     }
 
     public void markCardsPassed(PlayerId playerId) {
@@ -49,8 +65,32 @@ class Players {
         getPlayerById(playerId).markCardsReceived();
     }
 
+    public boolean hasReceivedCards(PlayerId playerId) {
+        return getPlayerById(playerId).hasReceivedCards();
+    }
+
     public boolean allReceivedCards() {
         return players.stream().allMatch(Player::hasReceivedCards);
+    }
+
+    public void markPlayedCard(PlayerId playerId) {
+        getPlayerById(playerId).markPlayedCard();
+    }
+
+    public boolean allPlayedCards() {
+        return players.stream().allMatch(Player::hasPlayedCard);
+    }
+
+    public PlayerId getPlayerWithCard(Card card) {
+        return players.stream()
+                .filter(player -> player.hasCard(card))
+                .findFirst()
+                .map(Player::id)
+                .get();
+    }
+
+    public void takeCards(PlayerId player, List<Card> cards) {
+        getPlayerById(player).takeCards(cards);
     }
 
     private int indexOf(PlayerId playerId) {
@@ -70,5 +110,4 @@ class Players {
     public static Players of(List<PlayerId> playerIds) {
         return new Players(Player.listOf(playerIds));
     }
-
 }
