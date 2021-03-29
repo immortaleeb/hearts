@@ -89,6 +89,10 @@ class Players {
                 .get();
     }
 
+    public void takeCard(PlayerId playerId, Card card) {
+        getPlayerById(playerId).takeCard(card);
+    }
+
     public void takeCards(PlayerId player, List<Card> cards) {
         getPlayerById(player).takeCards(cards);
     }

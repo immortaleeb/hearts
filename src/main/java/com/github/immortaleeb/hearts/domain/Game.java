@@ -23,12 +23,16 @@ public class Game {
     private static final int CARDS_PER_HAND = 13;
     private static final int CARDS_TO_PASS = 3;
     private static final Card OPENING_CARD = Card.of(Suite.CLUBS, Rank.TWO);
+    private static final int TRICKS_PER_ROUND = 13;
+    private static final int SHOOT_FOR_THE_MOON_SCORE = 26;
 
     private final GameId id;
     private Players players;
     private final Map<PlayerId, List<Card>> cardsToReceive = new HashMap<>();
     private PlayerId leadingPlayer;
     private Trick trick = Trick.empty();
+    private int tricksPlayed = 0;
+    private Map<PlayerId, Integer> scores = new HashMap<>();
 
     private final List<GameEvent> raisedEvents = new ArrayList<>();
 
@@ -115,6 +119,10 @@ public class Game {
         if (trick.numberOfPlayedCards() == players.size()) {
             applyNewEvent(new TrickWon(trick.decideWinner()));
         }
+
+        if (tricksPlayed == TRICKS_PER_ROUND) {
+            applyNewEvent(new RoundEnded(countRoundScores()));
+        }
     }
 
     private Optional<String> validateCardPlay(PlayerId player, Card card) {
@@ -167,6 +175,8 @@ public class Game {
             applyEvent((CardPlayed) event);
         } else if (event instanceof TrickWon) {
             applyEvent((TrickWon) event);
+        } else if (event instanceof RoundEnded) {
+            applyEvent((RoundEnded) event);
         } else {
             throw new RuntimeException("Unknown event type " + event.getClass());
         }
@@ -174,6 +184,14 @@ public class Game {
 
     public void applyEvent(GameStarted event) {
         players = Players.of(event.players());
+        initializeScores(event.players());
+    }
+
+    private void initializeScores(List<PlayerId> playerIds) {
+        scores = new HashMap<>();
+        for (PlayerId player : playerIds) {
+            scores.put(player, 0);
+        }
     }
 
     public void applyEvent(CardsDealt event) {
@@ -208,11 +226,36 @@ public class Game {
     private void applyEvent(CardPlayed event) {
         trick.play(event.card(), event.playedBy());
         leadingPlayer = event.nextLeadingPlayer();
+        players.takeCard(event.playedBy(), event.card());
     }
 
     private void applyEvent(TrickWon event) {
+        countScores(trick);
+
         leadingPlayer = event.wonBy();
         trick = Trick.empty();
+        tricksPlayed++;
+    }
+
+    private void countScores(Trick trick) {
+        int trickScore = trick.calculateScore();
+        scores.compute(trick.decideWinner(), (k, score) -> score + trickScore);
+    }
+
+    private Map<PlayerId, Integer> countRoundScores() {
+        Optional<PlayerId> playerWhoShotForTheMoon = scores.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() == SHOOT_FOR_THE_MOON_SCORE)
+                .map(Map.Entry::getKey)
+                .findFirst();
+
+        playerWhoShotForTheMoon.ifPresent(playerId -> scores.compute(playerId, (k, score) -> -score));
+
+        return scores;
+    }
+
+    private void applyEvent(RoundEnded event) {
+        // nothing to do
     }
 
     public static Game startWith(List<PlayerId> players) {

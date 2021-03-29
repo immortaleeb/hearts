@@ -5,6 +5,7 @@ import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -44,6 +45,10 @@ class Player {
 
     public void giveCards(List<Card> cards) {
         this.hand.addAll(cards);
+    }
+
+    public void takeCard(Card card) {
+        takeCards(List.of(card));
     }
 
     public void takeCards(List<Card> cards) {

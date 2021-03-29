@@ -21,6 +21,10 @@ class PlayedCard {
         return card.suite();
     }
 
+    public Card card() {
+        return card;
+    }
+
     public PlayerId playedBy() {
         return playedBy;
     }

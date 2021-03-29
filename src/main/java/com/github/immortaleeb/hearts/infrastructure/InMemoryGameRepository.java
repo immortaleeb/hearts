@@ -12,16 +12,29 @@ import java.util.Map;
 
 public class InMemoryGameRepository implements GameRepository {
 
+    public static final boolean ENABLE_PRINTS = true;
+    public static final boolean DISABLE_PRINTS = false;
+
     private final Map<GameId, List<GameEvent>> raisedEvents = new HashMap<>();
+
+    private boolean printEnabled;
+
+    public InMemoryGameRepository() {
+        this(DISABLE_PRINTS);
+    }
+
+    public InMemoryGameRepository(boolean printEnabled) {
+        this.printEnabled = printEnabled;
+    }
 
     @Override
     public Game load(GameId gameId) {
         Game game = new Game(gameId);
 
-        System.out.println("=== load");
+        print("=== load");
         for (GameEvent event : getEvents(gameId)) {
             game.apply(event);
-            System.out.println(event);
+            print(event);
         }
         return game;
     }
@@ -34,6 +47,12 @@ public class InMemoryGameRepository implements GameRepository {
 
     public List<GameEvent> getEvents(GameId gameId) {
         return raisedEvents.get(gameId);
+    }
+
+    private void print(Object message) {
+        if (printEnabled) {
+            System.out.println(message);
+        }
     }
 
 }
