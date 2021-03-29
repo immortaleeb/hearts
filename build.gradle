@@ -3,9 +3,6 @@ plugins {
     id 'application'
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
-
 mainClassName = 'com.github.immortaleeb.hearts.Application'
 
 repositories {
@@ -18,7 +15,17 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
+
 test {
     useJUnitPlatform()
 }
 
+// fix java 16 compilation
+tasks.withType( JavaCompile ).configureEach {
+    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+}
