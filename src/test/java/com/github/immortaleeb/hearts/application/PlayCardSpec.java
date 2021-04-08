@@ -343,77 +343,7 @@ public class PlayCardSpec extends GameSpec {
     }
 
     private void play13Tricks() {
-        // trick 1
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.TWO));
-        playCard(player3(), Card.of(Suite.CLUBS, Rank.ACE));
-        playCard(player4(), Card.of(Suite.DIAMONDS, Rank.ACE));
-        playCard(player1(), Card.of(Suite.SPADES, Rank.ACE));
-
-        // trick 2
-        playCard(player3(), Card.of(Suite.CLUBS, Rank.JACK));
-        playCard(player4(), Card.of(Suite.DIAMONDS, Rank.JACK));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.THREE));
-
-        // trick 3
-        playCard(player3(), Card.of(Suite.CLUBS, Rank.TEN));
-        playCard(player4(), Card.of(Suite.DIAMONDS, Rank.TEN));
-        playCard(player1(), Card.of(Suite.SPADES, Rank.TEN));
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.QUEEN));
-
-        // trick 4
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.NINE));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.KING));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.KING));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.KING));
-
-        // trick 5
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.EIGHT));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.QUEEN));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.QUEEN));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.QUEEN));
-
-        // trick 6
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.SEVEN));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.NINE));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.NINE));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.NINE));
-
-        // trick 7
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.SIX));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.EIGHT));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.EIGHT));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.EIGHT));
-
-        // trick 8
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.FIVE));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.SEVEN));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.SEVEN));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.SEVEN));
-
-        // trick 9
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.FOUR));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.SIX));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.SIX));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.SIX));
-
-        // trick 10
-        playCard(player2(), Card.of(Suite.CLUBS, Rank.KING));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.FIVE));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.FIVE));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.FIVE));
-
-        // trick 11
-        playCard(player2(), Card.of(Suite.HEARTS, Rank.ACE));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.FOUR));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.FOUR));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.FOUR));
-
-        // trick 12
-        playCard(player2(), Card.of(Suite.HEARTS, Rank.JACK));
-        playCard(player3(), Card.of(Suite.DIAMONDS, Rank.THREE));
-        playCard(player4(), Card.of(Suite.SPADES, Rank.THREE));
-        playCard(player1(), Card.of(Suite.HEARTS, Rank.THREE));
+        play12Tricks();
 
         // trick 13
         playCard(player2(), Card.of(Suite.HEARTS, Rank.TEN));
