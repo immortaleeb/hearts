@@ -6,6 +6,7 @@ import com.github.immortaleeb.hearts.infrastructure.FakeGameRepository;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.PlayerId;
+import com.github.immortaleeb.hearts.util.Events;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
@@ -29,13 +30,13 @@ abstract class GameSpec {
         gameId = GameId.generate();
 
         Game game = new Game(gameId);
-        game.loadFromHistory(given());
+        game.loadFromHistory(given().toList());
 
         gameRepository = new FakeGameRepository(game);
         dispatcher = new CommandDispatcher(gameRepository);
     }
 
-    protected abstract List<GameEvent> given();
+    protected abstract Events given();
 
     protected GameId startGameWith(List<PlayerId> players) {
         return dispatcher.dispatch(new StartGame(players));

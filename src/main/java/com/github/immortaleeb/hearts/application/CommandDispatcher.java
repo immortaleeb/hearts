@@ -15,6 +15,18 @@ public class CommandDispatcher {
         this.playCardHandler = new PlayCardHandler(gameRepository);
     }
 
+    public void dispatch(Command command) {
+        if (command instanceof StartGame startGame) {
+            dispatch(startGame);
+        } else if (command instanceof PassCards passCards) {
+            dispatch(passCards);
+        } else if (command instanceof PlayCard playCard) {
+            dispatch(playCard);
+        } else {
+            throw new RuntimeException("Unknown command of type " + command.getClass());
+        }
+    }
+
     public GameId dispatch(StartGame startGame) {
         return this.startGameHandler.handle(startGame);
     }

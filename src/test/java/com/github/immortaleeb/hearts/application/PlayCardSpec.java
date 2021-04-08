@@ -2,6 +2,7 @@ package com.github.immortaleeb.hearts.application;
 
 import com.github.immortaleeb.hearts.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.domain.CardPlayed;
+import com.github.immortaleeb.hearts.domain.CardsDealt;
 import com.github.immortaleeb.hearts.domain.GameEvent;
 import com.github.immortaleeb.hearts.domain.RoundEnded;
 import com.github.immortaleeb.hearts.domain.TrickWon;
@@ -12,6 +13,7 @@ import com.github.immortaleeb.hearts.shared.NotPlayersTurn;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 import com.github.immortaleeb.hearts.shared.Rank;
 import com.github.immortaleeb.hearts.shared.Suite;
+import com.github.immortaleeb.hearts.util.Events;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.Map;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
 import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
-import static com.github.immortaleeb.hearts.ScenarioFixtures.round1StartedWith;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.startedPlayingCardsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,9 +33,9 @@ public class PlayCardSpec extends GameSpec {
     private List<PlayerId> players;
 
     @Override
-    protected List<GameEvent> given() {
+    protected Events given() {
         players = PlayerIdFixtures.players();
-        return round1StartedWith(players);
+        return startedPlayingCardsWith(players);
     }
 
     @Test
@@ -233,6 +235,18 @@ public class PlayCardSpec extends GameSpec {
             assertThat(scores.get(player2()), is(equalTo(-26)));
             assertThat(scores.get(player3()), is(equalTo(0)));
             assertThat(scores.get(player4()), is(equalTo(0)));
+        });
+    }
+
+    @Test
+    void cards_are_dealt_for_round_2_after_round_1_has_ended() {
+        play13Tricks();
+
+        assertEvent(CardsDealt.class, event -> {
+            assertThat(event.playerHands().get(player1()), hasSize(13));
+            assertThat(event.playerHands().get(player2()), hasSize(13));
+            assertThat(event.playerHands().get(player3()), hasSize(13));
+            assertThat(event.playerHands().get(player4()), hasSize(13));
         });
     }
 

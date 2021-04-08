@@ -1,15 +1,20 @@
 package com.github.immortaleeb.hearts;
 
+import com.github.immortaleeb.hearts.domain.CardPlayed;
 import com.github.immortaleeb.hearts.domain.CardsDealt;
-import com.github.immortaleeb.hearts.domain.GameEvent;
 import com.github.immortaleeb.hearts.domain.GameStarted;
 import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
 import com.github.immortaleeb.hearts.domain.PlayerReceivedCards;
+import com.github.immortaleeb.hearts.domain.RoundEnded;
 import com.github.immortaleeb.hearts.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.domain.TrickWon;
+import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.PlayerId;
+import com.github.immortaleeb.hearts.shared.Rank;
 import com.github.immortaleeb.hearts.shared.Suite;
+import com.github.immortaleeb.hearts.util.Events;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
@@ -17,17 +22,31 @@ import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
 
 public class ScenarioFixtures {
 
-    public static List<GameEvent> gameStartedWith(List<PlayerId> players) {
-        return Arrays.asList(
+    public static Events gameStartedWith(List<PlayerId> players) {
+        return Events.of(
                 new GameStarted(players),
                 new CardsDealt(fixedPlayerHands(players))
         );
     }
 
-    public static List<GameEvent> round1StartedWith(List<PlayerId> players) {
-        return Arrays.asList(
-                new GameStarted(players),
-                new CardsDealt(fixedPlayerHands(players)),
+    public static Events startedPlayingCardsWith(List<PlayerId> players) {
+        return new Events()
+                .addAll(gameStartedWith(players))
+                .addAll(cardsPassedFor(players))
+                .add(new StartedPlaying(players.get(1)));
+    }
+
+    public static Events playedOneRoundOfCardsWith(List<PlayerId> players) {
+        return new Events()
+                .addAll(startedPlayingCardsWith(players))
+                .addAll(roundOfCardsPlayedWith(players))
+                .add(new CardsDealt(fixedPlayerHands(players)));
+    }
+
+    // helper methods
+
+    private static Events cardsPassedFor(List<PlayerId> players) {
+        return Events.of(
                 new PlayerPassedCards(players.get(0), players.get(1), threeCardsOfSuite(Suite.HEARTS)),
                 new PlayerPassedCards(players.get(1), players.get(2), threeCardsOfSuite(Suite.CLUBS)),
                 new PlayerPassedCards(players.get(2), players.get(3), threeCardsOfSuite(Suite.DIAMONDS)),
@@ -35,8 +54,109 @@ public class ScenarioFixtures {
                 new PlayerReceivedCards(players.get(0), players.get(1), threeCardsOfSuite(Suite.HEARTS)),
                 new PlayerReceivedCards(players.get(1), players.get(2), threeCardsOfSuite(Suite.CLUBS)),
                 new PlayerReceivedCards(players.get(2), players.get(3), threeCardsOfSuite(Suite.DIAMONDS)),
-                new PlayerReceivedCards(players.get(3), players.get(0), threeCardsOfSuite(Suite.SPADES)),
-                new StartedPlaying(players.get(1))
+                new PlayerReceivedCards(players.get(3), players.get(0), threeCardsOfSuite(Suite.SPADES))
+        );
+    }
+
+    private static Events roundOfCardsPlayedWith(List<PlayerId> players) {
+        return Events.of(
+                // trick 1
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.TWO), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.CLUBS, Rank.ACE), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.DIAMONDS, Rank.ACE), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.SPADES, Rank.ACE), players.get(1)),
+                new TrickWon(players.get(2)),
+
+                // trick 2
+                new CardPlayed(players.get(2), Card.of(Suite.CLUBS, Rank.JACK), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.DIAMONDS, Rank.JACK), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.TWO), players.get(1)),
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.THREE), players.get(2)),
+                new TrickWon(players.get(2)),
+
+                // trick 3
+                new CardPlayed(players.get(2), Card.of(Suite.CLUBS, Rank.TEN), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.DIAMONDS, Rank.TEN), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.SPADES, Rank.TEN), players.get(1)),
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.QUEEN), players.get(2)),
+                new TrickWon(players.get(1)),
+
+                // trick 4
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.NINE), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.KING), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.KING), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.KING), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 5
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.EIGHT), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.QUEEN), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.QUEEN), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.QUEEN), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 6
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.SEVEN), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.NINE), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.NINE), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.NINE), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 7
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.SIX), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.EIGHT), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.EIGHT), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.EIGHT), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 8
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.FIVE), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.SEVEN), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.SEVEN), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.SEVEN), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 9
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.FOUR), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.SIX), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.SIX), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.SIX), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 10
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.KING), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.FIVE), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.FIVE), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.FIVE), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 11
+                new CardPlayed(players.get(1), Card.of(Suite.HEARTS, Rank.ACE), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.FOUR), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.FOUR), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.FOUR), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 12
+                new CardPlayed(players.get(1), Card.of(Suite.HEARTS, Rank.JACK), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.THREE), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.THREE), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.THREE), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                // trick 13
+                new CardPlayed(players.get(1), Card.of(Suite.HEARTS, Rank.TEN), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.TWO), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.TWO), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.SPADES, Rank.JACK), players.get(1)),
+                new TrickWon(players.get(1)),
+
+                new RoundEnded(new HashMap<>() {{
+                    put(players.get(0), 0);
+                    put(players.get(1), 25);
+                    put(players.get(2), 1);
+                    put(players.get(3), 0);
+                }})
         );
     }
 

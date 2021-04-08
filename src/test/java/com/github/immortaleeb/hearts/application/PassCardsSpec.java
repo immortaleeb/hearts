@@ -12,6 +12,7 @@ import com.github.immortaleeb.hearts.shared.PlayerAlreadyPassedCards;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 import com.github.immortaleeb.hearts.shared.Rank;
 import com.github.immortaleeb.hearts.shared.Suite;
+import com.github.immortaleeb.hearts.util.Events;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class PassCardsSpec extends GameSpec {
     private List<PlayerId> players;
 
     @Override
-    protected List<GameEvent> given() {
+    protected Events given() {
         players = PlayerIdFixtures.players();
         return gameStartedWith(players);
     }

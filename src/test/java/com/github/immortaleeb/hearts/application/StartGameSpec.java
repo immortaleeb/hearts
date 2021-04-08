@@ -7,6 +7,7 @@ import com.github.immortaleeb.hearts.domain.GameStarted;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.PlayerId;
+import com.github.immortaleeb.hearts.util.Events;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -41,10 +42,10 @@ class StartGameSpec extends GameSpec {
     }
 
     @Override
-    protected List<GameEvent> given() {
+    protected Events given() {
         players = PlayerIdFixtures.players();
 
-        return emptyList();
+        return Events.none();
     }
 
     private void when() {

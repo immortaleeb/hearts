@@ -33,6 +33,7 @@ public class Game {
     private Trick trick = Trick.empty();
     private int tricksPlayed = 0;
     private Map<PlayerId, Integer> scores = new HashMap<>();
+    private int roundNumber = 0;
 
     private final List<GameEvent> raisedEvents = new ArrayList<>();
 
@@ -44,17 +45,17 @@ public class Game {
         return id;
     }
 
-    private void dealCardsFor(List<PlayerId> players) {
-        Map<PlayerId, List<Card>> playerHands = dealHands(players);
+    private void dealCards() {
+        Map<PlayerId, List<Card>> playerHands = dealHands();
         applyNewEvent(new CardsDealt(playerHands));
     }
 
-    private Map<PlayerId, List<Card>> dealHands(List<PlayerId> players) {
+    private Map<PlayerId, List<Card>> dealHands() {
         Map<PlayerId, List<Card>> playerHands = new HashMap<>();
 
         Deck deck = Deck.standard().shuffle();
 
-        for (PlayerId player : players) {
+        for (PlayerId player : this.players.toIds()) {
             playerHands.put(player, deck.takeCards(CARDS_PER_HAND));
         }
 
@@ -122,6 +123,7 @@ public class Game {
 
         if (tricksPlayed == TRICKS_PER_ROUND) {
             applyNewEvent(new RoundEnded(countRoundScores()));
+            dealCards();
         }
     }
 
@@ -148,11 +150,18 @@ public class Game {
     }
 
     private PlayerId choosePlayerToPassTo(PlayerId fromPlayer) {
-        return players.choosePlayerWithOffset(fromPlayer, 1);
+        return players.choosePlayerWithOffset(fromPlayer, choosePassingDirection().toOffset());
     }
 
     private PlayerId choosePlayerToReceiveFrom(PlayerId toPlayer) {
-        return players.choosePlayerWithOffset(toPlayer, -1);
+        return players.choosePlayerWithOffset(toPlayer, choosePassingDirection().fromOffset());
+    }
+
+    private PassDirection choosePassingDirection() {
+        return switch (roundNumber) {
+            case 2 -> PassDirection.RIGHT;
+            default -> PassDirection.LEFT;
+        };
     }
 
     public void applyNewEvent(GameEvent event) {
@@ -162,6 +171,7 @@ public class Game {
 
     public void loadFromHistory(List<GameEvent> events) {
         for (GameEvent event : events) {
+            System.out.println(event);
             apply(event);
         }
     }
@@ -202,6 +212,7 @@ public class Game {
 
     public void applyEvent(CardsDealt event) {
         players.dealCards(event.playerHands());
+        roundNumber++;
     }
 
     public void applyEvent(PlayerPassedCards event) {
@@ -268,7 +279,7 @@ public class Game {
         Game game = new Game(GameId.generate());
         game.applyNewEvent(new GameStarted(players));
 
-        game.dealCardsFor(players);
+        game.dealCards();
 
         return game;
     }

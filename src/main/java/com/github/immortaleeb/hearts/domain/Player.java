@@ -43,6 +43,12 @@ class Player {
         return receivedCards;
     }
 
+    public void dealCards(List<Card> cards) {
+        this.hand.addAll(cards);
+        this.passedCards = false;
+        this.receivedCards = false;
+    }
+
     public void giveCards(List<Card> cards) {
         this.hand.addAll(cards);
     }

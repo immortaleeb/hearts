@@ -6,6 +6,7 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Players {
@@ -45,7 +46,10 @@ class Players {
 
     public void dealCards(Map<PlayerId, List<Card>> playerHands) {
         for (Map.Entry<PlayerId, List<Card>> entry : playerHands.entrySet()) {
-            giveCards(entry.getKey(), entry.getValue());
+            Player player = getPlayerById(entry.getKey());
+            List<Card> cards = entry.getValue();
+
+            player.dealCards(cards);
         }
     }
 
@@ -97,6 +101,12 @@ class Players {
         getPlayerById(player).takeCards(cards);
     }
 
+    public List<PlayerId> toIds() {
+        return players.stream()
+                .map(Player::id)
+                .collect(Collectors.toList());
+    }
+
     private int indexOf(PlayerId playerId) {
         return IntStream.range(0, players.size())
                 .filter(i -> players.get(i).id().equals(playerId))
@@ -114,4 +124,5 @@ class Players {
     public static Players of(List<PlayerId> playerIds) {
         return new Players(Player.listOf(playerIds));
     }
+
 }
