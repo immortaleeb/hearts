@@ -1,9 +1,8 @@
 package com.github.immortaleeb.hearts.application;
 
 import com.github.immortaleeb.hearts.PlayerIdFixtures;
-import com.github.immortaleeb.hearts.domain.CardsDealt;
+import com.github.immortaleeb.hearts.ScenarioFixtures;
 import com.github.immortaleeb.hearts.domain.GameEvent;
-import com.github.immortaleeb.hearts.domain.GameStarted;
 import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
 import com.github.immortaleeb.hearts.domain.PlayerReceivedCards;
 import com.github.immortaleeb.hearts.domain.RoundStarted;
@@ -20,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
-import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.gameStartedWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,11 +32,7 @@ public class PassCardsSpec extends GameSpec {
     @Override
     protected List<GameEvent> given() {
         players = PlayerIdFixtures.players();
-
-        return Arrays.asList(
-                new GameStarted(players),
-                new CardsDealt(fixedPlayerHands(players))
-        );
+        return gameStartedWith(players);
     }
 
     @Test

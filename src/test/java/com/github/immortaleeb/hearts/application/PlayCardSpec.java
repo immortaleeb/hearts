@@ -2,13 +2,8 @@ package com.github.immortaleeb.hearts.application;
 
 import com.github.immortaleeb.hearts.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.domain.CardPlayed;
-import com.github.immortaleeb.hearts.domain.CardsDealt;
 import com.github.immortaleeb.hearts.domain.GameEvent;
-import com.github.immortaleeb.hearts.domain.GameStarted;
-import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
-import com.github.immortaleeb.hearts.domain.PlayerReceivedCards;
 import com.github.immortaleeb.hearts.domain.RoundEnded;
-import com.github.immortaleeb.hearts.domain.RoundStarted;
 import com.github.immortaleeb.hearts.domain.TrickWon;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardNotInHand;
@@ -19,14 +14,13 @@ import com.github.immortaleeb.hearts.shared.Rank;
 import com.github.immortaleeb.hearts.shared.Suite;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
 import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
-import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.round1StartedWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,20 +34,7 @@ public class PlayCardSpec extends GameSpec {
     @Override
     protected List<GameEvent> given() {
         players = PlayerIdFixtures.players();
-
-        return Arrays.asList(
-            new GameStarted(players),
-            new CardsDealt(fixedPlayerHands(players)),
-            new PlayerPassedCards(player1(), player2(), threeCardsOfSuite(Suite.HEARTS)),
-            new PlayerPassedCards(player2(), player3(), threeCardsOfSuite(Suite.CLUBS)),
-            new PlayerPassedCards(player3(), player4(), threeCardsOfSuite(Suite.DIAMONDS)),
-            new PlayerPassedCards(player4(), player1(), threeCardsOfSuite(Suite.SPADES)),
-            new PlayerReceivedCards(player1(), player2(), threeCardsOfSuite(Suite.HEARTS)),
-            new PlayerReceivedCards(player2(), player3(), threeCardsOfSuite(Suite.CLUBS)),
-            new PlayerReceivedCards(player3(), player4(), threeCardsOfSuite(Suite.DIAMONDS)),
-            new PlayerReceivedCards(player4(), player1(), threeCardsOfSuite(Suite.SPADES)),
-            new RoundStarted(player2())
-        );
+        return round1StartedWith(players);
     }
 
     @Test
