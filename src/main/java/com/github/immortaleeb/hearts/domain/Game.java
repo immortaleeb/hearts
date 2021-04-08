@@ -80,6 +80,10 @@ public class Game {
         applyNewEvent(new PlayerPassedCards(fromPlayer, playerToPassTo, cards));
 
         receiveCards(fromPlayer, playerToPassTo, playerToReceiveFrom);
+
+        if (players.allReceivedCards()) {
+            startPlaying();
+        }
     }
 
     private void receiveCards(PlayerId fromPlayer, PlayerId playerToPassTo, PlayerId playerToReceiveFrom) {
@@ -89,10 +93,6 @@ public class Game {
 
         if (players.hasPassedCards(playerToReceiveFrom)) {
             receiveCards(fromPlayer);
-        }
-
-        if (players.allReceivedCards()) {
-            startRound();
         }
     }
 
@@ -175,8 +175,8 @@ public class Game {
             applyEvent((PlayerPassedCards) event);
         } else if (event instanceof PlayerReceivedCards) {
             applyEvent((PlayerReceivedCards) event);
-        } else if (event instanceof RoundStarted) {
-            applyEvent((RoundStarted) event);
+        } else if (event instanceof StartedPlaying) {
+            applyEvent((StartedPlaying) event);
         } else if (event instanceof CardPlayed) {
             applyEvent((CardPlayed) event);
         } else if (event instanceof TrickWon) {
@@ -220,12 +220,12 @@ public class Game {
         players.giveCards(event.toPlayer(), event.cards());
     }
 
-    private void startRound() {
+    private void startPlaying() {
         PlayerId leadingPlayer = players.getPlayerWithCard(OPENING_CARD);
-        applyNewEvent(new RoundStarted(leadingPlayer));
+        applyNewEvent(new StartedPlaying(leadingPlayer));
     }
 
-    public void applyEvent(RoundStarted event) {
+    public void applyEvent(StartedPlaying event) {
         leadingPlayer = event.leadingPlayer();
     }
 

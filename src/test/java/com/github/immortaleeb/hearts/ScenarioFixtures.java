@@ -5,7 +5,7 @@ import com.github.immortaleeb.hearts.domain.GameEvent;
 import com.github.immortaleeb.hearts.domain.GameStarted;
 import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
 import com.github.immortaleeb.hearts.domain.PlayerReceivedCards;
-import com.github.immortaleeb.hearts.domain.RoundStarted;
+import com.github.immortaleeb.hearts.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 import com.github.immortaleeb.hearts.shared.Suite;
 
@@ -36,7 +36,7 @@ public class ScenarioFixtures {
                 new PlayerReceivedCards(players.get(1), players.get(2), threeCardsOfSuite(Suite.CLUBS)),
                 new PlayerReceivedCards(players.get(2), players.get(3), threeCardsOfSuite(Suite.DIAMONDS)),
                 new PlayerReceivedCards(players.get(3), players.get(0), threeCardsOfSuite(Suite.SPADES)),
-                new RoundStarted(players.get(1))
+                new StartedPlaying(players.get(1))
         );
     }
 

@@ -1,11 +1,10 @@
 package com.github.immortaleeb.hearts.application;
 
 import com.github.immortaleeb.hearts.PlayerIdFixtures;
-import com.github.immortaleeb.hearts.ScenarioFixtures;
 import com.github.immortaleeb.hearts.domain.GameEvent;
 import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
 import com.github.immortaleeb.hearts.domain.PlayerReceivedCards;
-import com.github.immortaleeb.hearts.domain.RoundStarted;
+import com.github.immortaleeb.hearts.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.IncorrectNumberOfCardsPassed;
@@ -127,22 +126,22 @@ public class PassCardsSpec extends GameSpec {
     }
 
     @Test
-    void round_does_not_start_until_all_cards_have_been_passed() {
+    void do_not_start_playing_until_all_cards_have_been_passed() {
         passCards(player1(), threeCardsOfSuite(Suite.HEARTS));
         passCards(player2(), threeCardsOfSuite(Suite.CLUBS));
         passCards(player3(), threeCardsOfSuite(Suite.DIAMONDS));
 
-        assertNoEvent(RoundStarted.class);
+        assertNoEvent(StartedPlaying.class);
     }
 
     @Test
-    void round_opens_with_player_who_has_two_of_spades_when_all_cards_have_been_passed() {
+    void first_trick_opens_with_player_who_has_two_of_spades_when_all_cards_have_been_passed() {
         passCards(player1(), threeCardsOfSuite(Suite.HEARTS));
         passCards(player2(), threeCardsOfSuite(Suite.CLUBS));
         passCards(player3(), threeCardsOfSuite(Suite.DIAMONDS));
         passCards(player4(), threeCardsOfSuite(Suite.SPADES));
 
-        assertEvent(RoundStarted.class, event -> {
+        assertEvent(StartedPlaying.class, event -> {
             assertThat(event.leadingPlayer(), is(equalTo(player2())));
         });
     }
