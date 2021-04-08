@@ -18,9 +18,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -31,13 +31,23 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 class StartGameSpec extends GameSpec {
 
     private List<PlayerId> players;
-    private GameId gameId;
 
+    @Override
     @BeforeEach
     void setUp() {
         super.setUp();
 
+        when();
+    }
+
+    @Override
+    protected List<GameEvent> given() {
         players = PlayerIdFixtures.players();
+
+        return emptyList();
+    }
+
+    private void when() {
         gameId = startGameWith(players);
     }
 
@@ -48,14 +58,14 @@ class StartGameSpec extends GameSpec {
 
     @Test
     void startGame_starts_a_game() {
-        assertEvent(gameId, GameStarted.class, event -> {
+        assertEvent(GameStarted.class, event -> {
             MatcherAssert.assertThat(event.players(), is(equalTo(players)));
         });
     }
 
     @Test
     void startGame_deals_13_cards_to_each_player() {
-        assertEvent(gameId, CardsDealt.class, event -> {
+        assertEvent(CardsDealt.class, event -> {
             Map<PlayerId, List<Card>> playerHands = event.playerHands();
 
             assertEachHand(playerHands, hasSize(13));
@@ -64,7 +74,7 @@ class StartGameSpec extends GameSpec {
 
     @Test
     void startGame_deals_unique_cards_to_each_player() {
-        assertEvent(gameId, CardsDealt.class, event -> {
+        assertEvent(CardsDealt.class, event -> {
             Map<PlayerId, List<Card>> playerHands = event.playerHands();
             List<Card> allCards = playerHands.values().stream().flatMap(List::stream).collect(Collectors.toList());
 
@@ -77,7 +87,7 @@ class StartGameSpec extends GameSpec {
     void startGame_deals_shuffled_cards() {
         GameId otherGameId = startGameWith(players);
 
-        Map<PlayerId, List<Card>> gamePlayerHands = getSingleEvent(gameId, CardsDealt.class).playerHands();
+        Map<PlayerId, List<Card>> gamePlayerHands = getSingleEvent(CardsDealt.class).playerHands();
         Map<PlayerId, List<Card>> otherGamePlayerHands = getSingleEvent(otherGameId, CardsDealt.class).playerHands();
 
         assertThat(gamePlayerHands, is(not(equalTo(otherGamePlayerHands))));

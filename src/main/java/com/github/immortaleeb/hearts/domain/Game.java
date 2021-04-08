@@ -160,6 +160,12 @@ public class Game {
         raiseEvent(event);
     }
 
+    public void loadFromHistory(List<GameEvent> events) {
+        for (GameEvent event : events) {
+            apply(event);
+        }
+    }
+
     public void apply(GameEvent event) {
         if (event instanceof GameStarted) {
             applyEvent((GameStarted) event);
@@ -273,5 +279,9 @@ public class Game {
 
     private void raiseEvent(GameEvent event) {
         this.raisedEvents.add(event);
+    }
+
+    public void clearRaisedEvents() {
+        raisedEvents.clear();
     }
 }

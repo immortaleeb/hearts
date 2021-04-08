@@ -1,7 +1,8 @@
 package com.github.immortaleeb.hearts.application;
 
+import com.github.immortaleeb.hearts.domain.Game;
 import com.github.immortaleeb.hearts.domain.GameEvent;
-import com.github.immortaleeb.hearts.infrastructure.InMemoryGameRepository;
+import com.github.immortaleeb.hearts.infrastructure.FakeGameRepository;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.PlayerId;
@@ -17,42 +18,54 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 
-class GameSpec {
+abstract class GameSpec {
 
-    protected InMemoryGameRepository gameRepository;
+    protected GameId gameId;
+    protected FakeGameRepository gameRepository;
     protected CommandDispatcher dispatcher;
 
     @BeforeEach
     void setUp() {
-        gameRepository = new InMemoryGameRepository();
+        gameId = GameId.generate();
+
+        Game game = new Game(gameId);
+        game.loadFromHistory(given());
+
+        gameRepository = new FakeGameRepository(game);
         dispatcher = new CommandDispatcher(gameRepository);
     }
+
+    protected abstract List<GameEvent> given();
 
     protected GameId startGameWith(List<PlayerId> players) {
         return dispatcher.dispatch(new StartGame(players));
     }
 
-    protected void passCards(GameId gameId, PlayerId fromPlayer, List<Card> cards) {
+    protected void passCards(PlayerId fromPlayer, List<Card> cards) {
         dispatcher.dispatch(new PassCards(gameId, fromPlayer, cards));
     }
 
-    protected void playCard(GameId gameId, PlayerId player, Card card) {
+    protected void playCard(PlayerId player, Card card) {
         dispatcher.dispatch(new PlayCard(gameId, player, card));
     }
 
-    protected  <T extends GameEvent> void assertEvent(GameId gameId, Class<T> eventClass, Consumer<T> eventConsumer) {
-        eventConsumer.accept(getSingleEvent(gameId, eventClass));
+    protected  <T extends GameEvent> void assertEvent(Class<T> eventClass, Consumer<T> eventConsumer) {
+        eventConsumer.accept(getSingleEvent(eventClass));
     }
 
-    protected  <T extends GameEvent> void assertEvent(GameId gameId, Class<T> eventClass) {
-        T event = getSingleEvent(gameId, eventClass);
+    protected  <T extends GameEvent> void assertEvent(Class<T> eventClass) {
+        T event = getSingleEvent(eventClass);
         assertThat(event, is(notNullValue()));
     }
 
-    protected <T extends GameEvent> void assertNoEvent(GameId gameId, Class<T> eventClass) {
-        List<T> events = getEvents(gameId, eventClass);
+    protected <T extends GameEvent> void assertNoEvent(Class<T> eventClass) {
+        List<T> events = getEvents(eventClass);
 
         assertThat(events, is(empty()));
+    }
+
+    protected <T extends GameEvent> List<T> getEvents(Class<T> eventClass) {
+        return getEvents(this.gameId, eventClass);
     }
 
     protected <T extends GameEvent> List<T> getEvents(GameId gameId, Class<T> eventClass) {
@@ -61,6 +74,10 @@ class GameSpec {
                 .filter(eventClass::isInstance)
                 .map(eventClass::cast)
                 .collect(Collectors.toList());
+    }
+
+    protected <T extends GameEvent> T getSingleEvent(Class<T> eventClass) {
+        return getSingleEvent(this.gameId, eventClass);
     }
 
     protected <T extends GameEvent> T getSingleEvent(GameId gameId, Class<T> eventClass) {

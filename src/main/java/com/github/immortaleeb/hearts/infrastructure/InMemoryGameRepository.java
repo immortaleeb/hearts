@@ -12,12 +12,11 @@ import java.util.Map;
 
 public class InMemoryGameRepository implements GameRepository {
 
-    public static final boolean ENABLE_PRINTS = true;
     public static final boolean DISABLE_PRINTS = false;
 
     private final Map<GameId, List<GameEvent>> raisedEvents = new HashMap<>();
 
-    private boolean printEnabled;
+    private final boolean printEnabled;
 
     public InMemoryGameRepository() {
         this(DISABLE_PRINTS);
