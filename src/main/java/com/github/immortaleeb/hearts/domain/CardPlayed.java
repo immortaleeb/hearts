@@ -3,7 +3,7 @@ package com.github.immortaleeb.hearts.domain;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
-public class CardPlayed implements GameEvent {
+public final class CardPlayed implements GameEvent {
 
     private final PlayerId playedBy;
     private final Card card;

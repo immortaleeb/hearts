@@ -4,7 +4,7 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.Map;
 
-public class RoundEnded implements GameEvent {
+public final class RoundEnded implements GameEvent {
     private final Map<PlayerId, Integer> scores;
 
     public RoundEnded(Map<PlayerId, Integer> scores) {

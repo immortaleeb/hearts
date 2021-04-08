@@ -2,7 +2,7 @@ package com.github.immortaleeb.hearts.domain;
 
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
-public class StartedPlaying implements GameEvent {
+public final class StartedPlaying implements GameEvent {
 
     private final PlayerId leadingPlayer;
 

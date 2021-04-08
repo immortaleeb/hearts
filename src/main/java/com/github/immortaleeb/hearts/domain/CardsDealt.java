@@ -6,7 +6,7 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 import java.util.List;
 import java.util.Map;
 
-public class CardsDealt implements GameEvent {
+public final class CardsDealt implements GameEvent {
 
     private final Map<PlayerId, List<Card>> playerHands;
 

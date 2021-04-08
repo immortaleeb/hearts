@@ -5,7 +5,7 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.List;
 
-public class PlayerReceivedCards implements GameEvent {
+public final class PlayerReceivedCards implements GameEvent {
 
     private final PlayerId fromPlayer;
     private final PlayerId toPlayer;

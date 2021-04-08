@@ -2,7 +2,7 @@ package com.github.immortaleeb.hearts.domain;
 
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
-public class TrickWon implements GameEvent {
+public final class TrickWon implements GameEvent {
 
     private final PlayerId playerId;
 

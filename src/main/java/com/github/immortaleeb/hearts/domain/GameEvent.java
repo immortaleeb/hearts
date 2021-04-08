@@ -1,4 +1,4 @@
 package com.github.immortaleeb.hearts.domain;
 
-public interface GameEvent {
+sealed public interface GameEvent permits GameStarted, CardsDealt, PlayerPassedCards, PlayerReceivedCards, StartedPlaying, CardPlayed, TrickWon, RoundEnded  {
 }
