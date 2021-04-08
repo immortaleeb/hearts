@@ -8,6 +8,7 @@ import com.github.immortaleeb.hearts.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.IncorrectNumberOfCardsPassed;
+import com.github.immortaleeb.hearts.shared.NotPlayersTurn;
 import com.github.immortaleeb.hearts.shared.PlayerAlreadyPassedCards;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 import com.github.immortaleeb.hearts.shared.Rank;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
+import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.gameStartedWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -144,6 +146,13 @@ public class PassCardsSpec extends GameSpec {
 
         assertEvent(StartedPlaying.class, event -> {
             assertThat(event.leadingPlayer(), is(equalTo(player2())));
+        });
+    }
+
+    @Test
+    void player_cannot_play_card_before_passing_cards() {
+        assertThrows(NotPlayersTurn.class, () -> {
+            playCard(player2(), twoOfClubs());
         });
     }
 

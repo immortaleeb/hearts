@@ -34,6 +34,7 @@ public class Game {
     private int tricksPlayed = 0;
     private Map<PlayerId, Integer> scores = new HashMap<>();
     private int roundNumber = 0;
+    private GamePhase gamePhase = GamePhase.DEALING;
 
     private final List<GameEvent> raisedEvents = new ArrayList<>();
 
@@ -48,6 +49,10 @@ public class Game {
     private void dealCards() {
         Map<PlayerId, List<Card>> playerHands = dealHands();
         applyNewEvent(new CardsDealt(playerHands));
+
+        if (!shouldPassCardsThisRounds()) {
+            startPlaying();
+        }
     }
 
     private Map<PlayerId, List<Card>> dealHands() {
@@ -75,6 +80,10 @@ public class Game {
             throw new PlayerAlreadyPassedCards();
         }
 
+        if (!shouldPassCardsThisRounds()) {
+            throw new PlayerAlreadyPassedCards();
+        }
+
         PlayerId playerToPassTo = choosePlayerToPassTo(fromPlayer);
         PlayerId playerToReceiveFrom = choosePlayerToReceiveFrom(fromPlayer);
 
@@ -98,6 +107,10 @@ public class Game {
     }
 
     public void playCard(PlayerId player, Card card) {
+        if (!gamePhase.equals(GamePhase.PLAYING)) {
+            throw new NotPlayersTurn();
+        }
+
         boolean isPlayersTurn = leadingPlayer.equals(player) && !trick.hasPlayedCard(player);
 
         if (!isPlayersTurn) {
@@ -150,18 +163,24 @@ public class Game {
     }
 
     private PlayerId choosePlayerToPassTo(PlayerId fromPlayer) {
-        return players.choosePlayerWithOffset(fromPlayer, choosePassingDirection().toOffset());
+        return players.choosePlayerWithOffset(fromPlayer, choosePassingDirection().get().toOffset());
     }
 
     private PlayerId choosePlayerToReceiveFrom(PlayerId toPlayer) {
-        return players.choosePlayerWithOffset(toPlayer, choosePassingDirection().fromOffset());
+        return players.choosePlayerWithOffset(toPlayer, choosePassingDirection().get().fromOffset());
     }
 
-    private PassDirection choosePassingDirection() {
-        return switch (roundNumber) {
+    private boolean shouldPassCardsThisRounds() {
+        return choosePassingDirection().isPresent();
+    }
+
+    private Optional<PassDirection> choosePassingDirection() {
+        return Optional.ofNullable(switch (roundNumber % 4) {
+            case 1 -> PassDirection.LEFT;
             case 2 -> PassDirection.RIGHT;
-            default -> PassDirection.LEFT;
-        };
+            case 3 -> PassDirection.DIAGONAL;
+            default -> null;
+        });
     }
 
     public void applyNewEvent(GameEvent event) {
@@ -238,6 +257,7 @@ public class Game {
 
     public void applyEvent(StartedPlaying event) {
         leadingPlayer = event.leadingPlayer();
+        gamePhase = GamePhase.PLAYING;
     }
 
     private void applyEvent(CardPlayed event) {

@@ -15,18 +15,18 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PassCardsInRound2Spec extends GameSpec {
+public class PassCardsInRound3Spec extends GameSpec {
 
     private List<PlayerId> players;
 
     @Override
     protected Events given() {
         players = PlayerIdFixtures.players();
-        return playedRoundsWith(1, players);
+        return playedRoundsWith(2, players);
     }
 
     @Test
-    void cards_are_passed_to_right_in_round_2() {
+    void cards_are_passed_to_front_in_round_3() {
         passCards(player1(), threeCardsOfSuite(Suite.HEARTS));
         passCards(player4(), threeCardsOfSuite(Suite.SPADES));
         passCards(player3(), threeCardsOfSuite(Suite.DIAMONDS));
@@ -34,10 +34,10 @@ public class PassCardsInRound2Spec extends GameSpec {
 
         List<PlayerPassedCards> passEvents = getEvents(PlayerPassedCards.class);
 
-        assertThat(passEvents.get(0).toPlayer(), is(equalTo(player4())));
-        assertThat(passEvents.get(1).toPlayer(), is(equalTo(player3())));
-        assertThat(passEvents.get(2).toPlayer(), is(equalTo(player2())));
-        assertThat(passEvents.get(3).toPlayer(), is(equalTo(player1())));
+        assertThat(passEvents.get(0).toPlayer(), is(equalTo(player3())));
+        assertThat(passEvents.get(1).toPlayer(), is(equalTo(player2())));
+        assertThat(passEvents.get(2).toPlayer(), is(equalTo(player1())));
+        assertThat(passEvents.get(3).toPlayer(), is(equalTo(player4())));
     }
 
     // helper methods

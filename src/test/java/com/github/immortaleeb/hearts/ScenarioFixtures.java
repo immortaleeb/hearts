@@ -32,14 +32,25 @@ public class ScenarioFixtures {
     public static Events startedPlayingCardsWith(List<PlayerId> players) {
         return new Events()
                 .addAll(gameStartedWith(players))
-                .addAll(cardsPassedFor(players))
-                .add(new StartedPlaying(players.get(1)));
+                .addAll(cardsPassedFor(players));
     }
 
-    public static Events playedOneRoundOfCardsWith(List<PlayerId> players) {
-        return new Events()
-                .addAll(startedPlayingCardsWith(players))
-                .addAll(roundOfCardsPlayedWith(players))
+    public static Events playedRoundsWith(int numberOfRounds, List<PlayerId> players) {
+        Events events = Events.of(new GameStarted(players));
+
+        for (int i = 0; i < numberOfRounds; i++) {
+            events.add(new CardsDealt(fixedPlayerHands(players)));
+
+            if ((i + 1) % 4 != 0) {
+                events.addAll(cardsPassedFor(players));
+                events.addAll(playRegularRoundOfCards(players));
+            } else {
+                events.addAll(playNonPassingRoundOfCards(players));
+            }
+
+        }
+
+        return events
                 .add(new CardsDealt(fixedPlayerHands(players)));
     }
 
@@ -54,11 +65,13 @@ public class ScenarioFixtures {
                 new PlayerReceivedCards(players.get(0), players.get(1), threeCardsOfSuite(Suite.HEARTS)),
                 new PlayerReceivedCards(players.get(1), players.get(2), threeCardsOfSuite(Suite.CLUBS)),
                 new PlayerReceivedCards(players.get(2), players.get(3), threeCardsOfSuite(Suite.DIAMONDS)),
-                new PlayerReceivedCards(players.get(3), players.get(0), threeCardsOfSuite(Suite.SPADES))
+                new PlayerReceivedCards(players.get(3), players.get(0), threeCardsOfSuite(Suite.SPADES)),
+
+                new StartedPlaying(players.get(1))
         );
     }
 
-    private static Events roundOfCardsPlayedWith(List<PlayerId> players) {
+    private static Events playRegularRoundOfCards(List<PlayerId> players) {
         return Events.of(
                 // trick 1
                 new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.TWO), players.get(2)),
@@ -158,6 +171,29 @@ public class ScenarioFixtures {
                     put(players.get(3), 0);
                 }})
         );
+    }
+
+    private static Events playNonPassingRoundOfCards(List<PlayerId> players) {
+        Events events = new Events();
+
+        for (Rank rank : Rank.values()) {
+            events.addAll(
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, rank), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, rank), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, rank), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, rank), players.get(1)),
+                new TrickWon(players.get(1))
+            );
+        }
+
+        events.add(new RoundEnded(new HashMap<>() {{
+            put(players.get(0), 0);
+            put(players.get(1), 25);
+            put(players.get(2), 1);
+            put(players.get(3), 0);
+        }}));
+
+        return events;
     }
 
 }

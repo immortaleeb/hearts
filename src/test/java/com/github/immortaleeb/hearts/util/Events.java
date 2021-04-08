@@ -41,7 +41,7 @@ public class Events {
     }
 
     public static Events of(GameEvent... events) {
-        return new Events(Arrays.asList(events));
+        return new Events(new ArrayList<>(Arrays.asList(events)));
     }
 
     public static Events none() {

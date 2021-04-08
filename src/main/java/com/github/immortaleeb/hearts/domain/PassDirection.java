@@ -4,6 +4,7 @@ public enum PassDirection {
 
     LEFT(1, -1),
     RIGHT(-1, 1),
+    DIAGONAL(2, 2),
     ;
 
     private final int toOffset;
