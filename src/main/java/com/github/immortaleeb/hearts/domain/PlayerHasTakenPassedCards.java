@@ -31,7 +31,7 @@ public final class PlayerHasTakenPassedCards implements GameEvent {
 
     @Override
     public String toString() {
-        return "PlayerReceivedCards{" + "fromPlayer=" + fromPlayer + ", toPlayer=" + toPlayer + ", cards=" + cards +
+        return "PlayerHasTakenPassedCards{" + "fromPlayer=" + fromPlayer + ", toPlayer=" + toPlayer + ", cards=" + cards +
                 '}';
     }
 
