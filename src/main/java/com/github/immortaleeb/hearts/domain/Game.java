@@ -67,16 +67,18 @@ public class Game {
         return playerHands;
     }
 
-    public void passCards(PlayerId fromPlayer, List<Card> cards) {
+    public void passCards(PlayerId fromPlayerId, List<Card> cards) {
         if (cards.size() != CARDS_TO_PASS) {
             throw new IncorrectNumberOfCardsPassed();
         }
 
-        if (!players.getPlayerById(fromPlayer).hasCards(cards)) {
+        Player fromPlayer = players.getPlayerById(fromPlayerId);
+
+        if (!fromPlayer.hasCards(cards)) {
             throw new CardsNotInHand();
         }
 
-        if (players.getPlayerById(fromPlayer).hasPassedCards()) {
+        if (fromPlayer.hasPassedCards()) {
             throw new PlayerAlreadyPassedCards();
         }
 
@@ -84,52 +86,57 @@ public class Game {
             throw new PlayerAlreadyPassedCards();
         }
 
-        PlayerId playerToPassTo = choosePlayerToPassTo(fromPlayer);
-        PlayerId playerToReceiveFrom = choosePlayerToReceiveFrom(fromPlayer);
+        PlayerId playerToPassTo = choosePlayerToPassTo(fromPlayerId);
+        PlayerId playerToReceiveFrom = choosePlayerToReceiveFrom(fromPlayerId);
 
-        applyNewEvent(new PlayerPassedCards(fromPlayer, playerToPassTo, cards));
+        applyNewEvent(new PlayerPassedCards(fromPlayerId, playerToPassTo, cards));
 
-        receiveCards(fromPlayer, playerToPassTo, playerToReceiveFrom);
+        receiveCards(fromPlayerId, playerToPassTo, playerToReceiveFrom);
 
         if (players.allReceivedCards()) {
             startPlaying();
         }
     }
 
-    private void receiveCards(PlayerId fromPlayer, PlayerId playerToPassTo, PlayerId playerToReceiveFrom) {
-        if (players.getPlayerById(playerToPassTo).hasPassedCards() && !players.getPlayerById(playerToPassTo)
-                .hasReceivedCards()) {
-            receiveCards(playerToPassTo);
+    private void receiveCards(PlayerId fromPlayerId, PlayerId playerToPassToId, PlayerId playerToReceiveFromId) {
+        Player playerToPassTo = players.getPlayerById(playerToPassToId);
+
+        if (playerToPassTo.hasPassedCards() && !playerToPassTo.hasReceivedCards()) {
+            receiveCards(playerToPassToId);
         }
 
-        if (players.getPlayerById(playerToReceiveFrom).hasPassedCards()) {
-            receiveCards(fromPlayer);
+        Player playerToReceiveFrom = players.getPlayerById(playerToReceiveFromId);
+
+        if (playerToReceiveFrom.hasPassedCards()) {
+            receiveCards(fromPlayerId);
         }
     }
 
-    public void playCard(PlayerId player, Card card) {
+    public void playCard(PlayerId playerId, Card card) {
         if (!gamePhase.equals(GamePhase.PLAYING)) {
             throw new NotPlayersTurn();
         }
 
-        boolean isPlayersTurn = leadingPlayer.equals(player) && !trick.hasPlayedCard(player);
+        boolean isPlayersTurn = leadingPlayer.equals(playerId) && !trick.hasPlayedCard(playerId);
 
         if (!isPlayersTurn) {
             throw new NotPlayersTurn();
         }
 
-        if (!players.getPlayerById(player).hasCard(card)) {
+        Player player = players.getPlayerById(playerId);
+
+        if (!player.hasCard(card)) {
             throw new CardNotInHand();
         }
 
-        Optional<String> validationError = validateCardPlay(player, card);
+        Optional<String> validationError = validateCardPlay(playerId, card);
         if (validationError.isPresent()) {
             throw new InvalidCardPlayed(validationError.get());
         }
 
-        PlayerId nextLeadingPlayer = chooseNextLeadingPlayer(player);
+        PlayerId nextLeadingPlayer = chooseNextLeadingPlayer(playerId);
 
-        applyNewEvent(new CardPlayed(player, card, nextLeadingPlayer));
+        applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer));
 
         if (trick.numberOfPlayedCards() == players.size()) {
             applyNewEvent(new TrickWon(trick.decideWinner()));
@@ -141,15 +148,17 @@ public class Game {
         }
     }
 
-    private Optional<String> validateCardPlay(PlayerId player, Card card) {
-        if (players.getPlayerById(player).hasCard(OPENING_CARD) && !OPENING_CARD.equals(card)) {
+    private Optional<String> validateCardPlay(PlayerId playerId, Card card) {
+        Player player = players.getPlayerById(playerId);
+
+        if (player.hasCard(OPENING_CARD) && !OPENING_CARD.equals(card)) {
             return Optional.of("You must open with the two of clubs");
         }
 
         if (!trick.isEmpty()) {
             Suite trickSuite = trick.suite();
 
-            boolean playerCanFollowSuite = players.getPlayerById(player).anyCard(Card.matchingSuite(trickSuite));
+            boolean playerCanFollowSuite = player.anyCard(Card.matchingSuite(trickSuite));
             boolean playerFollowsSuite = trickSuite == card.suite();
             boolean isValidPlay = playerFollowsSuite || !playerCanFollowSuite;
 
@@ -236,8 +245,10 @@ public class Game {
     }
 
     public void applyEvent(PlayerPassedCards event) {
-        players.getPlayerById(event.fromPlayer()).markCardsPassed();
-        players.getPlayerById(event.fromPlayer()).takeCards(event.passedCards());
+        Player fromPlayer = players.getPlayerById(event.fromPlayer());
+
+        fromPlayer.markCardsPassed();
+        fromPlayer.takeCards(event.passedCards());
         cardsToReceive.put(event.toPlayer(), event.passedCards());
     }
 
@@ -247,8 +258,10 @@ public class Game {
     }
 
     public void applyEvent(PlayerReceivedCards event) {
-        players.getPlayerById(event.toPlayer()).markCardsReceived();
-        players.getPlayerById(event.toPlayer()).giveCards(event.cards());
+        Player toPlayer = players.getPlayerById(event.toPlayer());
+
+        toPlayer.markCardsReceived();
+        toPlayer.giveCards(event.cards());
     }
 
     private void startPlaying() {
@@ -262,9 +275,11 @@ public class Game {
     }
 
     private void applyEvent(CardPlayed event) {
+        Player placedBy = players.getPlayerById(event.playedBy());
+
         trick.play(event.card(), event.playedBy());
         leadingPlayer = event.nextLeadingPlayer();
-        players.getPlayerById(event.playedBy()).takeCard(event.card());
+        placedBy.takeCard(event.card());
     }
 
     private void applyEvent(TrickWon event) {
