@@ -102,11 +102,11 @@ public class Game {
             throw new InvalidCardPlayed(validationError.get());
         }
 
-        PlayerId nextLeadingPlayer = chooseNextLeadingPlayer(playerId);
+        Optional<PlayerId> nextLeadingPlayer = chooseNextLeadingPlayer(playerId);
 
-        applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer));
+        applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer.orElse(null)));
 
-        if (table.numberOfPlayedCards() == players.size()) {
+        if (trickFinished(table.numberOfPlayedCards())) {
             applyNewEvent(new TrickWon(table.trick().winner()));
         }
 
@@ -114,6 +114,10 @@ public class Game {
             applyNewEvent(new RoundEnded(scoreCalculator.countRoundScores(table.wonTricks())));
             dealCards();
         }
+    }
+
+    private boolean trickFinished(int numberOfPlayedCards) {
+        return numberOfPlayedCards == players.size();
     }
 
     private Optional<String> validateCardPlay(PlayerId playerId, Card card) {
@@ -136,8 +140,12 @@ public class Game {
         return Optional.empty();
     }
 
-    private PlayerId chooseNextLeadingPlayer(PlayerId player) {
-        return players.choosePlayerWithOffset(player, 1);
+    private Optional<PlayerId> chooseNextLeadingPlayer(PlayerId player) {
+        if (trickFinished(table.numberOfPlayedCards() + 1)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(players.choosePlayerWithOffset(player, 1));
     }
 
     private PlayerId choosePlayerToPassTo(PlayerId fromPlayer) {
@@ -247,7 +255,7 @@ public class Game {
         Player placedBy = players.getPlayerById(event.playedBy());
 
         placedBy.play(event.card(), table);
-        leadingPlayer = event.nextLeadingPlayer();
+        leadingPlayer = event.nextLeadingPlayer().orElse(null);
     }
 
     private void applyEvent(TrickWon event) {

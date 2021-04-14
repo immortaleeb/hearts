@@ -23,6 +23,7 @@ import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.startedPlayingCardsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -64,7 +65,7 @@ public class PlayCardSpec extends GameSpec {
         playCard(player2(), Card.of(Suite.CLUBS, Rank.TWO));
 
         assertEvent(CardPlayed.class, event -> {
-            assertThat(event.nextLeadingPlayer(), is(equalTo(player3())));
+            assertThat(event.nextLeadingPlayer().get(), is(equalTo(player3())));
         });
     }
 
@@ -74,7 +75,7 @@ public class PlayCardSpec extends GameSpec {
         playCard(player3(), Card.of(Suite.CLUBS, Rank.TEN));
 
         List<CardPlayed> events = getEvents(CardPlayed.class);
-        assertThat(events.get(1).nextLeadingPlayer(), is(equalTo(player4())));
+        assertThat(events.get(1).nextLeadingPlayer().get(), is(equalTo(player4())));
     }
 
     @Test
@@ -185,6 +186,16 @@ public class PlayCardSpec extends GameSpec {
         playCard(player3(), Card.of(Suite.DIAMONDS, Rank.THREE));
 
         assertThat(getEvents(CardPlayed.class), hasSize(5));
+    }
+
+    @Test
+    void next_leading_player_is_empty_when_trick_is_finished() {
+        playCard(player2(), Card.of(Suite.CLUBS, Rank.TWO));
+        playCard(player3(), Card.of(Suite.CLUBS, Rank.TEN));
+        playCard(player4(), Card.of(Suite.SPADES, Rank.TWO));
+        playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
+
+        assertThat(getEvents(CardPlayed.class).get(3).nextLeadingPlayer().isEmpty(), is(equalTo(true)));
     }
 
     @Test

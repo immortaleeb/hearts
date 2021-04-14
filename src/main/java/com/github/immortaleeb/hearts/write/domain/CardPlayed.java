@@ -3,6 +3,8 @@ package com.github.immortaleeb.hearts.write.domain;
 import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
+import java.util.Optional;
+
 public final class CardPlayed implements GameEvent {
 
     private final PlayerId playedBy;
@@ -23,8 +25,8 @@ public final class CardPlayed implements GameEvent {
         return card;
     }
 
-    public PlayerId nextLeadingPlayer() {
-        return nextLeadingPlayer;
+    public Optional<PlayerId> nextLeadingPlayer() {
+        return Optional.ofNullable(nextLeadingPlayer);
     }
 
     @Override
