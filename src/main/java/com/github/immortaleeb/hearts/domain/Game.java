@@ -86,12 +86,12 @@ public class Game {
             throw new PlayerAlreadyPassedCards();
         }
 
-        PlayerId playerToPassTo = choosePlayerToPassTo(fromPlayerId);
-        PlayerId playerToReceiveFrom = choosePlayerToReceiveFrom(fromPlayerId);
+        PlayerId playerToPassToId = choosePlayerToPassTo(fromPlayerId);
+        PlayerId playerToReceiveFromId = choosePlayerToReceiveFrom(fromPlayerId);
 
-        applyNewEvent(new PlayerPassedCards(fromPlayerId, playerToPassTo, cards));
+        applyNewEvent(new PlayerPassedCards(fromPlayerId, playerToPassToId, cards));
 
-        receiveCards(fromPlayerId, playerToPassTo, playerToReceiveFrom);
+        receiveCards(fromPlayerId, playerToPassToId, playerToReceiveFromId);
 
         if (players.allReceivedCards()) {
             startPlaying();
