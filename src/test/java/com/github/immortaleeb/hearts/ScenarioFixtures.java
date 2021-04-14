@@ -9,6 +9,7 @@ import com.github.immortaleeb.hearts.write.domain.RoundEnded;
 import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hearts.write.shared.GameId;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Rank;
 import com.github.immortaleeb.hearts.write.shared.Suite;
@@ -24,7 +25,7 @@ public class ScenarioFixtures {
 
     public static Events gameStartedWith(List<PlayerId> players) {
         return Events.of(
-                new GameStarted(players),
+                new GameStarted(gameId(), players),
                 new CardsDealt(fixedPlayerHands(players))
         );
     }
@@ -36,7 +37,7 @@ public class ScenarioFixtures {
     }
 
     public static Events playedRoundsWith(int numberOfRounds, List<PlayerId> players) {
-        Events events = Events.of(new GameStarted(players));
+        Events events = Events.of(new GameStarted(gameId(), players));
 
         for (int i = 0; i < numberOfRounds; i++) {
             events.add(new CardsDealt(fixedPlayerHands(players)));
@@ -54,8 +55,8 @@ public class ScenarioFixtures {
                 .add(new CardsDealt(fixedPlayerHands(players)));
     }
 
-    // helper methods
 
+    // helper methods
     private static Events cardsPassedFor(List<PlayerId> players) {
         return Events.of(
                 new PlayerPassedCards(players.get(0), players.get(1), threeCardsOfSuite(Suite.HEARTS)),
@@ -194,6 +195,10 @@ public class ScenarioFixtures {
         }}));
 
         return events;
+    }
+
+    private static GameId gameId() {
+        return GameId.generate();
     }
 
 }

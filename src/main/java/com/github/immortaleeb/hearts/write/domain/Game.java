@@ -262,7 +262,7 @@ public class Game {
 
     public static Game startWith(List<PlayerId> players) {
         Game game = new Game(GameId.generate());
-        game.applyNewEvent(new GameStarted(players));
+        game.applyNewEvent(new GameStarted(game.id, players));
 
         game.dealCards();
 

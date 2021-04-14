@@ -16,7 +16,7 @@ public final class StartedPlaying implements GameEvent {
 
     @Override
     public String toString() {
-        return "RoundStarted{" + "leadingPlayer=" + leadingPlayer + '}';
+        return "StartedPlaying{" + "leadingPlayer=" + leadingPlayer + '}';
     }
 
 }
