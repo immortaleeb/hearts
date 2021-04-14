@@ -30,10 +30,8 @@ public class InMemoryGameRepository implements GameRepository {
     public Game load(GameId gameId) {
         Game game = new Game(gameId);
 
-        print("=== load");
         for (GameEvent event : getEvents(gameId)) {
             game.apply(event);
-            print(event);
         }
         return game;
     }
@@ -42,6 +40,8 @@ public class InMemoryGameRepository implements GameRepository {
     public void save(Game game) {
         List<GameEvent> events = raisedEvents.computeIfAbsent(game.id(), id -> new ArrayList<>());
         events.addAll(game.raisedEvents());
+
+        game.raisedEvents().forEach(this::print);
     }
 
     public List<GameEvent> getEvents(GameId gameId) {
