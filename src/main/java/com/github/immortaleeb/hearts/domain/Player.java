@@ -25,6 +25,11 @@ class Player {
         return hand;
     }
 
+    public void takeDealtCards(List<Card> cards) {
+        hand.receive(cards);
+        passedCards = false;
+    }
+
     public boolean hasPassedCards() {
         return passedCards;
     }
@@ -40,10 +45,6 @@ class Player {
         hand.take(cards);
         table.passCardsTo(toPlayer, cards);
         passedCards = true;
-    }
-
-    public void reset() {
-        this.passedCards = false;
     }
 
     public static List<Player> listOf(List<PlayerId> playerIds) {

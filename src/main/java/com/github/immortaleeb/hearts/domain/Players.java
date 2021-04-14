@@ -27,14 +27,13 @@ class Players {
         return players.get(toPlayerIndex).id();
     }
 
-    public void dealCards(Map<PlayerId, List<Card>> playerHands) {
-        for (Map.Entry<PlayerId, List<Card>> entry : playerHands.entrySet()) {
-            Player player = getPlayerById(entry.getKey());
-            List<Card> cards = entry.getValue();
+    public void takeDealtCards(Map<PlayerId, List<Card>> playerHands) {
+        playerHands.forEach(this::takeDealtCards);
+    }
 
-            player.hand().receive(cards);
-            player.reset();
-        }
+    private void takeDealtCards(PlayerId playerId, List<Card> cards) {
+        Player player = getPlayerById(playerId);
+        player.takeDealtCards(cards);
     }
 
     public boolean allPassedCards() {
@@ -49,7 +48,7 @@ class Players {
                 .get();
     }
 
-    public List<PlayerId> toIds() {
+    public List<PlayerId> ids() {
         return players.stream()
                 .map(Player::id)
                 .collect(Collectors.toList());

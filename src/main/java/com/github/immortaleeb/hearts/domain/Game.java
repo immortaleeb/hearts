@@ -27,7 +27,10 @@ public class Game {
     private static final int SHOOT_FOR_THE_MOON_SCORE = 26;
 
     private final GameId id;
+
     private final Table table = new Table();
+    private final Dealer dealer = new Dealer(CARDS_PER_HAND);
+
     private Players players;
     private PlayerId leadingPlayer;
     private Trick trick = Trick.empty();
@@ -47,24 +50,12 @@ public class Game {
     }
 
     private void dealCards() {
-        Map<PlayerId, List<Card>> playerHands = dealHands();
+        Map<PlayerId, List<Card>> playerHands = dealer.deal(players.ids());
         applyNewEvent(new CardsDealt(playerHands));
 
         if (!shouldPassCardsThisRounds()) {
             startPlaying();
         }
-    }
-
-    private Map<PlayerId, List<Card>> dealHands() {
-        Map<PlayerId, List<Card>> playerHands = new HashMap<>();
-
-        Deck deck = Deck.standard().shuffle();
-
-        for (PlayerId player : this.players.toIds()) {
-            playerHands.put(player, deck.takeCards(CARDS_PER_HAND));
-        }
-
-        return playerHands;
     }
 
     public void passCards(PlayerId fromPlayerId, List<Card> cards) {
@@ -226,7 +217,7 @@ public class Game {
     }
 
     public void applyEvent(CardsDealt event) {
-        players.dealCards(event.playerHands());
+        players.takeDealtCards(event.playerHands());
         roundNumber++;
     }
 
