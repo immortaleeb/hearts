@@ -30,6 +30,7 @@ public class Game {
 
     private final Table table = new Table();
     private final Dealer dealer = new Dealer(CARDS_PER_HAND);
+    private final TrickScoreCalculator scoreCalculator = new TrickScoreCalculator();
 
     private Players players;
     private PlayerId leadingPlayer;
@@ -280,7 +281,7 @@ public class Game {
     }
 
     private void countScores(Trick trick) {
-        int trickScore = trick.calculateScore();
+        int trickScore = scoreCalculator.calculateScore(trick.cards());
         scores.compute(trick.decideWinner(), (k, score) -> score + trickScore);
     }
 

@@ -8,6 +8,7 @@ import com.github.immortaleeb.hearts.shared.Suite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 class Trick {
 
@@ -41,21 +42,9 @@ class Trick {
         return winningCard.playedBy();
     }
 
-    public int calculateScore() {
+    public Stream<Card> cards() {
         return playedCards.stream()
-                .map(PlayedCard::card)
-                .mapToInt(this::scoreOf)
-                .sum();
-    }
-
-    private int scoreOf(Card card) {
-        if (card.matchesSuite(Suite.HEARTS)) {
-            return 1;
-        } else if (card.equals(Card.of(Suite.SPADES, Rank.QUEEN))) {
-            return 13;
-        }
-
-        return 0;
+                .map(PlayedCard::card);
     }
 
     public void play(Card card, PlayerId playedBy) {
