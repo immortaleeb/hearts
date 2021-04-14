@@ -1,0 +1,14 @@
+package com.github.immortaleeb.hearts.write.infrastructure;
+
+import com.github.immortaleeb.hearts.write.domain.GameEvent;
+import com.github.immortaleeb.hearts.write.shared.GameId;
+
+import java.util.List;
+
+public interface EventStore {
+
+    List<GameEvent> loadAll(GameId gameId);
+
+    void store(GameId gameId, List<GameEvent> events);
+
+}
