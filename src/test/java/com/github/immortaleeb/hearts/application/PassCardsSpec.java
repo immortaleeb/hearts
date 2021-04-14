@@ -2,9 +2,8 @@ package com.github.immortaleeb.hearts.application;
 
 import com.github.immortaleeb.hearts.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.domain.CardPlayed;
-import com.github.immortaleeb.hearts.domain.GameEvent;
 import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
-import com.github.immortaleeb.hearts.domain.PlayerReceivedCards;
+import com.github.immortaleeb.hearts.domain.PlayerHasTakenPassedCards;
 import com.github.immortaleeb.hearts.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardsNotInHand;
@@ -109,16 +108,16 @@ public class PassCardsSpec {
 
         @Test
         void player_receives_cards_after_passing_their_cards() {
-            assertNoEvent(PlayerReceivedCards.class);
+            assertNoEvent(PlayerHasTakenPassedCards.class);
 
             List<Card> passedCards = threeCardsOfSuite(Suite.SPADES);
             passCards(player4(), passedCards);
 
-            assertNoEvent(PlayerReceivedCards.class);
+            assertNoEvent(PlayerHasTakenPassedCards.class);
 
             passCards(player1(), threeCardsOfSuite(Suite.HEARTS));
 
-            assertEvent(PlayerReceivedCards.class, event -> {
+            assertEvent(PlayerHasTakenPassedCards.class, event -> {
                 assertThat(event.fromPlayer(), is(equalTo(player4())));
                 assertThat(event.toPlayer(), is(equalTo(player1())));
                 assertThat(event.cards(), is(equalTo(passedCards)));
@@ -205,16 +204,16 @@ public class PassCardsSpec {
 
         @Test
         void player_receives_cards_after_passing_their_cards() {
-            assertNoEvent(PlayerReceivedCards.class);
+            assertNoEvent(PlayerHasTakenPassedCards.class);
 
             List<Card> passedCards = threeCardsOfSuite(Suite.CLUBS);
             passCards(player2(), passedCards);
 
-            assertNoEvent(PlayerReceivedCards.class);
+            assertNoEvent(PlayerHasTakenPassedCards.class);
 
             passCards(player1(), threeCardsOfSuite(Suite.HEARTS));
 
-            assertEvent(PlayerReceivedCards.class, event -> {
+            assertEvent(PlayerHasTakenPassedCards.class, event -> {
                 assertThat(event.fromPlayer(), is(equalTo(player2())));
                 assertThat(event.toPlayer(), is(equalTo(player1())));
                 assertThat(event.cards(), is(equalTo(passedCards)));

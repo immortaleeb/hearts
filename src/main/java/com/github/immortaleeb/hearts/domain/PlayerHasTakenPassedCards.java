@@ -5,13 +5,13 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.List;
 
-public final class PlayerReceivedCards implements GameEvent {
+public final class PlayerHasTakenPassedCards implements GameEvent {
 
     private final PlayerId fromPlayer;
     private final PlayerId toPlayer;
     private final List<Card> cards;
 
-    public PlayerReceivedCards(PlayerId fromPlayer, PlayerId toPlayer, List<Card> cards) {
+    public PlayerHasTakenPassedCards(PlayerId fromPlayer, PlayerId toPlayer, List<Card> cards) {
         this.fromPlayer = fromPlayer;
         this.toPlayer = toPlayer;
         this.cards = cards;

@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.domain;
 
+import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.List;
@@ -10,7 +11,6 @@ class Player {
     private final PlayerId id;
     private final Hand hand;
     private boolean passedCards;
-    private boolean receivedCards;
 
     private Player(PlayerId id) {
         this.id = id;
@@ -25,25 +25,25 @@ class Player {
         return hand;
     }
 
-    public void markCardsPassed() {
-        passedCards = true;
-    }
-
     public boolean hasPassedCards() {
         return passedCards;
     }
 
-    public void markCardsReceived() {
-        receivedCards = true;
+    public void takePassedCardsFrom(Table table) {
+        List<Card> passedCards = table.cardsPassedTo(id);
+
+        table.takeCardsPassedTo(id);
+        hand.receive(passedCards);
     }
 
-    public boolean hasReceivedCards() {
-        return receivedCards;
+    public void passCardsTo(PlayerId toPlayer, List<Card> cards, Table table) {
+        hand.take(cards);
+        table.passCardsTo(toPlayer, cards);
+        passedCards = true;
     }
 
     public void reset() {
         this.passedCards = false;
-        this.receivedCards = false;
     }
 
     public static List<Player> listOf(List<PlayerId> playerIds) {

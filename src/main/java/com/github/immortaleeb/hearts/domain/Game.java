@@ -27,8 +27,8 @@ public class Game {
     private static final int SHOOT_FOR_THE_MOON_SCORE = 26;
 
     private final GameId id;
+    private final Table table = new Table();
     private Players players;
-    private final Map<PlayerId, List<Card>> cardsToReceive = new HashMap<>();
     private PlayerId leadingPlayer;
     private Trick trick = Trick.empty();
     private int tricksPlayed = 0;
@@ -87,28 +87,14 @@ public class Game {
         }
 
         PlayerId playerToPassToId = choosePlayerToPassTo(fromPlayerId);
-        PlayerId playerToReceiveFromId = choosePlayerToReceiveFrom(fromPlayerId);
 
         applyNewEvent(new PlayerPassedCards(fromPlayerId, playerToPassToId, cards));
 
-        receiveCards(fromPlayerId, playerToPassToId, playerToReceiveFromId);
+        takePassedCards(playerToPassToId);
+        takePassedCards(fromPlayerId);
 
-        if (players.allReceivedCards()) {
+        if (players.allPassedCards()) {
             startPlaying();
-        }
-    }
-
-    private void receiveCards(PlayerId fromPlayerId, PlayerId playerToPassToId, PlayerId playerToReceiveFromId) {
-        Player playerToPassTo = players.getPlayerById(playerToPassToId);
-
-        if (playerToPassTo.hasPassedCards() && !playerToPassTo.hasReceivedCards()) {
-            receiveCards(playerToPassToId);
-        }
-
-        Player playerToReceiveFrom = players.getPlayerById(playerToReceiveFromId);
-
-        if (playerToReceiveFrom.hasPassedCards()) {
-            receiveCards(fromPlayerId);
         }
     }
 
@@ -212,8 +198,8 @@ public class Game {
             applyEvent((CardsDealt) event);
         } else if (event instanceof PlayerPassedCards) {
             applyEvent((PlayerPassedCards) event);
-        } else if (event instanceof PlayerReceivedCards) {
-            applyEvent((PlayerReceivedCards) event);
+        } else if (event instanceof PlayerHasTakenPassedCards) {
+            applyEvent((PlayerHasTakenPassedCards) event);
         } else if (event instanceof StartedPlaying) {
             applyEvent((StartedPlaying) event);
         } else if (event instanceof CardPlayed) {
@@ -246,22 +232,21 @@ public class Game {
 
     public void applyEvent(PlayerPassedCards event) {
         Player fromPlayer = players.getPlayerById(event.fromPlayer());
-
-        fromPlayer.markCardsPassed();
-        fromPlayer.hand().take(event.passedCards());
-        cardsToReceive.put(event.toPlayer(), event.passedCards());
+        fromPlayer.passCardsTo(event.toPlayer(), event.passedCards(), table);
     }
 
-    private void receiveCards(PlayerId toPlayer) {
-        PlayerId fromPlayer = choosePlayerToReceiveFrom(toPlayer);
-        applyNewEvent(new PlayerReceivedCards(fromPlayer, toPlayer, cardsToReceive.get(toPlayer)));
+    private void takePassedCards(PlayerId toPlayerId) {
+        Player toPlayer = players.getPlayerById(toPlayerId);
+
+        if (toPlayer.hasPassedCards() && table.hasCardsPassedTo(toPlayerId)) {
+            PlayerId fromPlayer = choosePlayerToReceiveFrom(toPlayerId);
+            applyNewEvent(new PlayerHasTakenPassedCards(fromPlayer, toPlayerId, table.cardsPassedTo(toPlayerId)));
+        }
     }
 
-    public void applyEvent(PlayerReceivedCards event) {
+    public void applyEvent(PlayerHasTakenPassedCards event) {
         Player toPlayer = players.getPlayerById(event.toPlayer());
-
-        toPlayer.markCardsReceived();
-        toPlayer.hand().receive(event.cards());
+        toPlayer.takePassedCardsFrom(table);
     }
 
     private void startPlaying() {

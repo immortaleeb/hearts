@@ -37,8 +37,8 @@ class Players {
         }
     }
 
-    public boolean allReceivedCards() {
-        return players.stream().allMatch(Player::hasReceivedCards);
+    public boolean allPassedCards() {
+        return players.stream().allMatch(Player::hasPassedCards);
     }
 
     public PlayerId getPlayerWithCard(Card card) {
