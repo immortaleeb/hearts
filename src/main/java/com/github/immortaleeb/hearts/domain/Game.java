@@ -84,9 +84,13 @@ public class Game {
         takePassedCards(playerToPassToId);
         takePassedCards(fromPlayerId);
 
-        if (players.allPassedCards()) {
+        if (allPlayersPassedCards()) {
             startPlaying();
         }
+    }
+
+    private boolean allPlayersPassedCards() {
+        return players.all(Player::hasPassedCards);
     }
 
     public void playCard(PlayerId playerId, Card card) {
@@ -217,8 +221,13 @@ public class Game {
     }
 
     public void applyEvent(CardsDealt event) {
-        players.takeDealtCards(event.playerHands());
+        players.forEach(player -> takeDealtCards(player, event.playerHands()));
         roundNumber++;
+    }
+
+    private void takeDealtCards(Player player, Map<PlayerId, List<Card>> dealtCards) {
+        List<Card> hand = dealtCards.get(player.id());
+        player.takeDealtCards(hand);
     }
 
     public void applyEvent(PlayerPassedCards event) {
@@ -241,8 +250,12 @@ public class Game {
     }
 
     private void startPlaying() {
-        PlayerId leadingPlayer = players.getPlayerWithCard(OPENING_CARD);
-        applyNewEvent(new StartedPlaying(leadingPlayer));
+        Player leadingPlayer = playerWithOpeningCard();
+        applyNewEvent(new StartedPlaying(leadingPlayer.id()));
+    }
+
+    private Player playerWithOpeningCard() {
+        return players.where(player -> player.hand().contains(OPENING_CARD));
     }
 
     public void applyEvent(StartedPlaying event) {

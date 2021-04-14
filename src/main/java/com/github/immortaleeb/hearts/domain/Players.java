@@ -1,10 +1,10 @@
 package com.github.immortaleeb.hearts.domain;
 
-import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.List;
-import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,33 +27,6 @@ class Players {
         return players.get(toPlayerIndex).id();
     }
 
-    public void takeDealtCards(Map<PlayerId, List<Card>> playerHands) {
-        playerHands.forEach(this::takeDealtCards);
-    }
-
-    private void takeDealtCards(PlayerId playerId, List<Card> cards) {
-        Player player = getPlayerById(playerId);
-        player.takeDealtCards(cards);
-    }
-
-    public boolean allPassedCards() {
-        return players.stream().allMatch(Player::hasPassedCards);
-    }
-
-    public PlayerId getPlayerWithCard(Card card) {
-        return players.stream()
-                .filter(player -> player.hand().contains(card))
-                .findFirst()
-                .map(Player::id)
-                .get();
-    }
-
-    public List<PlayerId> ids() {
-        return players.stream()
-                .map(Player::id)
-                .collect(Collectors.toList());
-    }
-
     private int indexOf(PlayerId playerId) {
         return IntStream.range(0, players.size())
                 .filter(i -> players.get(i).id().equals(playerId))
@@ -62,10 +35,29 @@ class Players {
     }
 
     public Player getPlayerById(PlayerId playerId) {
+        return where(player -> player.id().equals(playerId));
+    }
+
+    public void forEach(Consumer<Player> playerConsumer) {
+        players.forEach(playerConsumer);
+    }
+
+    public Player where(Predicate<Player> predicate) {
         return players.stream()
-                .filter(player -> player.id().equals(playerId))
+                .filter(predicate)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown player with id " + playerId));
+                .orElseThrow(() -> new IllegalArgumentException("Could not find player matching predicate"));
+    }
+
+    public boolean all(Predicate<Player> predicate) {
+        return players.stream()
+                .allMatch(predicate);
+    }
+
+    public List<PlayerId> ids() {
+        return players.stream()
+                .map(Player::id)
+                .collect(Collectors.toList());
     }
 
     public static Players of(List<PlayerId> playerIds) {
