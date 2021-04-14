@@ -1,10 +1,10 @@
 package com.github.immortaleeb.hearts;
 
-import com.github.immortaleeb.hearts.application.CommandDispatcher;
-import com.github.immortaleeb.hearts.application.StartGame;
-import com.github.immortaleeb.hearts.domain.GameRepository;
-import com.github.immortaleeb.hearts.infrastructure.InMemoryGameRepository;
-import com.github.immortaleeb.hearts.shared.PlayerId;
+import com.github.immortaleeb.hearts.write.application.CommandDispatcher;
+import com.github.immortaleeb.hearts.write.application.StartGame;
+import com.github.immortaleeb.hearts.write.domain.GameRepository;
+import com.github.immortaleeb.hearts.write.infrastructure.InMemoryGameRepository;
+import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
 import java.util.Arrays;
 import java.util.List;

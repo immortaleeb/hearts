@@ -1,6 +1,6 @@
 package com.github.immortaleeb.hearts;
 
-import com.github.immortaleeb.hearts.shared.PlayerId;
+import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
 import java.util.Arrays;
 import java.util.List;

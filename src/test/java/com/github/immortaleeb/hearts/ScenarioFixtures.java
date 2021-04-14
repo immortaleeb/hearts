@@ -1,17 +1,17 @@
 package com.github.immortaleeb.hearts;
 
-import com.github.immortaleeb.hearts.domain.CardPlayed;
-import com.github.immortaleeb.hearts.domain.CardsDealt;
-import com.github.immortaleeb.hearts.domain.GameStarted;
-import com.github.immortaleeb.hearts.domain.PlayerPassedCards;
-import com.github.immortaleeb.hearts.domain.PlayerHasTakenPassedCards;
-import com.github.immortaleeb.hearts.domain.RoundEnded;
-import com.github.immortaleeb.hearts.domain.StartedPlaying;
-import com.github.immortaleeb.hearts.domain.TrickWon;
-import com.github.immortaleeb.hearts.shared.Card;
-import com.github.immortaleeb.hearts.shared.PlayerId;
-import com.github.immortaleeb.hearts.shared.Rank;
-import com.github.immortaleeb.hearts.shared.Suite;
+import com.github.immortaleeb.hearts.write.domain.CardPlayed;
+import com.github.immortaleeb.hearts.write.domain.CardsDealt;
+import com.github.immortaleeb.hearts.write.domain.GameStarted;
+import com.github.immortaleeb.hearts.write.domain.PlayerPassedCards;
+import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
+import com.github.immortaleeb.hearts.write.domain.RoundEnded;
+import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.domain.TrickWon;
+import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.hearts.write.shared.Rank;
+import com.github.immortaleeb.hearts.write.shared.Suite;
 import com.github.immortaleeb.hearts.util.Events;
 
 import java.util.HashMap;

@@ -1,8 +1,8 @@
 package com.github.immortaleeb.hearts;
 
-import com.github.immortaleeb.hearts.shared.Card;
-import com.github.immortaleeb.hearts.shared.Rank;
-import com.github.immortaleeb.hearts.shared.Suite;
+import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hearts.write.shared.Rank;
+import com.github.immortaleeb.hearts.write.shared.Suite;
 
 import java.util.Arrays;
 import java.util.List;
