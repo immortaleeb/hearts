@@ -4,7 +4,6 @@ import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -12,13 +11,13 @@ import java.util.stream.Collectors;
 class Player {
 
     private final PlayerId id;
-    private final List<Card> hand;
+    private final Hand hand;
     private boolean passedCards;
     private boolean receivedCards;
 
     private Player(PlayerId id) {
         this.id = id;
-        this.hand = new ArrayList<>();
+        this.hand = Hand.empty();
     }
 
     public PlayerId id() {
@@ -42,13 +41,13 @@ class Player {
     }
 
     public void dealCards(List<Card> cards) {
-        this.hand.addAll(cards);
+        this.hand.receive(cards);
         this.passedCards = false;
         this.receivedCards = false;
     }
 
     public void giveCards(List<Card> cards) {
-        this.hand.addAll(cards);
+        this.hand.receive(cards);
     }
 
     public void takeCard(Card card) {
@@ -56,16 +55,11 @@ class Player {
     }
 
     public void takeCards(List<Card> cards) {
-        if (!hasCards(cards)) {
-            throw new CardsNotInHand();
-        }
-
-        this.hand.removeAll(cards);
+        this.hand.take(cards);
     }
 
     public boolean hasCards(List<Card> cards) {
-        return cards.stream()
-            .allMatch(this::hasCard);
+        return hand.contains(cards);
     }
 
     public boolean hasCard(Card card) {
@@ -73,8 +67,7 @@ class Player {
     }
 
     public boolean anyCard(Predicate<Card> predicate) {
-        return hand.stream()
-                .anyMatch(predicate);
+        return hand.anyCard(predicate);
     }
 
     public static List<Player> listOf(List<PlayerId> playerIds) {
