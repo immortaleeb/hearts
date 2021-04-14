@@ -52,4 +52,10 @@ class Player {
                 .map(Player::new)
                 .collect(Collectors.toList());
     }
+
+    public void play(Card card, Table table) {
+        hand.take(card);
+        table.play(card, this.id);
+    }
+
 }

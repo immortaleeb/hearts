@@ -31,15 +31,15 @@ class Trick {
                 .anyMatch(playedCard -> playedCard.playedBy().equals(playerId));
     }
 
-    public PlayerId decideWinner() {
-        Suite trickSuite = playedCards.get(0).suite();
+    public PlayerId winner() {
+        return winningCard().playedBy();
+    }
 
-        PlayedCard winningCard = playedCards.stream()
-                .filter(PlayedCard.matchingSuite(trickSuite))
+    private PlayedCard winningCard() {
+        return playedCards.stream()
+                .filter(PlayedCard.matchingSuite(suite()))
                 .max(PlayedCard.compareByRank())
                 .get();
-
-        return winningCard.playedBy();
     }
 
     public Stream<Card> cards() {

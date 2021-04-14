@@ -34,7 +34,6 @@ public class Game {
 
     private Players players;
     private PlayerId leadingPlayer;
-    private Trick trick = Trick.empty();
     private int tricksPlayed = 0;
     private Map<PlayerId, Integer> scores = new HashMap<>();
     private int roundNumber = 0;
@@ -99,7 +98,7 @@ public class Game {
             throw new NotPlayersTurn();
         }
 
-        boolean isPlayersTurn = leadingPlayer.equals(playerId) && !trick.hasPlayedCard(playerId);
+        boolean isPlayersTurn = leadingPlayer.equals(playerId) && !table.hasPlayedCard(playerId);
 
         if (!isPlayersTurn) {
             throw new NotPlayersTurn();
@@ -120,8 +119,8 @@ public class Game {
 
         applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer));
 
-        if (trick.numberOfPlayedCards() == players.size()) {
-            applyNewEvent(new TrickWon(trick.decideWinner()));
+        if (table.numberOfPlayedCards() == players.size()) {
+            applyNewEvent(new TrickWon(table.trick().winner()));
         }
 
         if (tricksPlayed == TRICKS_PER_ROUND) {
@@ -137,8 +136,8 @@ public class Game {
             return Optional.of("You must open with the two of clubs");
         }
 
-        if (!trick.isEmpty()) {
-            Suite trickSuite = trick.suite();
+        if (table.hasPlayedCards()) {
+            Suite trickSuite = table.trick().suite();
 
             boolean playerCanFollowSuite = player.hand().anyCard(Card.matchingSuite(trickSuite));
             boolean playerFollowsSuite = trickSuite == card.suite();
@@ -267,22 +266,21 @@ public class Game {
     private void applyEvent(CardPlayed event) {
         Player placedBy = players.getPlayerById(event.playedBy());
 
-        trick.play(event.card(), event.playedBy());
+        placedBy.play(event.card(), table);
         leadingPlayer = event.nextLeadingPlayer();
-        placedBy.hand().take(event.card());
     }
 
     private void applyEvent(TrickWon event) {
-        countScores(trick);
+        countScores(table.trick());
 
         leadingPlayer = event.wonBy();
-        trick = Trick.empty();
+        table.clearTrick();
         tricksPlayed++;
     }
 
     private void countScores(Trick trick) {
         int trickScore = scoreCalculator.calculateScore(trick.cards());
-        scores.compute(trick.decideWinner(), (k, score) -> score + trickScore);
+        scores.compute(trick.winner(), (k, score) -> score + trickScore);
     }
 
     private Map<PlayerId, Integer> countRoundScores() {

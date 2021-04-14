@@ -10,6 +10,7 @@ import java.util.Map;
 class Table {
 
     private final Map<PlayerId, List<Card>> passedCards;
+    private Trick trick = Trick.empty();
 
     public Table() {
         this.passedCards = new HashMap<>();
@@ -29,6 +30,30 @@ class Table {
 
     public void takeCardsPassedTo(PlayerId toPlayer) {
         this.passedCards.remove(toPlayer);
+    }
+
+    public Trick trick() {
+        return trick;
+    }
+
+    public void clearTrick() {
+        trick = Trick.empty();
+    }
+
+    public boolean hasPlayedCard(PlayerId playerId) {
+        return trick.hasPlayedCard(playerId);
+    }
+
+    public boolean hasPlayedCards() {
+        return !trick.isEmpty();
+    }
+
+    public int numberOfPlayedCards() {
+        return trick.numberOfPlayedCards();
+    }
+
+    public void play(Card card, PlayerId playedBy) {
+        trick.play(card, playedBy);
     }
 
 }
