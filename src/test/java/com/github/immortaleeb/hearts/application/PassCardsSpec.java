@@ -8,6 +8,7 @@ import com.github.immortaleeb.hearts.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.IncorrectNumberOfCardsPassed;
+import com.github.immortaleeb.hearts.shared.NoCardsNeedToBePassed;
 import com.github.immortaleeb.hearts.shared.NotPlayersTurn;
 import com.github.immortaleeb.hearts.shared.PlayerAlreadyPassedCards;
 import com.github.immortaleeb.hearts.shared.PlayerId;
@@ -257,7 +258,7 @@ public class PassCardsSpec {
 
         @Test
         void cards_cannot_be_passed() {
-            assertThrows(PlayerAlreadyPassedCards.class, () -> passCards(player1(), threeCardsOfSuite(Suite.HEARTS)));
+            assertThrows(NoCardsNeedToBePassed.class, () -> passCards(player1(), threeCardsOfSuite(Suite.HEARTS)));
         }
 
         @Test

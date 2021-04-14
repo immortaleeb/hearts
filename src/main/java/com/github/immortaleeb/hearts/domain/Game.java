@@ -6,6 +6,7 @@ import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.GameId;
 import com.github.immortaleeb.hearts.shared.IncorrectNumberOfCardsPassed;
 import com.github.immortaleeb.hearts.shared.InvalidCardPlayed;
+import com.github.immortaleeb.hearts.shared.NoCardsNeedToBePassed;
 import com.github.immortaleeb.hearts.shared.NotPlayersTurn;
 import com.github.immortaleeb.hearts.shared.PlayerAlreadyPassedCards;
 import com.github.immortaleeb.hearts.shared.PlayerId;
@@ -72,7 +73,7 @@ public class Game {
         }
 
         if (!shouldPassCardsThisRounds()) {
-            throw new PlayerAlreadyPassedCards();
+            throw new NoCardsNeedToBePassed();
         }
 
         PlayerId playerToPassToId = choosePlayerToPassTo(fromPlayerId);
