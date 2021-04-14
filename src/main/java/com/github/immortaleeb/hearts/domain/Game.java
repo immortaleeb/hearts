@@ -13,7 +13,6 @@ import com.github.immortaleeb.hearts.shared.Rank;
 import com.github.immortaleeb.hearts.shared.Suite;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,14 +27,13 @@ public class Game {
 
     private final GameId id;
 
-    private final Table table = new Table();
+    private Table table;
     private final Dealer dealer = new Dealer(CARDS_PER_HAND);
-    private final TrickScoreCalculator scoreCalculator = new TrickScoreCalculator();
+    private final ScoreCalculator scoreCalculator = new ScoreCalculator(SHOOT_FOR_THE_MOON_SCORE);
 
     private Players players;
     private PlayerId leadingPlayer;
     private int tricksPlayed = 0;
-    private Map<PlayerId, Integer> scores = new HashMap<>();
     private int roundNumber = 0;
     private GamePhase gamePhase = GamePhase.DEALING;
 
@@ -124,7 +122,7 @@ public class Game {
         }
 
         if (tricksPlayed == TRICKS_PER_ROUND) {
-            applyNewEvent(new RoundEnded(countRoundScores()));
+            applyNewEvent(new RoundEnded(scoreCalculator.countRoundScores(table.wonTricks())));
             dealCards();
         }
     }
@@ -210,14 +208,7 @@ public class Game {
 
     public void applyEvent(GameStarted event) {
         players = Players.of(event.players());
-        initializeScores(event.players());
-    }
-
-    private void initializeScores(List<PlayerId> playerIds) {
-        scores = new HashMap<>();
-        for (PlayerId player : playerIds) {
-            scores.put(player, 0);
-        }
+        table = Table.with(event.players());
     }
 
     public void applyEvent(CardsDealt event) {
@@ -271,32 +262,13 @@ public class Game {
     }
 
     private void applyEvent(TrickWon event) {
-        countScores(table.trick());
-
         leadingPlayer = event.wonBy();
         table.clearTrick();
         tricksPlayed++;
     }
 
-    private void countScores(Trick trick) {
-        int trickScore = scoreCalculator.calculateScore(trick.cards());
-        scores.compute(trick.winner(), (k, score) -> score + trickScore);
-    }
-
-    private Map<PlayerId, Integer> countRoundScores() {
-        Optional<PlayerId> playerWhoShotForTheMoon = scores.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue() == SHOOT_FOR_THE_MOON_SCORE)
-                .map(Map.Entry::getKey)
-                .findFirst();
-
-        playerWhoShotForTheMoon.ifPresent(playerId -> scores.compute(playerId, (k, score) -> -score));
-
-        return scores;
-    }
-
     private void applyEvent(RoundEnded event) {
-        // nothing to do
+        table.clearWonTricks();
     }
 
     public static Game startWith(List<PlayerId> players) {
