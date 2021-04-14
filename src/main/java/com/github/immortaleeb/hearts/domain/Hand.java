@@ -23,6 +23,10 @@ class Hand {
         this.cards.addAll(cards);
     }
 
+    public void take(Card card) {
+        take(List.of(card));
+    }
+
     public void take(List<Card> cards) {
         if (!contains(cards)) {
             throw new CardsNotInHand();

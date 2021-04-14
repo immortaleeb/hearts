@@ -74,7 +74,7 @@ public class Game {
 
         Player fromPlayer = players.getPlayerById(fromPlayerId);
 
-        if (!fromPlayer.hasCards(cards)) {
+        if (!fromPlayer.hand().contains(cards)) {
             throw new CardsNotInHand();
         }
 
@@ -125,7 +125,7 @@ public class Game {
 
         Player player = players.getPlayerById(playerId);
 
-        if (!player.hasCard(card)) {
+        if (!player.hand().contains(card)) {
             throw new CardNotInHand();
         }
 
@@ -151,14 +151,14 @@ public class Game {
     private Optional<String> validateCardPlay(PlayerId playerId, Card card) {
         Player player = players.getPlayerById(playerId);
 
-        if (player.hasCard(OPENING_CARD) && !OPENING_CARD.equals(card)) {
+        if (player.hand().contains(OPENING_CARD) && !OPENING_CARD.equals(card)) {
             return Optional.of("You must open with the two of clubs");
         }
 
         if (!trick.isEmpty()) {
             Suite trickSuite = trick.suite();
 
-            boolean playerCanFollowSuite = player.anyCard(Card.matchingSuite(trickSuite));
+            boolean playerCanFollowSuite = player.hand().anyCard(Card.matchingSuite(trickSuite));
             boolean playerFollowsSuite = trickSuite == card.suite();
             boolean isValidPlay = playerFollowsSuite || !playerCanFollowSuite;
 
@@ -248,7 +248,7 @@ public class Game {
         Player fromPlayer = players.getPlayerById(event.fromPlayer());
 
         fromPlayer.markCardsPassed();
-        fromPlayer.takeCards(event.passedCards());
+        fromPlayer.hand().take(event.passedCards());
         cardsToReceive.put(event.toPlayer(), event.passedCards());
     }
 
@@ -261,7 +261,7 @@ public class Game {
         Player toPlayer = players.getPlayerById(event.toPlayer());
 
         toPlayer.markCardsReceived();
-        toPlayer.giveCards(event.cards());
+        toPlayer.hand().receive(event.cards());
     }
 
     private void startPlaying() {
@@ -279,7 +279,7 @@ public class Game {
 
         trick.play(event.card(), event.playedBy());
         leadingPlayer = event.nextLeadingPlayer();
-        placedBy.takeCard(event.card());
+        placedBy.hand().take(event.card());
     }
 
     private void applyEvent(TrickWon event) {

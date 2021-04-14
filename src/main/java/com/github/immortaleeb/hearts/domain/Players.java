@@ -5,7 +5,6 @@ import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,7 +32,8 @@ class Players {
             Player player = getPlayerById(entry.getKey());
             List<Card> cards = entry.getValue();
 
-            player.dealCards(cards);
+            player.hand().receive(cards);
+            player.reset();
         }
     }
 
@@ -43,7 +43,7 @@ class Players {
 
     public PlayerId getPlayerWithCard(Card card) {
         return players.stream()
-                .filter(player -> player.hasCard(card))
+                .filter(player -> player.hand().contains(card))
                 .findFirst()
                 .map(Player::id)
                 .get();
