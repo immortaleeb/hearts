@@ -2,13 +2,10 @@ package com.github.immortaleeb.hearts.domain;
 
 import com.github.immortaleeb.hearts.shared.Card;
 import com.github.immortaleeb.hearts.shared.CardNotInHand;
-import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.GameId;
-import com.github.immortaleeb.hearts.shared.IncorrectNumberOfCardsPassed;
 import com.github.immortaleeb.hearts.shared.InvalidCardPlayed;
 import com.github.immortaleeb.hearts.shared.NoCardsNeedToBePassed;
 import com.github.immortaleeb.hearts.shared.NotPlayersTurn;
-import com.github.immortaleeb.hearts.shared.PlayerAlreadyPassedCards;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 import com.github.immortaleeb.hearts.shared.Rank;
 import com.github.immortaleeb.hearts.shared.Suite;
@@ -32,6 +29,8 @@ public class Game {
     private final Dealer dealer = new Dealer(CARDS_PER_HAND);
     private final ScoreCalculator scoreCalculator = new ScoreCalculator(SHOOT_FOR_THE_MOON_SCORE);
 
+    private final CardPassValidator cardPassValidator = new CardPassValidator(CARDS_TO_PASS);
+
     private Players players;
     private PlayerId leadingPlayer;
     private int tricksPlayed = 0;
@@ -52,29 +51,18 @@ public class Game {
         Map<PlayerId, List<Card>> playerHands = dealer.deal(players.ids());
         applyNewEvent(new CardsDealt(playerHands));
 
-        if (!shouldPassCardsThisRounds()) {
+        if (!shouldPassCardsThisRound()) {
             startPlaying();
         }
     }
 
     public void passCards(PlayerId fromPlayerId, List<Card> cards) {
-        if (cards.size() != CARDS_TO_PASS) {
-            throw new IncorrectNumberOfCardsPassed();
+        if (!shouldPassCardsThisRound()) {
+            throw new NoCardsNeedToBePassed();
         }
 
         Player fromPlayer = players.getPlayerById(fromPlayerId);
-
-        if (!fromPlayer.hand().contains(cards)) {
-            throw new CardsNotInHand();
-        }
-
-        if (fromPlayer.hasPassedCards()) {
-            throw new PlayerAlreadyPassedCards();
-        }
-
-        if (!shouldPassCardsThisRounds()) {
-            throw new NoCardsNeedToBePassed();
-        }
+        cardPassValidator.verifyPassIsValid(fromPlayer, cards);
 
         PlayerId playerToPassToId = choosePlayerToPassTo(fromPlayerId);
 
@@ -160,7 +148,7 @@ public class Game {
         return players.choosePlayerWithOffset(toPlayer, choosePassingDirection().get().fromOffset());
     }
 
-    private boolean shouldPassCardsThisRounds() {
+    private boolean shouldPassCardsThisRound() {
         return choosePassingDirection().isPresent();
     }
 
