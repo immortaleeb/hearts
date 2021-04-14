@@ -5,7 +5,6 @@ import com.github.immortaleeb.hearts.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.shared.PlayerId;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -16,7 +15,6 @@ class Player {
     private final List<Card> hand;
     private boolean passedCards;
     private boolean receivedCards;
-    private boolean playedCard;
 
     private Player(PlayerId id) {
         this.id = id;
@@ -77,14 +75,6 @@ class Player {
     public boolean anyCard(Predicate<Card> predicate) {
         return hand.stream()
                 .anyMatch(predicate);
-    }
-
-    public void markPlayedCard() {
-        playedCard = true;
-    }
-
-    public boolean hasPlayedCard() {
-        return playedCard;
     }
 
     public static List<Player> listOf(List<PlayerId> playerIds) {

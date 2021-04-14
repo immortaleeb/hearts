@@ -17,10 +17,6 @@ class Players {
         this.players = players;
     }
 
-    public Player get(int index) {
-        return players.get(index);
-    }
-
     public int size() {
         return players.size();
     }
@@ -32,18 +28,6 @@ class Players {
         return players.get(toPlayerIndex).id();
     }
 
-    public boolean hasCards(PlayerId playerId, List<Card> cards) {
-        return getPlayerById(playerId).hasCards(cards);
-    }
-
-    public boolean hasCard(PlayerId playerId, Card card) {
-        return getPlayerById(playerId).hasCard(card);
-    }
-
-    public boolean anyCard(PlayerId playerId, Predicate<Card> predicate) {
-        return getPlayerById(playerId).anyCard(predicate);
-    }
-
     public void dealCards(Map<PlayerId, List<Card>> playerHands) {
         for (Map.Entry<PlayerId, List<Card>> entry : playerHands.entrySet()) {
             Player player = getPlayerById(entry.getKey());
@@ -53,36 +37,8 @@ class Players {
         }
     }
 
-    public void giveCards(PlayerId player, List<Card> cards) {
-        getPlayerById(player).giveCards(cards);
-    }
-
-    public void markCardsPassed(PlayerId playerId) {
-        getPlayerById(playerId).markCardsPassed();
-    }
-
-    public boolean hasPassedCards(PlayerId playerId) {
-        return getPlayerById(playerId).hasPassedCards();
-    }
-
-    public void markCardsReceived(PlayerId playerId) {
-        getPlayerById(playerId).markCardsReceived();
-    }
-
-    public boolean hasReceivedCards(PlayerId playerId) {
-        return getPlayerById(playerId).hasReceivedCards();
-    }
-
     public boolean allReceivedCards() {
         return players.stream().allMatch(Player::hasReceivedCards);
-    }
-
-    public void markPlayedCard(PlayerId playerId) {
-        getPlayerById(playerId).markPlayedCard();
-    }
-
-    public boolean allPlayedCards() {
-        return players.stream().allMatch(Player::hasPlayedCard);
     }
 
     public PlayerId getPlayerWithCard(Card card) {
@@ -91,14 +47,6 @@ class Players {
                 .findFirst()
                 .map(Player::id)
                 .get();
-    }
-
-    public void takeCard(PlayerId playerId, Card card) {
-        getPlayerById(playerId).takeCard(card);
-    }
-
-    public void takeCards(PlayerId player, List<Card> cards) {
-        getPlayerById(player).takeCards(cards);
     }
 
     public List<PlayerId> toIds() {
@@ -114,7 +62,7 @@ class Players {
                 .orElse(-1);
     }
 
-    private Player getPlayerById(PlayerId playerId) {
+    public Player getPlayerById(PlayerId playerId) {
         return players.stream()
                 .filter(player -> player.id().equals(playerId))
                 .findFirst()

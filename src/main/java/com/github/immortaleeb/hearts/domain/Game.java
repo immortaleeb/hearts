@@ -72,11 +72,11 @@ public class Game {
             throw new IncorrectNumberOfCardsPassed();
         }
 
-        if (!players.hasCards(fromPlayer, cards)) {
+        if (!players.getPlayerById(fromPlayer).hasCards(cards)) {
             throw new CardsNotInHand();
         }
 
-        if (players.hasPassedCards(fromPlayer)) {
+        if (players.getPlayerById(fromPlayer).hasPassedCards()) {
             throw new PlayerAlreadyPassedCards();
         }
 
@@ -97,11 +97,12 @@ public class Game {
     }
 
     private void receiveCards(PlayerId fromPlayer, PlayerId playerToPassTo, PlayerId playerToReceiveFrom) {
-        if (players.hasPassedCards(playerToPassTo) && !players.hasReceivedCards(playerToPassTo)) {
+        if (players.getPlayerById(playerToPassTo).hasPassedCards() && !players.getPlayerById(playerToPassTo)
+                .hasReceivedCards()) {
             receiveCards(playerToPassTo);
         }
 
-        if (players.hasPassedCards(playerToReceiveFrom)) {
+        if (players.getPlayerById(playerToReceiveFrom).hasPassedCards()) {
             receiveCards(fromPlayer);
         }
     }
@@ -117,7 +118,7 @@ public class Game {
             throw new NotPlayersTurn();
         }
 
-        if (!players.hasCard(player, card)) {
+        if (!players.getPlayerById(player).hasCard(card)) {
             throw new CardNotInHand();
         }
 
@@ -141,14 +142,14 @@ public class Game {
     }
 
     private Optional<String> validateCardPlay(PlayerId player, Card card) {
-        if (players.hasCard(player, OPENING_CARD) && !OPENING_CARD.equals(card)) {
+        if (players.getPlayerById(player).hasCard(OPENING_CARD) && !OPENING_CARD.equals(card)) {
             return Optional.of("You must open with the two of clubs");
         }
 
         if (!trick.isEmpty()) {
             Suite trickSuite = trick.suite();
 
-            boolean playerCanFollowSuite = players.anyCard(player, Card.matchingSuite(trickSuite));
+            boolean playerCanFollowSuite = players.getPlayerById(player).anyCard(Card.matchingSuite(trickSuite));
             boolean playerFollowsSuite = trickSuite == card.suite();
             boolean isValidPlay = playerFollowsSuite || !playerCanFollowSuite;
 
@@ -235,8 +236,8 @@ public class Game {
     }
 
     public void applyEvent(PlayerPassedCards event) {
-        players.markCardsPassed(event.fromPlayer());
-        players.takeCards(event.fromPlayer(), event.passedCards());
+        players.getPlayerById(event.fromPlayer()).markCardsPassed();
+        players.getPlayerById(event.fromPlayer()).takeCards(event.passedCards());
         cardsToReceive.put(event.toPlayer(), event.passedCards());
     }
 
@@ -246,8 +247,8 @@ public class Game {
     }
 
     public void applyEvent(PlayerReceivedCards event) {
-        players.markCardsReceived(event.toPlayer());
-        players.giveCards(event.toPlayer(), event.cards());
+        players.getPlayerById(event.toPlayer()).markCardsReceived();
+        players.getPlayerById(event.toPlayer()).giveCards(event.cards());
     }
 
     private void startPlaying() {
@@ -263,7 +264,7 @@ public class Game {
     private void applyEvent(CardPlayed event) {
         trick.play(event.card(), event.playedBy());
         leadingPlayer = event.nextLeadingPlayer();
-        players.takeCard(event.playedBy(), event.card());
+        players.getPlayerById(event.playedBy()).takeCard(event.card());
     }
 
     private void applyEvent(TrickWon event) {
