@@ -2,6 +2,8 @@ package com.github.immortaleeb.hearts.write.application;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
 import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.play12TricksAnd3CardsofShootForTheMoonRound;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.playRegular12Tricks;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.startedPlayingCardsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -240,30 +242,50 @@ public class PlayCardSpec {
     }
 
     @Nested
-    @DisplayName("other")
-    public class OtherTests extends GameSpec {
+    @DisplayName("given 12 tricks and 2 cards played")
+    public class Given12TricksAnd2CardsPlayed extends GameSpec {
         @Override
         protected Events given() {
-            return startedPlayingCardsWith(players);
+            return startedPlayingCardsWith(players)
+                .addAll(playRegular12Tricks(players))
+                .addAll(
+                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3()),
+                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4())
+                );
         }
 
         @Test
         void round_does_not_end_until_all_players_have_played_13_cards() {
-            play12Tricks();
+            playCard(player4(), Card.of(Suite.SPADES, Rank.TWO));
 
             assertNoEvent(RoundEnded.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("given 12 tricks and 3 cards played in regular round")
+    public class Given12TricksAnd3CardsPlayed extends GameSpec {
+        @Override
+        protected Events given() {
+            return startedPlayingCardsWith(players)
+                .addAll(playRegular12Tricks(players))
+                .addAll(
+                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3()),
+                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4()),
+                    new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1())
+                );
         }
 
         @Test
         void round_ends_when_all_players_have_played_13_cards() {
-            play13Tricks();
+            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
 
             assertEvent(RoundEnded.class);
         }
 
         @Test
         void round_ends_with_correct_scores() {
-            play13Tricks();
+            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
 
             assertEvent(RoundEnded.class, event -> {
                 Map<PlayerId, Integer> scores = event.scores();
@@ -275,21 +297,8 @@ public class PlayCardSpec {
         }
 
         @Test
-        void player_who_shot_for_the_moon_has_score_minus_26() {
-            playShootForTheMoonRound();
-
-            assertEvent(RoundEnded.class, event -> {
-                Map<PlayerId, Integer> scores = event.scores();
-                assertThat(scores.get(player1()), is(equalTo(0)));
-                assertThat(scores.get(player2()), is(equalTo(-26)));
-                assertThat(scores.get(player3()), is(equalTo(0)));
-                assertThat(scores.get(player4()), is(equalTo(0)));
-            });
-        }
-
-        @Test
         void cards_are_dealt_for_round_2_after_round_1_has_ended() {
-            play13Tricks();
+            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
 
             assertEvent(CardsDealt.class, event -> {
                 assertThat(event.playerHands().get(player1()), hasSize(13));
@@ -298,169 +307,28 @@ public class PlayCardSpec {
                 assertThat(event.playerHands().get(player4()), hasSize(13));
             });
         }
+    }
 
-        private void play12Tricks() {
-            // trick 1
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.TWO));
-            playCard(player3(), Card.of(Suite.CLUBS, Rank.ACE));
-            playCard(player4(), Card.of(Suite.DIAMONDS, Rank.ACE));
-            playCard(player1(), Card.of(Suite.SPADES, Rank.ACE));
-
-            // trick 2
-            playCard(player3(), Card.of(Suite.CLUBS, Rank.JACK));
-            playCard(player4(), Card.of(Suite.DIAMONDS, Rank.JACK));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.THREE));
-
-            // trick 3
-            playCard(player3(), Card.of(Suite.CLUBS, Rank.TEN));
-            playCard(player4(), Card.of(Suite.DIAMONDS, Rank.TEN));
-            playCard(player1(), Card.of(Suite.SPADES, Rank.TEN));
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.QUEEN));
-
-            // trick 4
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.NINE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.KING));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.KING));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.KING));
-
-            // trick 5
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.EIGHT));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.QUEEN));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.QUEEN));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.QUEEN));
-
-            // trick 6
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.SEVEN));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.NINE));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.NINE));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.NINE));
-
-            // trick 7
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.SIX));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.EIGHT));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.EIGHT));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.EIGHT));
-
-            // trick 8
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.FIVE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.SEVEN));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.SEVEN));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.SEVEN));
-
-            // trick 9
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.FOUR));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.SIX));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.SIX));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.SIX));
-
-            // trick 10
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.KING));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.FIVE));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.FIVE));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.FIVE));
-
-            // trick 11
-            playCard(player2(), Card.of(Suite.HEARTS, Rank.ACE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.FOUR));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.FOUR));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.FOUR));
-
-            // trick 12
-            playCard(player2(), Card.of(Suite.HEARTS, Rank.JACK));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.THREE));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.THREE));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.THREE));
+    @Nested
+    @DisplayName("given 12 tricks and 3 cards played when player is shooting for the moon")
+    public class Given12TricksAnd3CardsPlayedWhenPlayerIsShootingForTheMoon extends GameSpec {
+        @Override
+        protected Events given() {
+            return startedPlayingCardsWith(players)
+                .addAll(play12TricksAnd3CardsofShootForTheMoonRound(players));
         }
 
-        private void play13Tricks() {
-            play12Tricks();
-
-            // trick 13
-            playCard(player2(), Card.of(Suite.HEARTS, Rank.TEN));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.TWO));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.TWO));
-            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
-        }
-
-        private void playShootForTheMoonRound() {
-            // trick 1
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.TWO));
-            playCard(player3(), Card.of(Suite.CLUBS, Rank.ACE));
-            playCard(player4(), Card.of(Suite.DIAMONDS, Rank.ACE));
-            playCard(player1(), Card.of(Suite.SPADES, Rank.ACE));
-
-            // trick 2
-            playCard(player3(), Card.of(Suite.CLUBS, Rank.JACK));
-            playCard(player4(), Card.of(Suite.DIAMONDS, Rank.JACK));
-            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.KING));
-
-            // trick 3
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.QUEEN));
-            playCard(player3(), Card.of(Suite.CLUBS, Rank.TEN));
-            playCard(player4(), Card.of(Suite.DIAMONDS, Rank.TEN));
-            playCard(player1(), Card.of(Suite.SPADES, Rank.TEN));
-
-            // trick 4
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.NINE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.KING));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.KING));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.KING));
-
-            // trick 5
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.EIGHT));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.QUEEN));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.QUEEN));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.QUEEN));
-
-            // trick 6
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.SEVEN));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.NINE));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.NINE));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.NINE));
-
-            // trick 7
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.SIX));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.EIGHT));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.EIGHT));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.EIGHT));
-
-            // trick 8
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.FIVE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.SEVEN));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.SEVEN));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.SEVEN));
-
-            // trick 9
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.FOUR));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.SIX));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.SIX));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.SIX));
-
-            // trick 10
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.THREE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.FIVE));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.FIVE));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.FIVE));
-
-            // trick 11
-            playCard(player2(), Card.of(Suite.HEARTS, Rank.ACE));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.FOUR));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.FOUR));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.FOUR));
-
-            // trick 12
-            playCard(player2(), Card.of(Suite.HEARTS, Rank.JACK));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.THREE));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.THREE));
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.THREE));
-
-            // trick 13
-            playCard(player2(), Card.of(Suite.HEARTS, Rank.TEN));
-            playCard(player3(), Card.of(Suite.DIAMONDS, Rank.TWO));
-            playCard(player4(), Card.of(Suite.SPADES, Rank.TWO));
+        @Test
+        void player_who_shot_for_the_moon_has_score_minus_26_when_round_ends() {
             playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
+
+            assertEvent(RoundEnded.class, event -> {
+                Map<PlayerId, Integer> scores = event.scores();
+                assertThat(scores.get(player1()), is(equalTo(0)));
+                assertThat(scores.get(player2()), is(equalTo(-26)));
+                assertThat(scores.get(player3()), is(equalTo(0)));
+                assertThat(scores.get(player4()), is(equalTo(0)));
+            });
         }
     }
 
@@ -481,7 +349,5 @@ public class PlayCardSpec {
     private PlayerId player4() {
         return players.get(3);
     }
-
-
 
 }
