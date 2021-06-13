@@ -1,6 +1,7 @@
 package com.github.immortaleeb.hearts.util;
 
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
+import jdk.jfr.Event;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +42,11 @@ public class Events {
     }
 
     public static Events of(GameEvent... events) {
-        return new Events(new ArrayList<>(Arrays.asList(events)));
+        return of(Arrays.asList(events));
+    }
+
+    public static Events of(List<GameEvent> list) {
+        return new Events(new ArrayList<>(list));
     }
 
     public static Events none() {
