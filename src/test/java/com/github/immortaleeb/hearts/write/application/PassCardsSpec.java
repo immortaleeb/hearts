@@ -1,28 +1,5 @@
 package com.github.immortaleeb.hearts.write.application;
 
-import com.github.immortaleeb.hearts.PlayerIdFixtures;
-import com.github.immortaleeb.hearts.write.domain.CardPlayed;
-import com.github.immortaleeb.hearts.write.domain.PlayerPassedCards;
-import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
-import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.CardsNotInHand;
-import com.github.immortaleeb.hearts.write.shared.IncorrectNumberOfCardsPassed;
-import com.github.immortaleeb.hearts.write.shared.NoCardsNeedToBePassed;
-import com.github.immortaleeb.hearts.write.shared.NotPlayersTurn;
-import com.github.immortaleeb.hearts.write.shared.PlayerAlreadyPassedCards;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.shared.Rank;
-import com.github.immortaleeb.hearts.write.shared.Suite;
-import com.github.immortaleeb.hearts.util.Events;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
 import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.gameStartedWith;
@@ -32,14 +9,27 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.github.immortaleeb.hearts.util.Events;
+import com.github.immortaleeb.hearts.write.domain.CardPlayed;
+import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
+import com.github.immortaleeb.hearts.write.domain.PlayerPassedCards;
+import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hearts.write.shared.CardsNotInHand;
+import com.github.immortaleeb.hearts.write.shared.IncorrectNumberOfCardsPassed;
+import com.github.immortaleeb.hearts.write.shared.NoCardsNeedToBePassed;
+import com.github.immortaleeb.hearts.write.shared.NotPlayersTurn;
+import com.github.immortaleeb.hearts.write.shared.PlayerAlreadyPassedCards;
+import com.github.immortaleeb.hearts.write.shared.Rank;
+import com.github.immortaleeb.hearts.write.shared.Suite;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class PassCardsSpec {
-
-    private List<PlayerId> players;
-
-    @BeforeEach
-    void setUp() {
-        players = PlayerIdFixtures.players();
-    }
 
     @DisplayName("when game has started")
     @Nested
@@ -295,24 +285,6 @@ public class PassCardsSpec {
             assertThat(passEvents.get(2).toPlayer(), is(equalTo(player4())));
             assertThat(passEvents.get(3).toPlayer(), is(equalTo(player3())));
         }
-    }
-
-    // helper methods
-
-    private PlayerId player1() {
-        return players.get(0);
-    }
-
-    private PlayerId player2() {
-        return players.get(1);
-    }
-
-    private PlayerId player3() {
-        return players.get(2);
-    }
-
-    private PlayerId player4() {
-        return players.get(3);
     }
 
 }

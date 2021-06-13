@@ -1,12 +1,18 @@
 package com.github.immortaleeb.hearts.write.application;
 
-import com.github.immortaleeb.hearts.PlayerIdFixtures;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+
+import com.github.immortaleeb.hearts.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
 import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
-import com.github.immortaleeb.hearts.util.Events;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -20,16 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-
 class StartGameSpec extends GameSpec {
-
-    private List<PlayerId> players;
 
     @Override
     @BeforeEach
@@ -41,8 +38,6 @@ class StartGameSpec extends GameSpec {
 
     @Override
     protected Events given() {
-        players = PlayerIdFixtures.players();
-
         return Events.none();
     }
 
@@ -95,10 +90,10 @@ class StartGameSpec extends GameSpec {
     // helper methods
 
     private void assertEachHand(Map<PlayerId, List<Card>> playerHands, Matcher<Collection<? extends Card>> matcher) {
-        assertThat(playerHands.get(players.get(0)), matcher);
-        assertThat(playerHands.get(players.get(1)), matcher);
-        assertThat(playerHands.get(players.get(2)), matcher);
-        assertThat(playerHands.get(players.get(3)), matcher);
+        assertThat(playerHands.get(player1()), matcher);
+        assertThat(playerHands.get(player2()), matcher);
+        assertThat(playerHands.get(player3()), matcher);
+        assertThat(playerHands.get(player4()), matcher);
     }
 
     private Matcher<Collection<? extends Card>> hasUniqueItems() {

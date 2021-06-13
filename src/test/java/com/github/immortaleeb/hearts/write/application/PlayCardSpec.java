@@ -11,7 +11,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.github.immortaleeb.hearts.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
@@ -24,7 +23,6 @@ import com.github.immortaleeb.hearts.write.shared.NotPlayersTurn;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Rank;
 import com.github.immortaleeb.hearts.write.shared.Suite;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,13 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayCardSpec {
-
-    private List<PlayerId> players;
-
-    @BeforeEach
-    void setUp() {
-        players = PlayerIdFixtures.players();
-    }
 
     @Nested
     @DisplayName("given no cards have been played yet")
@@ -347,24 +338,6 @@ public class PlayCardSpec {
         private void whenLastCardIsPlayed() {
             playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
         }
-    }
-
-    // helper methods
-
-    private PlayerId player1() {
-        return players.get(0);
-    }
-
-    private PlayerId player2() {
-        return players.get(1);
-    }
-
-    private PlayerId player3() {
-        return players.get(2);
-    }
-
-    private PlayerId player4() {
-        return players.get(3);
     }
 
 }

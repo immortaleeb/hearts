@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.write.application;
 
+import com.github.immortaleeb.hearts.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.infrastructure.FakeGameRepository;
@@ -22,12 +23,14 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 abstract class GameSpec {
 
     protected GameId gameId;
+    protected List<PlayerId> players;
     protected FakeGameRepository gameRepository;
     protected CommandDispatcher dispatcher;
 
     @BeforeEach
     void setUp() {
         gameId = GameId.generate();
+        players = PlayerIdFixtures.players();
 
         Game game = new Game(gameId);
         game.loadFromHistory(given().toList());
@@ -86,6 +89,22 @@ abstract class GameSpec {
 
         assertThat("Expected an event of type " + eventClass, raisedEvents, hasSize(1));
         return eventClass.cast(raisedEvents.get(0));
+    }
+
+    protected PlayerId player1() {
+        return players.get(0);
+    }
+
+    protected PlayerId player2() {
+        return players.get(1);
+    }
+
+    protected PlayerId player3() {
+        return players.get(2);
+    }
+
+    protected PlayerId player4() {
+        return players.get(3);
     }
 
 }
