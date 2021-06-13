@@ -69,7 +69,7 @@ public class PlayCardSpec {
 
         @Test
         void player2_opens_with_two_of_clubs() {
-            playCard(player2(), twoOfClubs());
+            whenTwoOfClubsIsPlayed();
 
             assertEvent(CardPlayed.class, event -> {
                 assertThat(event.playedBy(), is(equalTo(player2())));
@@ -79,11 +79,15 @@ public class PlayCardSpec {
 
         @Test
         void playing_a_card_moves_leading_player_to_player_3_after_player_2() {
-            playCard(player2(), Card.of(Suite.CLUBS, Rank.TWO));
+            whenTwoOfClubsIsPlayed();
 
             assertEvent(CardPlayed.class, event -> {
                 assertThat(event.nextLeadingPlayer().get(), is(equalTo(player3())));
             });
+        }
+
+        private void whenTwoOfClubsIsPlayed() {
+            playCard(player2(), twoOfClubs());
         }
     }
 
@@ -162,12 +166,15 @@ public class PlayCardSpec {
         @Test
         void trick_is_not_won_until_all_players_played_cards() {
             // when
-            playCard(player4(), Card.of(Suite.SPADES, Rank.TWO));
+            whenThirdCardIsPlayed();
 
             // then
             assertNoEvent(TrickWon.class);
         }
 
+        private void whenThirdCardIsPlayed() {
+            playCard(player4(), Card.of(Suite.SPADES, Rank.TWO));
+        }
     }
 
     @Nested
@@ -184,16 +191,14 @@ public class PlayCardSpec {
 
         @Test
         void trick_is_won_when_all_players_played_cards() {
-            // when
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
+            whenFourthCardIsPlayed();
 
-            // then
             assertEvent(TrickWon.class);
         }
 
         @Test
         void player_with_highest_card_following_trick_suite_wins_trick() {
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
+            whenFourthCardIsPlayed();
 
             assertEvent(TrickWon.class, event -> {
                 assertThat(event.wonBy(), is(equalTo(player3())));
@@ -202,11 +207,15 @@ public class PlayCardSpec {
 
         @Test
         void next_leading_player_is_empty_when_trick_is_finished() {
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
+            whenFourthCardIsPlayed();
 
             assertEvent(CardPlayed.class, event -> {
                 assertThat(event.nextLeadingPlayer().isEmpty(), is(equalTo(true)));
             });
+        }
+
+        private void whenFourthCardIsPlayed() {
+            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
         }
 
     }
@@ -278,14 +287,14 @@ public class PlayCardSpec {
 
         @Test
         void round_ends_when_all_players_have_played_13_cards() {
-            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
+            whenLastCardIsPlayed();
 
             assertEvent(RoundEnded.class);
         }
 
         @Test
         void round_ends_with_correct_scores() {
-            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
+            whenLastCardIsPlayed();
 
             assertEvent(RoundEnded.class, event -> {
                 Map<PlayerId, Integer> scores = event.scores();
@@ -298,7 +307,7 @@ public class PlayCardSpec {
 
         @Test
         void cards_are_dealt_for_round_2_after_round_1_has_ended() {
-            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
+            whenLastCardIsPlayed();
 
             assertEvent(CardsDealt.class, event -> {
                 assertThat(event.playerHands().get(player1()), hasSize(13));
@@ -306,6 +315,10 @@ public class PlayCardSpec {
                 assertThat(event.playerHands().get(player3()), hasSize(13));
                 assertThat(event.playerHands().get(player4()), hasSize(13));
             });
+        }
+
+        private void whenLastCardIsPlayed() {
+            playCard(player1(), Card.of(Suite.SPADES, Rank.JACK));
         }
     }
 
@@ -320,7 +333,7 @@ public class PlayCardSpec {
 
         @Test
         void player_who_shot_for_the_moon_has_score_minus_26_when_round_ends() {
-            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
+            whenLastCardIsPlayed();
 
             assertEvent(RoundEnded.class, event -> {
                 Map<PlayerId, Integer> scores = event.scores();
@@ -329,6 +342,10 @@ public class PlayCardSpec {
                 assertThat(scores.get(player3()), is(equalTo(0)));
                 assertThat(scores.get(player4()), is(equalTo(0)));
             });
+        }
+
+        private void whenLastCardIsPlayed() {
+            playCard(player1(), Card.of(Suite.HEARTS, Rank.TWO));
         }
     }
 
