@@ -32,7 +32,7 @@ public class Events {
         return addAll(events.events);
     }
 
-    public Events addAll(List<GameEvent> events) {
+    public Events addAll(List<? extends GameEvent> events) {
         this.events.addAll(events);
         return this;
     }

@@ -1,6 +1,7 @@
 package com.github.immortaleeb.hearts.scenarios;
 
-import com.github.immortaleeb.hearts.util.Events;
+import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
+
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.shared.Card;
@@ -8,13 +9,30 @@ import com.github.immortaleeb.hearts.write.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Rank;
 import com.github.immortaleeb.hearts.write.shared.Suite;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RegularRound4Scenario implements RoundScenario {
     private final List<PlayerId> players;
 
     public RegularRound4Scenario(List<PlayerId> players) {
         this.players = players;
+    }
+
+    @Override
+    public Map<PlayerId, List<Card>> cardsDealt() {
+        return fixedPlayerHands(players);
+    }
+
+    @Override
+    public PassedCards cardsPassed() {
+        return PassedCards.none();
+    }
+
+    @Override
+    public PlayerId leadingPlayer() {
+        return players.get(1);
     }
 
     @Override
@@ -30,6 +48,16 @@ public class RegularRound4Scenario implements RoundScenario {
             ),
             new TrickWon(players.get(1))
         );
+    }
+
+    @Override
+    public Map<PlayerId, Integer> roundScore() {
+        return new HashMap<>() {{
+            put(players.get(0), 0);
+            put(players.get(1), 25);
+            put(players.get(2), 1);
+            put(players.get(3), 0);
+        }};
     }
 
 }

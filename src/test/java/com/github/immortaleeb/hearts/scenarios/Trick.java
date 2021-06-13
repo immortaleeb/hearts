@@ -5,4 +5,4 @@ import com.github.immortaleeb.hearts.write.domain.TrickWon;
 
 import java.util.List;
 
-record Trick(List<CardPlayed> cardPlays, TrickWon trickWon) { }
+public record Trick(List<CardPlayed> cardPlays, TrickWon trickWon) { }

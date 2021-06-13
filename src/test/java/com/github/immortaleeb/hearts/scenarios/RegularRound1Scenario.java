@@ -1,5 +1,8 @@
 package com.github.immortaleeb.hearts.scenarios;
 
+import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
+import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
+
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.shared.Card;
@@ -7,7 +10,9 @@ import com.github.immortaleeb.hearts.write.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Rank;
 import com.github.immortaleeb.hearts.write.shared.Suite;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RegularRound1Scenario extends FixedRoundScenario {
 
@@ -15,6 +20,35 @@ public class RegularRound1Scenario extends FixedRoundScenario {
 
     public RegularRound1Scenario(List<PlayerId> players) {
         this.players = players;
+    }
+
+    @Override
+    public Map<PlayerId, List<Card>> cardsDealt() {
+        return fixedPlayerHands(players);
+    }
+
+    @Override
+    public PassedCards cardsPassed() {
+        return PassedCards.none()
+            .pass(players.get(0), players.get(1), threeCardsOfSuite(Suite.HEARTS))
+            .pass(players.get(1), players.get(2), threeCardsOfSuite(Suite.CLUBS))
+            .pass(players.get(2), players.get(3), threeCardsOfSuite(Suite.DIAMONDS))
+            .pass(players.get(3), players.get(0), threeCardsOfSuite(Suite.SPADES));
+    }
+
+    @Override
+    public PlayerId leadingPlayer() {
+        return players.get(1);
+    }
+
+    @Override
+    public Map<PlayerId, Integer> roundScore() {
+        return new HashMap<>() {{
+            put(players.get(0), 0);
+            put(players.get(1), 25);
+            put(players.get(2), 1);
+            put(players.get(3), 0);
+        }};
     }
 
     protected Trick trick1() {
@@ -183,4 +217,5 @@ public class RegularRound1Scenario extends FixedRoundScenario {
             new TrickWon(players.get(1))
         );
     }
+
 }
