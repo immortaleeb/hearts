@@ -2,6 +2,7 @@ package com.github.immortaleeb.hearts;
 
 import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
 import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
+import static com.github.immortaleeb.hearts.scenarios.RoundScenarioEvents.eventsFor;
 
 import com.github.immortaleeb.hearts.scenarios.RegularRound1Scenario;
 import com.github.immortaleeb.hearts.scenarios.RegularRound4Scenario;
@@ -51,11 +52,11 @@ public class ScenarioFixtures {
     }
 
     public static Events playRegular12Tricks(List<PlayerId> players) {
-        return new RegularRound1Scenario(players).eventsForFirst12Tricks();
+        return eventsFor(new RegularRound1Scenario(players)).eventsForFirst12Tricks();
     }
 
     public static Events play12TricksAnd3CardsofShootForTheMoonRound(List<PlayerId> players) {
-        return new ShootForTheMoonRound1Scenario(players)
+        return eventsFor(new ShootForTheMoonRound1Scenario(players))
             .eventsForFirst12Tricks()
             .addAll(
                 new CardPlayed(players.get(1), Card.of(Suite.HEARTS, Rank.TEN), players.get(2)),
@@ -73,8 +74,7 @@ public class ScenarioFixtures {
             events.addAll(cardsPassedFor(players));
         }
 
-        events.addAll(regularScenarioForRound(roundIndex)
-                .apply(players)
+        events.addAll(eventsFor(regularScenarioForRound(roundIndex).apply(players))
                 .eventsForAllTricks());
 
         events.add(roundEnded(players, roundIndex));

@@ -45,7 +45,7 @@ public class Events {
         return of(Arrays.asList(events));
     }
 
-    public static Events of(List<GameEvent> list) {
+    public static <T extends GameEvent> Events of(List<T> list) {
         return new Events(new ArrayList<>(list));
     }
 

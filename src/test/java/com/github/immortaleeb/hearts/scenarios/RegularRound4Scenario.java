@@ -18,14 +18,16 @@ public class RegularRound4Scenario implements RoundScenario {
     }
 
     @Override
-    public Events trick(int trickNumber) {
+    public Trick trick(int trickNumber) {
         Rank rank = Rank.values()[trickNumber - 1];
 
-        return Events.of(
-            new CardPlayed(players.get(1), Card.of(Suite.CLUBS, rank), players.get(2)),
-            new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, rank), players.get(3)),
-            new CardPlayed(players.get(3), Card.of(Suite.SPADES, rank), players.get(0)),
-            new CardPlayed(players.get(0), Card.of(Suite.HEARTS, rank), players.get(1)),
+        return new Trick(
+            List.of(
+                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, rank), players.get(2)),
+                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, rank), players.get(3)),
+                new CardPlayed(players.get(3), Card.of(Suite.SPADES, rank), players.get(0)),
+                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, rank), players.get(1))
+            ),
             new TrickWon(players.get(1))
         );
     }
