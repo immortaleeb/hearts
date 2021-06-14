@@ -4,6 +4,8 @@ import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
 import static com.github.immortaleeb.hearts.scenarios.RoundScenarioEvents.eventsFor;
 
 import com.github.immortaleeb.hearts.scenarios.RegularRound1Scenario;
+import com.github.immortaleeb.hearts.scenarios.RegularRound2Scenario;
+import com.github.immortaleeb.hearts.scenarios.RegularRound3Scenario;
 import com.github.immortaleeb.hearts.scenarios.RegularRound4Scenario;
 import com.github.immortaleeb.hearts.scenarios.RoundScenario;
 import com.github.immortaleeb.hearts.scenarios.RoundScenarioEvents;
@@ -40,11 +42,13 @@ public class ScenarioFixtures {
             events.addAll(scenarioEvents.allEvents());
         }
 
-        return events.add(new CardsDealt(fixedPlayerHands(players)));
+        RoundScenarioEvents nextRoundEvents = eventsFor(regularScenarioForRound(numberOfRounds).apply(players));
+
+        return events.addAll(nextRoundEvents.eventsForCardsDealt());
     }
 
     public static Events playRegular12Tricks(List<PlayerId> players) {
-        return eventsFor(new RegularRound1Scenario(players)).eventsForFirst12Tricks();
+        return eventsFor(regularScenarioForRound(0).apply(players)).eventsForFirst12Tricks();
     }
 
     public static Events play12TricksAnd3CardsofShootForTheMoonRound(List<PlayerId> players) {
@@ -55,11 +59,11 @@ public class ScenarioFixtures {
             .addAll(scenarioEvents.eventsForFirst3CardsOfTrick(13));
     }
 
-    // helper methods
-
-    private static Function<List<PlayerId>, RoundScenario> regularScenarioForRound(int roundIndex) {
+    public static Function<List<PlayerId>, RoundScenario> regularScenarioForRound(int roundIndex) {
         return switch (roundIndex % 4) {
-            case 0, 1, 2 -> RegularRound1Scenario::new;
+            case 0 -> RegularRound1Scenario::new;
+            case 1 -> RegularRound2Scenario::new;
+            case 2 -> RegularRound3Scenario::new;
             case 3 -> RegularRound4Scenario::new;
             default -> throw new RuntimeException("illegal case");
         };

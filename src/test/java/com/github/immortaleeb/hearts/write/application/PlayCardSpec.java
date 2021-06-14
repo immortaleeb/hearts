@@ -4,13 +4,18 @@ import static com.github.immortaleeb.hearts.CardFixtures.threeCardsOfSuite;
 import static com.github.immortaleeb.hearts.CardFixtures.twoOfClubs;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.play12TricksAnd3CardsofShootForTheMoonRound;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.playRegular12Tricks;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.playedRoundsWith;
+import static com.github.immortaleeb.hearts.ScenarioFixtures.regularScenarioForRound;
 import static com.github.immortaleeb.hearts.ScenarioFixtures.startedPlayingCardsWith;
+import static com.github.immortaleeb.hearts.scenarios.RoundScenarioEvents.eventsFor;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.github.immortaleeb.hearts.scenarios.RoundScenario;
+import com.github.immortaleeb.hearts.scenarios.RoundScenarioEvents;
 import com.github.immortaleeb.hearts.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
@@ -340,4 +345,41 @@ public class PlayCardSpec {
         }
     }
 
+    @Nested
+    @DisplayName("given 2 rounds, 12 tricks and 3 cards played")
+    public class Given2RoundsAnd12TricksAnd3CardsPlayed extends GameSpec {
+
+        private RoundScenario round3;
+
+        @Override
+        protected Events given() {
+            round3 = regularScenarioForRound(2).apply(players);
+            RoundScenarioEvents round3Events = eventsFor(round3);
+
+            return startedPlayingCardsWith(players)
+                .addAll(playedRoundsWith(2, players))
+                .addAll(round3Events.eventsForCardsPassed())
+                .addAll(round3Events.eventsForFirst12Tricks())
+                .addAll(round3Events.eventsForFirst3CardsOfTrick(13));
+        }
+
+        @Test
+        void round_ends_with_correct_scores_when_last_card_is_played() {
+            whenLastCardIsPlayed();
+
+            assertEvent(RoundEnded.class, event -> {
+                Map<PlayerId, Integer> scores = event.scores();
+                assertThat(scores.get(player1()), is(equalTo(0)));
+                assertThat(scores.get(player2()), is(equalTo(11)));
+                assertThat(scores.get(player3()), is(equalTo(0)));
+                assertThat(scores.get(player4()), is(equalTo(15)));
+            });
+        }
+
+        private void whenLastCardIsPlayed() {
+            CardPlayed lastCardPlayed = round3.trick(13).lastCardPlayed();
+            playCard(lastCardPlayed.playedBy(), lastCardPlayed.card());
+        }
+
+    }
 }
