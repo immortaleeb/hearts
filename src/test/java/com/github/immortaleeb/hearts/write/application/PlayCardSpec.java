@@ -19,6 +19,7 @@ import com.github.immortaleeb.hearts.scenarios.RoundScenarioEvents;
 import com.github.immortaleeb.hearts.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
+import com.github.immortaleeb.hearts.write.domain.GameEnded;
 import com.github.immortaleeb.hearts.write.domain.RoundEnded;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.shared.Card;
@@ -382,4 +383,35 @@ public class PlayCardSpec {
         }
 
     }
+
+    @Nested
+    @DisplayName("given 7 rounds, 12 tricks and 3 cards played")
+    public class Given7RoundsAnd12TricksAnd3CardsPlayed extends GameSpec {
+
+        private RoundScenario round8;
+
+        @Override
+        protected Events given() {
+            round8 = regularScenarioForRound(7).apply(players);
+            RoundScenarioEvents round8Events = eventsFor(round8);
+
+            return startedPlayingCardsWith(players)
+                .addAll(playedRoundsWith(7, players))
+                .addAll(round8Events.eventsForCardsPassed())
+                .addAll(round8Events.eventsForFirst12Tricks())
+                .addAll(round8Events.eventsForFirst3CardsOfTrick(13));
+        }
+
+        @Test
+        void game_ends_when_round_is_finished_and_player_reaches_score_over_100() {
+            givenLastCardPlayed();
+
+            assertEvent(GameEnded.class);
+        }
+        private void givenLastCardPlayed() {
+            CardPlayed lastCardPlayed = round8.trick(13).lastCardPlayed();
+            playCard(lastCardPlayed.playedBy(), lastCardPlayed.card());
+        }
+    }
+
 }

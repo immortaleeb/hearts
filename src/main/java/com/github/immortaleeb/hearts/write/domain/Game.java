@@ -22,6 +22,7 @@ public class Game {
     private static final Card OPENING_CARD = Card.of(Suite.CLUBS, Rank.TWO);
     private static final int TRICKS_PER_ROUND = 13;
     private static final int SHOOT_FOR_THE_MOON_SCORE = 26;
+    private static final int SCORE_FOR_GAME_END = 100;
 
     private final GameId id;
 
@@ -36,6 +37,7 @@ public class Game {
     private int tricksPlayed = 0;
     private int roundNumber = 0;
     private GamePhase gamePhase = GamePhase.DEALING;
+    private Scoreboard scoreboard;
 
     private final List<GameEvent> raisedEvents = new ArrayList<>();
 
@@ -112,6 +114,11 @@ public class Game {
 
         if (tricksPlayed == TRICKS_PER_ROUND) {
             applyNewEvent(new RoundEnded(scoreCalculator.countRoundScores(table.wonTricks())));
+
+            if (scoreboard.largestScore().score() >= SCORE_FOR_GAME_END) {
+                applyNewEvent(new GameEnded());
+            }
+
             dealCards();
         }
     }
@@ -198,6 +205,8 @@ public class Game {
             applyEvent((TrickWon) event);
         } else if (event instanceof RoundEnded) {
             applyEvent((RoundEnded) event);
+        } else if (event instanceof GameEnded) {
+            applyEvent((GameEnded) event);
         } else {
             throw new RuntimeException("Unknown event type " + event.getClass());
         }
@@ -206,6 +215,7 @@ public class Game {
     public void applyEvent(GameStarted event) {
         players = Players.of(event.players());
         table = Table.with(event.players());
+        scoreboard = Scoreboard.forPlayers(event.players());
     }
 
     public void applyEvent(CardsDealt event) {
@@ -266,6 +276,12 @@ public class Game {
 
     private void applyEvent(RoundEnded event) {
         table.clearWonTricks();
+        tricksPlayed = 0;
+        scoreboard = scoreboard.add(event.scores());
+    }
+
+    private void applyEvent(GameEnded event) {
+
     }
 
     public static Game startWith(List<PlayerId> players) {
