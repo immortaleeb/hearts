@@ -403,6 +403,18 @@ public class PlayCardSpec {
         }
 
         @Test
+        void game_ends_with_total_scores_when_last_card_is_played() {
+            givenLastCardPlayed();
+
+            assertEvent(GameEnded.class, roundEnded -> {
+                assertThat(roundEnded.scores().get(player1()), is(equalTo(50)));
+                assertThat(roundEnded.scores().get(player2()), is(equalTo(124)));
+                assertThat(roundEnded.scores().get(player3()), is(equalTo(4)));
+                assertThat(roundEnded.scores().get(player4()), is(equalTo(30)));
+            });
+        }
+
+        @Test
         void game_ends_when_round_is_finished_and_player_reaches_score_over_100() {
             givenLastCardPlayed();
 

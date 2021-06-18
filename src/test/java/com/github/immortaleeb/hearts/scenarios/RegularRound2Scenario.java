@@ -46,7 +46,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
         return new HashMap<>() {{
             put(players.get(0), 25);
             put(players.get(1), 1);
-            put(players.get(2), 1);
+            put(players.get(2), 0);
             put(players.get(3), 0);
         }};
     }

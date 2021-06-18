@@ -116,7 +116,7 @@ public class Game {
             applyNewEvent(new RoundEnded(scoreCalculator.countRoundScores(table.wonTricks())));
 
             if (scoreboard.largestScore().score() >= SCORE_FOR_GAME_END) {
-                applyNewEvent(new GameEnded());
+                applyNewEvent(new GameEnded(scoreboard.toMap()));
             }
 
             dealCards();

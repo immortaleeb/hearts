@@ -37,4 +37,9 @@ class Scoreboard {
             .map(Score::forPlayer)
             .collect(Collectors.toList()));
     }
+
+    public Map<PlayerId, Integer> toMap() {
+        return totalScores.stream()
+            .collect(Collectors.toMap(Score::player, Score::score));
+    }
 }

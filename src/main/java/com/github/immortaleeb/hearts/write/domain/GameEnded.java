@@ -1,4 +1,9 @@
 package com.github.immortaleeb.hearts.write.domain;
 
-public final class GameEnded implements GameEvent {
+import com.github.immortaleeb.hearts.write.shared.PlayerId;
+
+import java.util.Map;
+
+public final record GameEnded(Map<PlayerId, Integer> scores) implements GameEvent {
+
 }
