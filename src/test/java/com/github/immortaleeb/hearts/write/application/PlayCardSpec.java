@@ -420,6 +420,14 @@ public class PlayCardSpec {
 
             assertEvent(GameEnded.class);
         }
+
+        @Test
+        void no_cards_are_dealt_when_game_has_ended() {
+            givenLastCardPlayed();
+
+            assertNoEvent(CardsDealt.class);
+        }
+
         private void givenLastCardPlayed() {
             CardPlayed lastCardPlayed = round8.trick(13).lastCardPlayed();
             playCard(lastCardPlayed.playedBy(), lastCardPlayed.card());

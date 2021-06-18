@@ -117,9 +117,9 @@ public class Game {
 
             if (scoreboard.largestScore().score() >= SCORE_FOR_GAME_END) {
                 applyNewEvent(new GameEnded(scoreboard.toMap()));
+            } else {
+                dealCards();
             }
-
-            dealCards();
         }
     }
 
