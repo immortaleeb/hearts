@@ -6,18 +6,19 @@ import com.github.immortaleeb.hearts.write.shared.Suite;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CardFixtures {
+
+    private static final Predicate<Card> NO_CARD = card -> false;
 
     public static Card twoOfClubs() {
         return Card.of(Suite.CLUBS, Rank.TWO);
     }
 
     public static List<Card> allCardsOfSuite(Suite suite) {
-        return Arrays.stream(Rank.values())
-                .map(rank -> new Card(suite, rank))
-                .collect(Collectors.toList());
+        return allCardsOfSuiteExcept(suite, NO_CARD);
     }
 
     public static List<Card> threeCardsOfSuite(Suite suite) {
@@ -28,4 +29,10 @@ public class CardFixtures {
         );
     }
 
+    public static List<Card> allCardsOfSuiteExcept(Suite suite, Predicate<Card> predicate) {
+        return Arrays.stream(Rank.values())
+            .map(rank -> new Card(suite, rank))
+            .filter(predicate.negate())
+            .collect(Collectors.toList());
+    }
 }
