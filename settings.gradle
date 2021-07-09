@@ -1,2 +1,3 @@
 rootProject.name = 'hearts'
 
+include ':code:main'

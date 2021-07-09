@@ -1,7 +1,6 @@
 package com.github.immortaleeb.hearts.util;
 
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
-import jdk.jfr.Event;
 
 import java.util.ArrayList;
 import java.util.Arrays;

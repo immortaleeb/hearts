@@ -1,13 +1,5 @@
 package com.github.immortaleeb.hearts.scenarios;
 
-import static com.github.immortaleeb.hearts.GameFixtures.fixedPlayerHands;
-
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
-
-import java.util.List;
-import java.util.Map;
-
 abstract class FixedRoundScenario implements RoundScenario {
 
     @Override
