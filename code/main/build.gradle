@@ -9,8 +9,4 @@ dependencies {
     implementation project(':code:write:domain')
     implementation project(':code:write:infrastructure')
     implementation project(':code:write:shared')
-
-    testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
