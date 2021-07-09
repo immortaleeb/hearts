@@ -4,7 +4,7 @@ import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
 import java.util.List;
 
-public class StartGame {
+public class StartGame implements Command {
 
     private final List<PlayerId> players;
 

@@ -51,7 +51,7 @@ public class Game {
 
     private void dealCards() {
         Map<PlayerId, List<Card>> playerHands = dealer.deal(players.ids());
-        applyNewEvent(new CardsDealt(playerHands));
+        applyNewEvent(new CardsDealt(id, playerHands));
 
         if (!shouldPassCardsThisRound()) {
             startPlaying();

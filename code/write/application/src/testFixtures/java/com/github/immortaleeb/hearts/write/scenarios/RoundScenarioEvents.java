@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.write.scenarios;
 
+import com.github.immortaleeb.hearts.write.shared.GameId;
 import com.github.immortaleeb.hearts.write.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
@@ -15,16 +16,16 @@ public class RoundScenarioEvents {
         this.roundScenario = roundScenario;
     }
 
-    public Events allEvents() {
+    public Events allEvents(GameId gameId) {
         return Events.none()
-            .addAll(eventsForCardsDealt())
+            .addAll(eventsForCardsDealt(gameId))
             .addAll(eventsForCardsPassed())
             .addAll(eventsForAllTricks())
             .add(eventForRoundEnded());
     }
 
-    public Events eventsForCardsDealt() {
-        return Events.of(new CardsDealt(roundScenario.cardsDealt()));
+    public Events eventsForCardsDealt(GameId gameId) {
+        return Events.of(new CardsDealt(gameId, roundScenario.cardsDealt()));
     }
 
     public Events eventsForCardsPassed() {

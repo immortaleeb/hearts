@@ -24,7 +24,7 @@ public class ScenarioFixtures {
     public static Events gameStartedWith(List<PlayerId> players) {
         return Events.of(
                 new GameStarted(gameId(), players),
-                new CardsDealt(fixedPlayerHands(players))
+                new CardsDealt(gameId(), fixedPlayerHands(players))
         );
     }
 
@@ -35,16 +35,17 @@ public class ScenarioFixtures {
     }
 
     public static Events playedRoundsWith(int numberOfRounds, List<PlayerId> players) {
-        Events events = Events.of(new GameStarted(gameId(), players));
+        GameId gameId = gameId();
+        Events events = Events.of(new GameStarted(gameId, players));
 
         for (int roundIndex = 0; roundIndex < numberOfRounds; roundIndex++) {
             RoundScenarioEvents scenarioEvents = eventsFor(regularScenarioForRound(roundIndex).apply(players));
-            events.addAll(scenarioEvents.allEvents());
+            events.addAll(scenarioEvents.allEvents(gameId));
         }
 
         RoundScenarioEvents nextRoundEvents = eventsFor(regularScenarioForRound(numberOfRounds).apply(players));
 
-        return events.addAll(nextRoundEvents.eventsForCardsDealt());
+        return events.addAll(nextRoundEvents.eventsForCardsDealt(gameId));
     }
 
     public static Events playRegular12Tricks(List<PlayerId> players) {

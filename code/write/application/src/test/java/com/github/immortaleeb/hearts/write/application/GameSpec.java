@@ -1,8 +1,8 @@
 package com.github.immortaleeb.hearts.write.application;
 
-import com.github.immortaleeb.hearts.write.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
+import com.github.immortaleeb.hearts.write.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.infrastructure.FakeGameRepository;
 import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.GameId;
@@ -25,7 +25,7 @@ abstract class GameSpec {
     protected GameId gameId;
     protected List<PlayerId> players;
     protected FakeGameRepository gameRepository;
-    protected CommandDispatcher dispatcher;
+    protected CommandHandlerDispatcher dispatcher;
 
     @BeforeEach
     void setUp() {
@@ -36,7 +36,7 @@ abstract class GameSpec {
         game.loadFromHistory(given().toList());
 
         gameRepository = new FakeGameRepository(game);
-        dispatcher = new CommandDispatcher(gameRepository);
+        dispatcher = new CommandHandlerDispatcher(gameRepository);
     }
 
     protected abstract Events given();

@@ -6,4 +6,6 @@ dependencies {
     implementation project(':code:write:application')
     implementation project(':code:write:domain')
     implementation project(':code:write:shared')
+
+    testImplementation(testFixtures(project(':code:write:application')))
 }
