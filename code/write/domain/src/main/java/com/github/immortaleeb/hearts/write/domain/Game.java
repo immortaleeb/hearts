@@ -249,7 +249,7 @@ public class Game {
 
     private void startPlaying() {
         Player leadingPlayer = playerWithOpeningCard();
-        applyNewEvent(new StartedPlaying(leadingPlayer.id()));
+        applyNewEvent(new StartedPlaying(id, leadingPlayer.id()));
     }
 
     private Player playerWithOpeningCard() {

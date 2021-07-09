@@ -2,7 +2,10 @@ package com.github.immortaleeb.hearts.write.infrastructure;
 
 import com.github.immortaleeb.hearts.write.application.Command;
 import com.github.immortaleeb.hearts.write.application.PassCards;
+import com.github.immortaleeb.hearts.write.application.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
+import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.fixtures.CardFixtures;
 import com.github.immortaleeb.hearts.write.fixtures.GameFixtures;
 import com.github.immortaleeb.hearts.write.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.shared.*;
@@ -13,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 
 class PlayerControllerTest {
 
@@ -39,15 +41,22 @@ class PlayerControllerTest {
         controller.process(new CardsDealt(gameId, dealtCards));
 
         // then
-        List<Command> dispatchedCommands = commandDispatcher.dispatchedCommands();
-
-        assertThat(dispatchedCommands, hasSize(1));
-
         List<Card> expectedCards = List.of(
                 Card.of(Suite.HEARTS, Rank.TWO),
                 Card.of(Suite.HEARTS, Rank.THREE),
                 Card.of(Suite.HEARTS, Rank.FOUR)
         );
-        assertThat(dispatchedCommands, hasItems(new PassCards(gameId, playerId, expectedCards)));
+        assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(new PassCards(gameId, playerId, expectedCards))));
+    }
+
+    @Test
+    void plays_first_card_when_started_playing_and_player_is_leading_player() {
+        // when
+        controller.process(new StartedPlaying(gameId, playerId));
+
+        // then
+        assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(
+                new PlayCard(gameId, playerId, CardFixtures.twoOfClubs()))
+        ));
     }
 }

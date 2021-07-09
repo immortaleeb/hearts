@@ -19,7 +19,7 @@ public class RoundScenarioEvents {
     public Events allEvents(GameId gameId) {
         return Events.none()
             .addAll(eventsForCardsDealt(gameId))
-            .addAll(eventsForCardsPassed())
+            .addAll(eventsForCardsPassed(gameId))
             .addAll(eventsForAllTricks())
             .add(eventForRoundEnded());
     }
@@ -28,7 +28,7 @@ public class RoundScenarioEvents {
         return Events.of(new CardsDealt(gameId, roundScenario.cardsDealt()));
     }
 
-    public Events eventsForCardsPassed() {
+    public Events eventsForCardsPassed(GameId gameId) {
         PassedCards passedCards = roundScenario.cardsPassed();
 
         Events events = Events.none();
@@ -41,7 +41,7 @@ public class RoundScenarioEvents {
             events.add(new PlayerHasTakenPassedCards(cardPass.fromPlayer(), cardPass.toPlayer(), cardPass.cards()));
         }
 
-        return events.add(new StartedPlaying(roundScenario.leadingPlayer()));
+        return events.add(new StartedPlaying(gameId, roundScenario.leadingPlayer()));
     }
 
     public Events eventsForAllTricks() {

@@ -31,7 +31,7 @@ public class ScenarioFixtures {
     public static Events startedPlayingCardsWith(List<PlayerId> players) {
         return new Events()
                 .addAll(gameStartedWith(players))
-                .addAll(eventsFor(new RegularRound1Scenario(players)).eventsForCardsPassed());
+                .addAll(eventsFor(new RegularRound1Scenario(players)).eventsForCardsPassed(gameId()));
     }
 
     public static Events playedRoundsWith(int numberOfRounds, List<PlayerId> players) {
