@@ -1,0 +1,34 @@
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(16)
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    def ENABLE_PREVIEW = "--enable-preview"
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs.add(ENABLE_PREVIEW)
+        options.release.set(16)
+
+        // fix java 16 compilation
+        options.forkOptions.jvmArgs.addAll(['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'])
+    }
+
+    tasks.withType(Test).configureEach {
+        jvmArgs(ENABLE_PREVIEW)
+    }
+
+    tasks.withType(JavaExec).configureEach {
+        jvmArgs(ENABLE_PREVIEW)
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
