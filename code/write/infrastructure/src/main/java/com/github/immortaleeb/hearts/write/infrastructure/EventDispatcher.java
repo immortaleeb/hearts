@@ -12,7 +12,7 @@ public class EventDispatcher {
 
     public <E extends GameEvent> void dispatch(E event) {
         Class<E> eventClass = (Class<E>) event.getClass();
-        registry.findListener(eventClass).ifPresent(listener -> listener.process(event));
+        registry.findListeners(eventClass).forEach(listener -> listener.process(event));
     }
 
 }
