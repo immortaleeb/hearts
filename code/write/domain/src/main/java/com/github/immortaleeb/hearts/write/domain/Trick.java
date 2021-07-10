@@ -49,6 +49,10 @@ class Trick {
         playedCards.add(new PlayedCard(card, playedBy));
     }
 
+    public boolean hasCards() {
+        return !isEmpty();
+    }
+
     public boolean isEmpty() {
         return playedCards.isEmpty();
     }

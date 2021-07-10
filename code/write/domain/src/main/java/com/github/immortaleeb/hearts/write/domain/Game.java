@@ -1,14 +1,6 @@
 package com.github.immortaleeb.hearts.write.domain;
 
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.CardNotInHand;
-import com.github.immortaleeb.hearts.write.shared.GameId;
-import com.github.immortaleeb.hearts.write.shared.InvalidCardPlayed;
-import com.github.immortaleeb.hearts.write.shared.NoCardsNeedToBePassed;
-import com.github.immortaleeb.hearts.write.shared.NotPlayersTurn;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.shared.Rank;
-import com.github.immortaleeb.hearts.write.shared.Suite;
+import com.github.immortaleeb.hearts.write.shared.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +23,7 @@ public class Game {
     private final ScoreCalculator scoreCalculator = new ScoreCalculator(SHOOT_FOR_THE_MOON_SCORE);
 
     private final CardPassValidator cardPassValidator = new CardPassValidator(CARDS_TO_PASS);
+    private final CardPlayValidator cardPlayValidator = new CardPlayValidator(OPENING_CARD);
 
     private Players players;
     private PlayerId leadingPlayer;
@@ -93,15 +86,9 @@ public class Game {
             throw new NotPlayersTurn();
         }
 
-        Player player = players.getPlayerById(playerId);
-
-        if (!player.hand().contains(card)) {
-            throw new CardNotInHand();
-        }
-
-        Optional<String> validationError = validateCardPlay(playerId, card);
-        if (validationError.isPresent()) {
-            throw new InvalidCardPlayed(validationError.get());
+        ValidationResult validationResult = validateCardPlay(playerId, card);
+        if (validationResult.hasError()) {
+            throw new InvalidCardPlayed(validationResult.error());
         }
 
         Optional<PlayerId> nextLeadingPlayer = chooseNextLeadingPlayer(playerId);
@@ -127,24 +114,10 @@ public class Game {
         return numberOfPlayedCards == players.size();
     }
 
-    private Optional<String> validateCardPlay(PlayerId playerId, Card card) {
+    private ValidationResult validateCardPlay(PlayerId playerId, Card card) {
         Player player = players.getPlayerById(playerId);
 
-        if (player.hand().contains(OPENING_CARD) && !OPENING_CARD.equals(card)) {
-            return Optional.of("You must open with the two of clubs");
-        }
-
-        if (table.hasPlayedCards()) {
-            Suite trickSuite = table.trick().suite();
-
-            boolean playerCanFollowSuite = player.hand().anyCard(Card.matchingSuite(trickSuite));
-            boolean playerFollowsSuite = trickSuite == card.suite();
-            boolean isValidPlay = playerFollowsSuite || !playerCanFollowSuite;
-
-            return isValidPlay ? Optional.empty() : Optional.of("Player must follow suite when possible");
-        }
-
-        return Optional.empty();
+        return cardPlayValidator.validateCardPlay(table.trick(), player.hand(), card);
     }
 
     private Optional<PlayerId> chooseNextLeadingPlayer(PlayerId player) {
