@@ -354,7 +354,7 @@ public class PlayCardSpec {
 
             return ScenarioFixtures.startedPlayingCardsWith(players)
                 .addAll(ScenarioFixtures.playedRoundsWith(2, players))
-                .addAll(round3Events.eventsForCardsPassed())
+                .addAll(round3Events.eventsForCardsPassed(gameId))
                 .addAll(round3Events.eventsForFirst12Tricks())
                 .addAll(round3Events.eventsForFirst3CardsOfTrick(13));
         }
@@ -392,7 +392,7 @@ public class PlayCardSpec {
 
             return ScenarioFixtures.startedPlayingCardsWith(players)
                 .addAll(ScenarioFixtures.playedRoundsWith(7, players))
-                .addAll(round8Events.eventsForCardsPassed())
+                .addAll(round8Events.eventsForCardsPassed(gameId))
                 .addAll(round8Events.eventsForFirst12Tricks())
                 .addAll(round8Events.eventsForFirst3CardsOfTrick(13));
         }
