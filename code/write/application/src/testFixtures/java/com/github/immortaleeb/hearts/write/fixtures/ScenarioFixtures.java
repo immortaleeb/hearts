@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 public class ScenarioFixtures {
 
+    private static final GameId GAME_ID = GameId.generate();
+
     public static Events gameStartedWith(List<PlayerId> players) {
         return Events.of(
                 new GameStarted(gameId(), players),
@@ -31,7 +33,7 @@ public class ScenarioFixtures {
     public static Events startedPlayingCardsWith(List<PlayerId> players) {
         return new Events()
                 .addAll(gameStartedWith(players))
-                .addAll(eventsFor(new RegularRound1Scenario(players)).eventsForCardsPassed(gameId()));
+                .addAll(eventsFor(new RegularRound1Scenario(gameId(), players)).eventsForCardsPassed(gameId()));
     }
 
     public static Events playedRoundsWith(int numberOfRounds, List<PlayerId> players) {
@@ -53,7 +55,7 @@ public class ScenarioFixtures {
     }
 
     public static Events play12TricksAnd3CardsofShootForTheMoonRound(List<PlayerId> players) {
-        RoundScenarioEvents scenarioEvents = eventsFor(new ShootForTheMoonRound1Scenario(players));
+        RoundScenarioEvents scenarioEvents = eventsFor(new ShootForTheMoonRound1Scenario(gameId(), players));
 
         return scenarioEvents
             .eventsForFirst12Tricks()
@@ -62,16 +64,16 @@ public class ScenarioFixtures {
 
     public static Function<List<PlayerId>, RoundScenario> regularScenarioForRound(int roundIndex) {
         return switch (roundIndex % 4) {
-            case 0 -> RegularRound1Scenario::new;
-            case 1 -> RegularRound2Scenario::new;
-            case 2 -> RegularRound3Scenario::new;
-            case 3 -> RegularRound4Scenario::new;
+            case 0 -> players -> new RegularRound1Scenario(gameId(), players);
+            case 1 -> players -> new RegularRound2Scenario(gameId(), players);
+            case 2 -> players -> new RegularRound3Scenario(gameId(), players);
+            case 3 -> players -> new RegularRound4Scenario(gameId(), players);
             default -> throw new RuntimeException("illegal case");
         };
     }
 
     private static GameId gameId() {
-        return GameId.generate();
+        return GAME_ID;
     }
 
 }

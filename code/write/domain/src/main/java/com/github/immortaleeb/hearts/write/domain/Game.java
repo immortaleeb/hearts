@@ -9,8 +9,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
-
 public class Game {
 
     private static final int CARDS_PER_HAND = 13;
@@ -101,7 +99,7 @@ public class Game {
 
         List<Card> validCardsToPlay = filterValidCardsToPlay(nextLeadingPlayer.stream(), updatedTrick);
 
-        applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer.orElse(null), validCardsToPlay));
+        applyNewEvent(new CardPlayed(id, playerId, card, nextLeadingPlayer.orElse(null), validCardsToPlay));
 
         if (trickFinished(table.numberOfPlayedCards())) {
             applyNewEvent(new TrickWon(table.trick().winner()));

@@ -2,10 +2,7 @@ package com.github.immortaleeb.hearts.write.scenarios;
 
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.shared.Rank;
-import com.github.immortaleeb.hearts.write.shared.Suite;
+import com.github.immortaleeb.hearts.write.shared.*;
 import com.github.immortaleeb.hearts.write.fixtures.CardFixtures;
 
 import java.util.*;
@@ -13,9 +10,12 @@ import java.util.*;
 import static java.util.Collections.emptyList;
 
 public class RegularRound4Scenario implements RoundScenario {
+
+    private final GameId gameId;
     private final List<PlayerId> players;
 
-    public RegularRound4Scenario(List<PlayerId> players) {
+    public RegularRound4Scenario(GameId gameId, List<PlayerId> players) {
+        this.gameId = gameId;
         this.players = players;
     }
 
@@ -70,10 +70,10 @@ public class RegularRound4Scenario implements RoundScenario {
 
         return new Trick(
             List.of(
-                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, rank), players.get(2), emptyList()),
-                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, rank), players.get(3), emptyList()),
-                new CardPlayed(players.get(3), Card.of(Suite.SPADES, rank), players.get(0), emptyList()),
-                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, rank), players.get(1), emptyList())
+                new CardPlayed(gameId, players.get(1), Card.of(Suite.CLUBS, rank), players.get(2), emptyList()),
+                new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, rank), players.get(3), emptyList()),
+                new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, rank), players.get(0), emptyList()),
+                new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, rank), players.get(1), emptyList())
             ),
             new TrickWon(players.get(1))
         );
@@ -82,10 +82,10 @@ public class RegularRound4Scenario implements RoundScenario {
     private Trick trick1() {
         return new Trick(
             List.of(
-                new CardPlayed(players.get(1), Card.of(Suite.CLUBS, Rank.TWO), players.get(2), emptyList()),
-                new CardPlayed(players.get(2), Card.of(Suite.CLUBS, Rank.ACE), players.get(3), emptyList()),
-                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.TWO), players.get(0), emptyList()),
-                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.TWO), players.get(1), emptyList())
+                new CardPlayed(gameId, players.get(1), Card.of(Suite.CLUBS, Rank.TWO), players.get(2), emptyList()),
+                new CardPlayed(gameId, players.get(2), Card.of(Suite.CLUBS, Rank.ACE), players.get(3), emptyList()),
+                new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.TWO), players.get(0), emptyList()),
+                new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.TWO), players.get(1), emptyList())
             ),
             new TrickWon(players.get(2))
         );
@@ -94,10 +94,10 @@ public class RegularRound4Scenario implements RoundScenario {
     private Trick trick2() {
         return new Trick(
             List.of(
-                new CardPlayed(players.get(2), Card.of(Suite.DIAMONDS, Rank.TWO), players.get(3), emptyList()),
-                new CardPlayed(players.get(3), Card.of(Suite.SPADES, Rank.ACE), players.get(0), emptyList()),
-                new CardPlayed(players.get(0), Card.of(Suite.HEARTS, Rank.ACE), players.get(1), emptyList()),
-                new CardPlayed(players.get(1), Card.of(Suite.DIAMONDS, Rank.ACE), players.get(2), emptyList())
+                new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.TWO), players.get(3), emptyList()),
+                new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.ACE), players.get(0), emptyList()),
+                new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.ACE), players.get(1), emptyList()),
+                new CardPlayed(gameId, players.get(1), Card.of(Suite.DIAMONDS, Rank.ACE), players.get(2), emptyList())
             ),
             new TrickWon(players.get(1))
         );

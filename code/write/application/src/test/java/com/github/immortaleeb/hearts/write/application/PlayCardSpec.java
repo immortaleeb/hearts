@@ -29,7 +29,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +103,7 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()));
+                .add(new CardPlayed(gameId, player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()));
         }
 
         @Test
@@ -166,8 +165,8 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
-                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()));
+                .add(new CardPlayed(gameId, player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
+                .add(new CardPlayed(gameId, player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()));
         }
 
         @Test
@@ -191,9 +190,9 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
-                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
-                .add(new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()));
+                .add(new CardPlayed(gameId, player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
+                .add(new CardPlayed(gameId, player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
+                .add(new CardPlayed(gameId, player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()));
         }
 
         @Test
@@ -233,10 +232,10 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
-                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
-                .add(new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()))
-                .add(new CardPlayed(player1(), Card.of(Suite.HEARTS, Rank.TWO), null, emptyList()))
+                .add(new CardPlayed(gameId, player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
+                .add(new CardPlayed(gameId, player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
+                .add(new CardPlayed(gameId, player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()))
+                .add(new CardPlayed(gameId, player1(), Card.of(Suite.HEARTS, Rank.TWO), null, emptyList()))
                 .add(new TrickWon(player3()));
         }
 
@@ -265,8 +264,8 @@ public class PlayCardSpec {
             return ScenarioFixtures.startedPlayingCardsWith(players)
                 .addAll(ScenarioFixtures.playRegular12Tricks(players))
                 .addAll(
-                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3(), emptyList()),
-                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4(), emptyList())
+                    new CardPlayed(gameId, player2(), Card.of(Suite.HEARTS, Rank.TEN), player3(), emptyList()),
+                    new CardPlayed(gameId, player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4(), emptyList())
                 );
         }
 
@@ -286,9 +285,9 @@ public class PlayCardSpec {
             return ScenarioFixtures.startedPlayingCardsWith(players)
                 .addAll(ScenarioFixtures.playRegular12Tricks(players))
                 .addAll(
-                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3(), emptyList()),
-                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4(), emptyList()),
-                    new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList())
+                    new CardPlayed(gameId, player2(), Card.of(Suite.HEARTS, Rank.TEN), player3(), emptyList()),
+                    new CardPlayed(gameId, player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4(), emptyList()),
+                    new CardPlayed(gameId, player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList())
                 );
         }
 

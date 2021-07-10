@@ -1,6 +1,7 @@
 package com.github.immortaleeb.hearts.write.domain;
 
 import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hearts.write.shared.GameId;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
 import java.util.List;
@@ -8,16 +9,22 @@ import java.util.Optional;
 
 public final class CardPlayed implements GameEvent {
 
+    private final GameId gameId;
     private final PlayerId playedBy;
     private final Card card;
     private final PlayerId nextLeadingPlayer;
     private final List<Card> validCardsForNextPlayer;
 
-    public CardPlayed(PlayerId playedBy, Card card, PlayerId nextLeadingPlayer, List<Card> validCardsForNextPlayer) {
+    public CardPlayed(GameId gameId, PlayerId playedBy, Card card, PlayerId nextLeadingPlayer, List<Card> validCardsForNextPlayer) {
+        this.gameId = gameId;
         this.playedBy = playedBy;
         this.card = card;
         this.nextLeadingPlayer = nextLeadingPlayer;
         this.validCardsForNextPlayer = validCardsForNextPlayer;
+    }
+
+    public GameId gameId() {
+        return gameId;
     }
 
     public PlayerId playedBy() {
@@ -39,7 +46,8 @@ public final class CardPlayed implements GameEvent {
     @Override
     public String toString() {
         return "CardPlayed{" +
-                "playedBy=" + playedBy +
+                "gameId=" + gameId +
+                ", playedBy=" + playedBy +
                 ", card=" + card +
                 ", nextLeadingPlayer=" + nextLeadingPlayer +
                 ", validCardsForNextPlayer=" + validCardsForNextPlayer +
