@@ -236,7 +236,7 @@ public class PlayCardSpec {
                 .add(new CardPlayed(gameId, player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
                 .add(new CardPlayed(gameId, player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()))
                 .add(new CardPlayed(gameId, player1(), Card.of(Suite.HEARTS, Rank.TWO), null, emptyList()))
-                .add(new TrickWon(player3()));
+                .add(new TrickWon(gameId, player3()));
         }
 
         @Test

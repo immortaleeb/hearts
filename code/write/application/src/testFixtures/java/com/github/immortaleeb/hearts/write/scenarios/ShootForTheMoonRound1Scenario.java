@@ -59,7 +59,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.DIAMONDS, Rank.ACE), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.SPADES, Rank.ACE), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(2))
+            new TrickWon(gameId, players.get(2))
         );
     }
 
@@ -71,7 +71,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.SPADES, Rank.JACK), players.get(1), emptyList()),
                 new CardPlayed(gameId, players.get(1), Card.of(Suite.CLUBS, Rank.KING), players.get(2), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -83,7 +83,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.DIAMONDS, Rank.TEN), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.SPADES, Rank.TEN), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -95,7 +95,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.KING), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.KING), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -107,7 +107,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.QUEEN), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.QUEEN), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -119,7 +119,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.NINE), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.NINE), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -131,7 +131,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.EIGHT), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.EIGHT), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -143,7 +143,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.SEVEN), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.SEVEN), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -155,7 +155,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.SIX), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.SIX), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -167,7 +167,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.FIVE), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.FIVE), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
 
         );
     }
@@ -180,7 +180,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.FOUR), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.FOUR), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
 
         );
     }
@@ -193,7 +193,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.THREE), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.THREE), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
 
         );
     }
@@ -206,7 +206,7 @@ public class ShootForTheMoonRound1Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.TWO), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.TWO), null, emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 }

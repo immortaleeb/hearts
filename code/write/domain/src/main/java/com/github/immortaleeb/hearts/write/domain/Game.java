@@ -102,7 +102,7 @@ public class Game {
         applyNewEvent(new CardPlayed(id, playerId, card, nextLeadingPlayer.orElse(null), validCardsToPlay));
 
         if (trickFinished(table.numberOfPlayedCards())) {
-            applyNewEvent(new TrickWon(table.trick().winner()));
+            applyNewEvent(new TrickWon(id, table.trick().winner()));
         }
 
         if (tricksPlayed == TRICKS_PER_ROUND) {

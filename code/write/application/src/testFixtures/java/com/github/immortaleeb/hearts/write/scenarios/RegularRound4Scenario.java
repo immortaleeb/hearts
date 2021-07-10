@@ -75,7 +75,7 @@ public class RegularRound4Scenario implements RoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, rank), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, rank), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 
@@ -87,7 +87,7 @@ public class RegularRound4Scenario implements RoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.TWO), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.TWO), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(2))
+            new TrickWon(gameId, players.get(2))
         );
     }
 
@@ -99,7 +99,7 @@ public class RegularRound4Scenario implements RoundScenario {
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.HEARTS, Rank.ACE), players.get(1), emptyList()),
                 new CardPlayed(gameId, players.get(1), Card.of(Suite.DIAMONDS, Rank.ACE), players.get(2), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
     }
 

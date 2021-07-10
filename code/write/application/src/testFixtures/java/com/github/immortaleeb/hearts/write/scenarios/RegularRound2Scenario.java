@@ -59,7 +59,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.TWO), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.CLUBS, Rank.ACE), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
     }
 
@@ -71,7 +71,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.SPADES, Rank.JACK), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.HEARTS, Rank.ACE), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(1))
+            new TrickWon(gameId, players.get(1))
         );
 
     }
@@ -84,7 +84,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.THREE), players.get(0), emptyList()),
                 new CardPlayed(gameId, players.get(0), Card.of(Suite.CLUBS, Rank.TEN), players.get(1), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -97,7 +97,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.KING), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.HEARTS, Rank.JACK), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -110,7 +110,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.QUEEN), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.HEARTS, Rank.TEN), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -123,7 +123,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.NINE), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.KING), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -136,7 +136,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.EIGHT), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.QUEEN), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -149,7 +149,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.SEVEN), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.NINE), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -162,7 +162,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.SIX), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.EIGHT), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -175,7 +175,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.FIVE), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.SEVEN), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -188,7 +188,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.FOUR), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.SIX), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -201,7 +201,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.THREE), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.FIVE), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
 
     }
@@ -214,7 +214,7 @@ public class RegularRound2Scenario extends FixedRoundScenario {
                 new CardPlayed(gameId, players.get(2), Card.of(Suite.DIAMONDS, Rank.TWO), players.get(3), emptyList()),
                 new CardPlayed(gameId, players.get(3), Card.of(Suite.SPADES, Rank.FOUR), players.get(0), emptyList())
             ),
-            new TrickWon(players.get(0))
+            new TrickWon(gameId, players.get(0))
         );
     }
 
