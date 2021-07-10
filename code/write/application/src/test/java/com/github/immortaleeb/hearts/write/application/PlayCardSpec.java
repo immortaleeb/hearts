@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.write.application;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +80,19 @@ public class PlayCardSpec {
             });
         }
 
+        @Test
+        void playing_a_card_includes_valid_cards_to_play_for_player3() {
+            whenTwoOfClubsIsPlayed();
+
+            assertEvent(CardPlayed.class, event -> {
+                assertThat(event.validCardsForNextPlayer(), is(equalTo(List.of(
+                        Card.of(Suite.CLUBS, Rank.TEN),
+                        Card.of(Suite.CLUBS, Rank.JACK),
+                        Card.of(Suite.CLUBS, Rank.ACE)
+                ))));
+            });
+        }
+
         private void whenTwoOfClubsIsPlayed() {
             playCard(player2(), CardFixtures.twoOfClubs());
         }
@@ -89,7 +104,7 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3()));
+                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()));
         }
 
         @Test
@@ -151,8 +166,8 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3()))
-                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4()));
+                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
+                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()));
         }
 
         @Test
@@ -176,9 +191,9 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3()))
-                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4()))
-                .add(new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1()));
+                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
+                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
+                .add(new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()));
         }
 
         @Test
@@ -218,10 +233,10 @@ public class PlayCardSpec {
         @Override
         protected Events given() {
             return ScenarioFixtures.startedPlayingCardsWith(players)
-                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3()))
-                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4()))
-                .add(new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1()))
-                .add(new CardPlayed(player1(), Card.of(Suite.HEARTS, Rank.TWO), null))
+                .add(new CardPlayed(player2(), Card.of(Suite.CLUBS, Rank.TWO), player3(), emptyList()))
+                .add(new CardPlayed(player3(), Card.of(Suite.CLUBS, Rank.TEN), player4(), emptyList()))
+                .add(new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList()))
+                .add(new CardPlayed(player1(), Card.of(Suite.HEARTS, Rank.TWO), null, emptyList()))
                 .add(new TrickWon(player3()));
         }
 
@@ -250,8 +265,8 @@ public class PlayCardSpec {
             return ScenarioFixtures.startedPlayingCardsWith(players)
                 .addAll(ScenarioFixtures.playRegular12Tricks(players))
                 .addAll(
-                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3()),
-                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4())
+                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3(), emptyList()),
+                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4(), emptyList())
                 );
         }
 
@@ -271,9 +286,9 @@ public class PlayCardSpec {
             return ScenarioFixtures.startedPlayingCardsWith(players)
                 .addAll(ScenarioFixtures.playRegular12Tricks(players))
                 .addAll(
-                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3()),
-                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4()),
-                    new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1())
+                    new CardPlayed(player2(), Card.of(Suite.HEARTS, Rank.TEN), player3(), emptyList()),
+                    new CardPlayed(player3(), Card.of(Suite.DIAMONDS, Rank.TWO), player4(), emptyList()),
+                    new CardPlayed(player4(), Card.of(Suite.SPADES, Rank.TWO), player1(), emptyList())
                 );
         }
 

@@ -29,7 +29,7 @@ class CardPlayValidator {
             boolean isValidPlay = playerFollowsSuite || !playerCanFollowSuite;
 
             if (!isValidPlay) {
-                return  ValidationResult.failed("Player must follow suite when possible");
+                return ValidationResult.failed("Player must follow suite when possible");
             }
         }
 

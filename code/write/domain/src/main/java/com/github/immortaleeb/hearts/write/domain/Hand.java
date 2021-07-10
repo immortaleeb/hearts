@@ -4,6 +4,7 @@ import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.CardsNotInHand;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -47,6 +48,10 @@ class Hand {
     public boolean anyCard(Predicate<Card> predicate) {
         return cards.stream()
                 .anyMatch(predicate);
+    }
+
+    public List<Card> cards() {
+        return Collections.unmodifiableList(cards);
     }
 
 }

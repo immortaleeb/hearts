@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptyList;
 
 public class Game {
 
@@ -24,6 +28,7 @@ public class Game {
 
     private final CardPassValidator cardPassValidator = new CardPassValidator(CARDS_TO_PASS);
     private final CardPlayValidator cardPlayValidator = new CardPlayValidator(OPENING_CARD);
+    private final CardPlayFilter cardPlayFilter = new CardPlayFilter(cardPlayValidator);
 
     private Players players;
     private PlayerId leadingPlayer;
@@ -92,8 +97,11 @@ public class Game {
         }
 
         Optional<PlayerId> nextLeadingPlayer = chooseNextLeadingPlayer(playerId);
+        Trick updatedTrick = table.trick().play(card, playerId);
 
-        applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer.orElse(null)));
+        List<Card> validCardsToPlay = filterValidCardsToPlay(nextLeadingPlayer.stream(), updatedTrick);
+
+        applyNewEvent(new CardPlayed(playerId, card, nextLeadingPlayer.orElse(null), validCardsToPlay));
 
         if (trickFinished(table.numberOfPlayedCards())) {
             applyNewEvent(new TrickWon(table.trick().winner()));
@@ -108,6 +116,15 @@ public class Game {
                 dealCards();
             }
         }
+    }
+
+    private List<Card> filterValidCardsToPlay(Stream<PlayerId> nextLeadingPlayer, Trick updatedTrick) {
+        return nextLeadingPlayer
+                .map(players::getPlayerById)
+                .map(Player::hand)
+                .map(playerHand -> cardPlayFilter.filterValidCardsToPlayFromHand(updatedTrick, playerHand))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     private boolean trickFinished(int numberOfPlayedCards) {
