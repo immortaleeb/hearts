@@ -74,7 +74,7 @@ class Table {
     }
 
     public void play(Card card, PlayerId playedBy) {
-        trick.play(card, playedBy);
+        trick = trick.play(card, playedBy);
     }
 
     // helper methods

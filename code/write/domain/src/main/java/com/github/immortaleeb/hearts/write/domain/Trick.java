@@ -45,8 +45,11 @@ class Trick {
                 .map(PlayedCard::card);
     }
 
-    public void play(Card card, PlayerId playedBy) {
-        playedCards.add(new PlayedCard(card, playedBy));
+    public Trick play(Card card, PlayerId playedBy) {
+        List<PlayedCard> newPlayedCards = new ArrayList<>(this.playedCards);
+        newPlayedCards.add(new PlayedCard(card, playedBy));
+
+        return new Trick(newPlayedCards);
     }
 
     public boolean hasCards() {
