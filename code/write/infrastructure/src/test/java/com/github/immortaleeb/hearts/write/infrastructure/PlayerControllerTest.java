@@ -1,8 +1,8 @@
 package com.github.immortaleeb.hearts.write.infrastructure;
 
-import com.github.immortaleeb.hearts.write.application.Command;
 import com.github.immortaleeb.hearts.write.application.PassCards;
 import com.github.immortaleeb.hearts.write.application.PlayCard;
+import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.write.fixtures.CardFixtures;
@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.immortaleeb.hearts.write.fixtures.CardFixtures.twoOfClubs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 class PlayerControllerTest {
 
-    private final PlayerId playerId = PlayerIdFixtures.players().get(0);
+    private final PlayerId player1 = PlayerIdFixtures.players().get(0);
+    private final PlayerId player4 = PlayerIdFixtures.players().get(3);
     private final GameId gameId = GameId.generate();
 
     private FakeCommandDispatcher commandDispatcher;
@@ -29,7 +31,7 @@ class PlayerControllerTest {
     @BeforeEach
     void setUp() {
         commandDispatcher = new FakeCommandDispatcher();
-        controller = new PlayerController(playerId, commandDispatcher);
+        controller = new PlayerController(player1, commandDispatcher);
     }
 
     @Test
@@ -46,17 +48,31 @@ class PlayerControllerTest {
                 Card.of(Suite.HEARTS, Rank.THREE),
                 Card.of(Suite.HEARTS, Rank.FOUR)
         );
-        assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(new PassCards(gameId, playerId, expectedCards))));
+        assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(new PassCards(gameId, player1, expectedCards))));
     }
 
     @Test
     void plays_first_card_when_started_playing_and_player_is_leading_player() {
         // when
-        controller.process(new StartedPlaying(gameId, playerId));
+        controller.process(new StartedPlaying(gameId, player1));
 
         // then
         assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(
-                new PlayCard(gameId, playerId, CardFixtures.twoOfClubs()))
+                new PlayCard(gameId, player1, twoOfClubs()))
         ));
+    }
+
+    @Test
+    void plays_first_playable_card_when_players_turn() {
+        // when
+        controller.process(new CardPlayed(gameId, player4, twoOfClubs(), player1, List.of(
+                Card.of(Suite.CLUBS, Rank.FIVE),
+                Card.of(Suite.CLUBS, Rank.NINE)
+        )));
+
+        // then
+        assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(
+                new PlayCard(gameId, player1, Card.of(Suite.CLUBS, Rank.FIVE))
+        )));
     }
 }

@@ -3,6 +3,7 @@ package com.github.immortaleeb.hearts.write.infrastructure;
 import com.github.immortaleeb.hearts.write.application.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.PassCards;
 import com.github.immortaleeb.hearts.write.application.PlayCard;
+import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
@@ -32,12 +33,8 @@ public class PlayerController implements EventListener<GameEvent> {
             passCards(cardsDealt);
         } else if (event instanceof StartedPlaying startedPlaying) {
             playOpeningCard(startedPlaying);
-        }
-    }
-
-    private void playOpeningCard(StartedPlaying startedPlaying) {
-        if (startedPlaying.leadingPlayer().equals(playerId)) {
-            commandDispatcher.dispatch(new PlayCard(startedPlaying.gameId(), playerId, OPENING_CARD));
+        } else if (event instanceof CardPlayed cardPlayed) {
+            playFirstPlayableCard(cardPlayed);
         }
     }
 
@@ -46,6 +43,21 @@ public class PlayerController implements EventListener<GameEvent> {
         List<Card> cardsToPass = playerHands.get(playerId).subList(0, 3);
 
         commandDispatcher.dispatch(new PassCards(cardsDealt.gameId(), playerId, cardsToPass));
+    }
+
+    private void playOpeningCard(StartedPlaying startedPlaying) {
+        if (startedPlaying.leadingPlayer().equals(playerId)) {
+            commandDispatcher.dispatch(new PlayCard(startedPlaying.gameId(), playerId, OPENING_CARD));
+        }
+    }
+
+    private void playFirstPlayableCard(CardPlayed cardPlayed) {
+        boolean playerIsNextLeadingPlayer = cardPlayed.nextLeadingPlayer().stream().anyMatch(playerId::equals);
+
+        if (playerIsNextLeadingPlayer) {
+            Card firstPlayableCard = cardPlayed.validCardsForNextPlayer().get(0);
+            commandDispatcher.dispatch(new PlayCard(cardPlayed.gameId(), playerId, firstPlayableCard));
+        }
     }
 
 }

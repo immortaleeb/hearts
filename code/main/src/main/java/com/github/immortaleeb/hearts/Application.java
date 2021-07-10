@@ -2,10 +2,7 @@ package com.github.immortaleeb.hearts;
 
 import com.github.immortaleeb.hearts.write.application.CommandHandlerDispatcher;
 import com.github.immortaleeb.hearts.write.application.StartGame;
-import com.github.immortaleeb.hearts.write.domain.CardsDealt;
-import com.github.immortaleeb.hearts.write.domain.GameEvent;
-import com.github.immortaleeb.hearts.write.domain.GameRepository;
-import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.infrastructure.*;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
@@ -34,6 +31,7 @@ public class Application {
 
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardsDealt.class, controller::process));
         playerControllers.forEach(controller -> eventListenerRegistry.register(StartedPlaying.class, controller::process));
+        playerControllers.forEach(controller -> eventListenerRegistry.register(CardPlayed.class, controller::process));
 
         dispatcher.dispatch(new StartGame(players));
 
