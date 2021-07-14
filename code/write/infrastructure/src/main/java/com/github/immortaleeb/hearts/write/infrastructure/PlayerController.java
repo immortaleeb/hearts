@@ -3,17 +3,17 @@ package com.github.immortaleeb.hearts.write.infrastructure;
 import com.github.immortaleeb.hearts.write.application.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.PassCards;
 import com.github.immortaleeb.hearts.write.application.PlayCard;
-import com.github.immortaleeb.hearts.write.domain.CardPlayed;
-import com.github.immortaleeb.hearts.write.domain.CardsDealt;
-import com.github.immortaleeb.hearts.write.domain.GameEvent;
-import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Rank;
 import com.github.immortaleeb.hearts.write.shared.Suite;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class PlayerController implements EventListener<GameEvent> {
 
@@ -21,28 +21,61 @@ public class PlayerController implements EventListener<GameEvent> {
 
     private final PlayerId playerId;
     private final CommandDispatcher commandDispatcher;
+    private final List<Card> hand;
 
     public PlayerController(PlayerId playerId, CommandDispatcher commandDispatcher) {
         this.playerId = playerId;
         this.commandDispatcher = commandDispatcher;
+        this.hand = new ArrayList<>();
     }
 
     @Override
     public void process(GameEvent event) {
         if (event instanceof CardsDealt cardsDealt) {
+            updateHand(cardsDealt);
             passCards(cardsDealt);
+        } else if (event instanceof PlayerPassedCards playerPassedCards) {
+            removeCardsFromHand(playerPassedCards);
         } else if (event instanceof StartedPlaying startedPlaying) {
             playOpeningCard(startedPlaying);
         } else if (event instanceof CardPlayed cardPlayed) {
             playFirstPlayableCard(cardPlayed);
+            removeCardFromHand(cardPlayed);
+        } else if (event instanceof TrickWon trickWon) {
+            playFirstCard(trickWon);
+        }
+    }
+
+    private void playFirstCard(TrickWon trickWon) {
+        if (trickWon.wonBy().equals(playerId) && !hand.isEmpty()) {
+            Card firstCard = hand.get(0);
+            commandDispatcher.dispatch(new PlayCard(trickWon.gameId(), playerId, firstCard));
+        }
+    }
+
+    private void removeCardFromHand(CardPlayed cardPlayed) {
+        if (cardPlayed.playedBy().equals(playerId)) {
+            hand.remove(cardPlayed.card());
+        }
+    }
+
+    private void removeCardsFromHand(PlayerPassedCards playerPassedCards) {
+        if (playerPassedCards.fromPlayer().equals(playerId)) {
+            hand.removeAll(playerPassedCards.passedCards());
         }
     }
 
     private void passCards(CardsDealt cardsDealt) {
-        Map<PlayerId, List<Card>> playerHands = cardsDealt.playerHands();
-        List<Card> cardsToPass = playerHands.get(playerId).subList(0, 3);
+        List<Card> cardsToPass = IntStream.range(0, 3)
+                .mapToObj(hand::get)
+                .collect(Collectors.toList());
 
         commandDispatcher.dispatch(new PassCards(cardsDealt.gameId(), playerId, cardsToPass));
+    }
+
+    private void updateHand(CardsDealt cardsDealt) {
+        Map<PlayerId, List<Card>> playerHands = cardsDealt.playerHands();
+        hand.addAll(playerHands.get(playerId));
     }
 
     private void playOpeningCard(StartedPlaying startedPlaying) {

@@ -34,7 +34,7 @@ public class FakeCommandDispatcher implements CommandDispatcher {
         if (dispatchedCommands.isEmpty()) {
             throw new IllegalStateException("No commands have been dispatched");
         }
-        return dispatchedCommands.get(0);
+        return dispatchedCommands.get(dispatchedCommands.size() - 1);
     }
 
 }

@@ -30,8 +30,10 @@ public class Application {
                 .collect(Collectors.toList());
 
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardsDealt.class, controller::process));
+        playerControllers.forEach(controller -> eventListenerRegistry.register(PlayerPassedCards.class, controller::process));
         playerControllers.forEach(controller -> eventListenerRegistry.register(StartedPlaying.class, controller::process));
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardPlayed.class, controller::process));
+        playerControllers.forEach(controller -> eventListenerRegistry.register(TrickWon.class, controller::process));
 
         dispatcher.dispatch(new StartGame(players));
 
