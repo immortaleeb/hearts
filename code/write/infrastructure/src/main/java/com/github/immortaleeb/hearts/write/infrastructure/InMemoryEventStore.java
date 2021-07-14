@@ -28,7 +28,7 @@ public class InMemoryEventStore implements EventStore {
         List<GameEvent> storedEvents = allEvents.computeIfAbsent(gameId, id -> new ArrayList<>());
         storedEvents.addAll(events);
 
-        events.forEach(eventDispatcher::dispatch);
+        eventDispatcher.dispatchAll(events);
     }
 
 }
