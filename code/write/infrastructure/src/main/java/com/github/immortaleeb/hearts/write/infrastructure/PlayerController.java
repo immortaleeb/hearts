@@ -36,6 +36,8 @@ public class PlayerController implements EventListener<GameEvent> {
             passCards(cardsDealt);
         } else if (event instanceof PlayerPassedCards playerPassedCards) {
             removeCardsFromHand(playerPassedCards);
+        } else if (event instanceof PlayerHasTakenPassedCards playerHasTakenPassedCards) {
+            addCardsToHand(playerHasTakenPassedCards);
         } else if (event instanceof StartedPlaying startedPlaying) {
             playOpeningCard(startedPlaying);
         } else if (event instanceof CardPlayed cardPlayed) {
@@ -43,6 +45,12 @@ public class PlayerController implements EventListener<GameEvent> {
             removeCardFromHand(cardPlayed);
         } else if (event instanceof TrickWon trickWon) {
             playFirstCard(trickWon);
+        }
+    }
+
+    private void addCardsToHand(PlayerHasTakenPassedCards playerHasTakenPassedCards) {
+        if (playerHasTakenPassedCards.toPlayer().equals(playerId)) {
+            hand.addAll(playerHasTakenPassedCards.cards());
         }
     }
 

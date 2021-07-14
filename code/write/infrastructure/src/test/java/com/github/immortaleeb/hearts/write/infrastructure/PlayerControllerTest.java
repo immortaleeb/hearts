@@ -3,19 +3,20 @@ package com.github.immortaleeb.hearts.write.infrastructure;
 import com.github.immortaleeb.hearts.write.application.PassCards;
 import com.github.immortaleeb.hearts.write.application.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;
-import com.github.immortaleeb.hearts.write.fixtures.CardFixtures;
 import com.github.immortaleeb.hearts.write.fixtures.GameFixtures;
 import com.github.immortaleeb.hearts.write.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.shared.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.github.immortaleeb.hearts.write.fixtures.CardFixtures.twoOfClubs;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -112,4 +113,38 @@ class PlayerControllerTest {
                 new PlayCard(gameId, player1, Card.of(Suite.HEARTS, Rank.SIX))
         )));
     }
+
+    @Test
+    void plays_received_card_when_no_other_cards_are_left() {
+        // given
+        List<Card> fixedHand = List.of(
+                Card.of(Suite.SPADES, Rank.TWO),
+                Card.of(Suite.SPADES, Rank.THREE),
+                Card.of(Suite.SPADES, Rank.FOUR)
+        );
+
+        controller.process(new CardsDealt(gameId, fixedHands(fixedHand)));
+        controller.process(new PlayerPassedCards(player1, player4, fixedHand));
+        controller.process(new PlayerHasTakenPassedCards(player4, player1, List.of(
+                Card.of(Suite.DIAMONDS, Rank.NINE),
+                Card.of(Suite.DIAMONDS, Rank.QUEEN),
+                Card.of(Suite.DIAMONDS, Rank.KING)
+        )));
+
+        // when
+        controller.process(new TrickWon(gameId, player1));
+
+        // then
+        assertThat(commandDispatcher.lastDispatchedCommand(), is(equalTo(
+                new PlayCard(gameId, player1, Card.of(Suite.DIAMONDS, Rank.NINE))
+        )));
+    }
+
+    // helper methods
+
+    private Map<PlayerId, List<Card>> fixedHands(List<Card> hand) {
+        return PlayerIdFixtures.players().stream()
+                .collect(Collectors.toMap(Function.identity(), player -> unmodifiableList(hand)));
+    }
+
 }
