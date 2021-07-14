@@ -4,6 +4,10 @@ import com.github.immortaleeb.hearts.write.application.CommandHandlerDispatcher;
 import com.github.immortaleeb.hearts.write.application.StartGame;
 import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.infrastructure.*;
+import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
+import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventDispatcher;
+import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventListenerRegistry;
+import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.InMemoryEventStore;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
 import java.util.Arrays;

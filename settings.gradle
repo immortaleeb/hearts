@@ -4,4 +4,7 @@ include ':code:main',
         ':code:write:application',
         ':code:write:domain',
         ':code:write:infrastructure',
+        ':code:write:infrastructure:incoming:cli',
+        ':code:write:infrastructure:outgoing:eventstore:api',
+        ':code:write:infrastructure:outgoing:eventstore:inmemory',
         ':code:write:shared'

@@ -1,0 +1,8 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':code:write:domain')
+    implementation project(':code:write:shared')
+}

@@ -4,6 +4,7 @@ import com.github.immortaleeb.hearts.write.application.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.PassCards;
 import com.github.immortaleeb.hearts.write.application.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;
+import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventListener;
 import com.github.immortaleeb.hearts.write.shared.*;
 
 import java.util.ArrayList;

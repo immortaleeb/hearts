@@ -1,6 +1,7 @@
-package com.github.immortaleeb.hearts.write.infrastructure;
+package com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory;
 
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
+import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 
 import java.util.ArrayList;

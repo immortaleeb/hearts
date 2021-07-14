@@ -1,0 +1,10 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api project(':code:write:infrastructure:outgoing:eventstore:api')
+
+    implementation project(':code:write:domain')
+    implementation project(':code:write:shared')
+}

@@ -1,4 +1,4 @@
-package com.github.immortaleeb.hearts.write.infrastructure;
+package com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory;
 
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 

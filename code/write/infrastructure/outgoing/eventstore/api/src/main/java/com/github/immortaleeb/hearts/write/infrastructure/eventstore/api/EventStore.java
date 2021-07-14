@@ -1,4 +1,4 @@
-package com.github.immortaleeb.hearts.write.infrastructure;
+package com.github.immortaleeb.hearts.write.infrastructure.eventstore.api;
 
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.shared.GameId;
