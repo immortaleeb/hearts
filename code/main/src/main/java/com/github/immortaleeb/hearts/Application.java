@@ -26,7 +26,7 @@ public class Application {
                 PlayerId.generate());
 
         List<PlayerController> playerControllers = players.stream()
-                .map(player -> new PlayerController(player, dispatcher))
+                .map(player -> new PlayerController(player, dispatcher, new SimplePlayerInputHandler()))
                 .collect(Collectors.toList());
 
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardsDealt.class, controller::process));

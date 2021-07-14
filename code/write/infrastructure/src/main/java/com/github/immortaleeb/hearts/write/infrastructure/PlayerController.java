@@ -4,29 +4,28 @@ import com.github.immortaleeb.hearts.write.application.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.PassCards;
 import com.github.immortaleeb.hearts.write.application.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.shared.Rank;
-import com.github.immortaleeb.hearts.write.shared.Suite;
+import com.github.immortaleeb.hearts.write.shared.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class PlayerController implements EventListener<GameEvent> {
 
     private static final Card OPENING_CARD = Card.of(Suite.CLUBS, Rank.TWO);
 
-    private final PlayerId playerId;
     private final CommandDispatcher commandDispatcher;
+    private final PlayerInputHandler playerInputHandler;
+
+    private final PlayerId playerId;
     private final List<Card> hand;
     private int roundNumber;
 
-    public PlayerController(PlayerId playerId, CommandDispatcher commandDispatcher) {
-        this.playerId = playerId;
+    public PlayerController(PlayerId playerId, CommandDispatcher commandDispatcher, PlayerInputHandler playerInputHandler) {
         this.commandDispatcher = commandDispatcher;
+        this.playerInputHandler = playerInputHandler;
+
+        this.playerId = playerId;
         this.hand = new ArrayList<>();
         this.roundNumber = 0;
     }
@@ -44,10 +43,10 @@ public class PlayerController implements EventListener<GameEvent> {
         } else if (event instanceof StartedPlaying startedPlaying) {
             playOpeningCard(startedPlaying);
         } else if (event instanceof CardPlayed cardPlayed) {
-            playFirstPlayableCard(cardPlayed);
+            playCardFromHand(cardPlayed);
             removeCardFromHand(cardPlayed);
         } else if (event instanceof TrickWon trickWon) {
-            playFirstCard(trickWon);
+            playCardFromHand(trickWon);
         }
     }
 
@@ -61,10 +60,9 @@ public class PlayerController implements EventListener<GameEvent> {
         }
     }
 
-    private void playFirstCard(TrickWon trickWon) {
+    private void playCardFromHand(TrickWon trickWon) {
         if (trickWon.wonBy().equals(playerId) && !hand.isEmpty()) {
-            Card firstCard = hand.get(0);
-            commandDispatcher.dispatch(new PlayCard(trickWon.gameId(), playerId, firstCard));
+            playCard(trickWon.gameId(), hand);
         }
     }
 
@@ -87,10 +85,7 @@ public class PlayerController implements EventListener<GameEvent> {
     }
 
     private void passCards(CardsDealt cardsDealt) {
-        List<Card> cardsToPass = IntStream.range(0, 3)
-                .mapToObj(hand::get)
-                .collect(Collectors.toList());
-
+        List<Card> cardsToPass = playerInputHandler.chooseCardsToPass(hand);
         commandDispatcher.dispatch(new PassCards(cardsDealt.gameId(), playerId, cardsToPass));
     }
 
@@ -105,17 +100,21 @@ public class PlayerController implements EventListener<GameEvent> {
 
     private void playOpeningCard(StartedPlaying startedPlaying) {
         if (startedPlaying.leadingPlayer().equals(playerId)) {
-            commandDispatcher.dispatch(new PlayCard(startedPlaying.gameId(), playerId, OPENING_CARD));
+            playCard(startedPlaying.gameId(), List.of(OPENING_CARD));
         }
     }
 
-    private void playFirstPlayableCard(CardPlayed cardPlayed) {
+    private void playCardFromHand(CardPlayed cardPlayed) {
         boolean playerIsNextLeadingPlayer = cardPlayed.nextLeadingPlayer().stream().anyMatch(playerId::equals);
 
         if (playerIsNextLeadingPlayer) {
-            Card firstPlayableCard = cardPlayed.validCardsForNextPlayer().get(0);
-            commandDispatcher.dispatch(new PlayCard(cardPlayed.gameId(), playerId, firstPlayableCard));
+            playCard(cardPlayed.gameId(), cardPlayed.validCardsForNextPlayer());
         }
+    }
+
+    private void playCard(GameId gameId, List<Card> playableCards) {
+        Card cardToPlay = playerInputHandler.chooseCardToPlay(playableCards);
+        commandDispatcher.dispatch(new PlayCard(gameId, playerId, cardToPlay));
     }
 
 }

@@ -33,7 +33,7 @@ class PlayerControllerTest {
     @BeforeEach
     void setUp() {
         commandDispatcher = new FakeCommandDispatcher();
-        controller = new PlayerController(player1, commandDispatcher);
+        controller = new PlayerController(player1, commandDispatcher, new SimplePlayerInputHandler());
     }
 
     @Test
