@@ -56,8 +56,16 @@ public class Card {
         return card -> card.matchesSuite(suite);
     }
 
+    public static Comparator<Card> compareBySuite() {
+        return Comparator.comparingInt(card -> card.suite.ordinal());
+    }
+
     public static Comparator<Card> compareByRank() {
         return Comparator.comparingInt(card -> card.rank().ordinal());
+    }
+
+    public static Comparator<Card> compareBySuiteAndRank() {
+        return compareBySuite().thenComparing(compareByRank());
     }
 
 }

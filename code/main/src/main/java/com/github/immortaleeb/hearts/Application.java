@@ -9,6 +9,7 @@ import com.github.immortaleeb.hearts.write.shared.PlayerId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Application {
 
@@ -25,8 +26,15 @@ public class Application {
                 PlayerId.generate(),
                 PlayerId.generate());
 
-        List<PlayerController> playerControllers = players.stream()
-                .map(player -> new PlayerController(player, dispatcher, new SimplePlayerInputHandler()))
+        List<PlayerInputHandler> playerInputHandlers = List.of(
+                new StdinPlayerInputHandler(),
+                new SimplePlayerInputHandler(),
+                new SimplePlayerInputHandler(),
+                new SimplePlayerInputHandler()
+        );
+
+        List<PlayerController> playerControllers = IntStream.range(0, players.size())
+                .mapToObj(playerIndex -> new PlayerController(players.get(playerIndex), dispatcher, playerInputHandlers.get(playerIndex)))
                 .collect(Collectors.toList());
 
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardsDealt.class, controller::process));
