@@ -8,6 +8,7 @@ dependencies {
     implementation project(':code:write:application')
     implementation project(':code:write:domain')
     implementation project(':code:write:infrastructure')
+    implementation project(':code:write:infrastructure:outgoing:eventsourcing')
     implementation project(':code:write:infrastructure:outgoing:eventstore:inmemory')
     implementation project(':code:write:shared')
 }

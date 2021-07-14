@@ -1,4 +1,4 @@
-package com.github.immortaleeb.hearts.write.infrastructure;
+package com.github.immortaleeb.hearts.write.infrastructure.eventsourcing;
 
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
@@ -6,11 +6,11 @@ import com.github.immortaleeb.hearts.write.domain.GameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 
-public class InMemoryGameRepository implements GameRepository {
+public class EventSourcedGameRepository implements GameRepository {
 
     private final EventStore eventStore;
 
-    public InMemoryGameRepository(EventStore eventStore) {
+    public EventSourcedGameRepository(EventStore eventStore) {
         this.eventStore = eventStore;
     }
 
