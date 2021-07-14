@@ -22,18 +22,21 @@ public class PlayerController implements EventListener<GameEvent> {
     private final PlayerId playerId;
     private final CommandDispatcher commandDispatcher;
     private final List<Card> hand;
+    private int roundNumber;
 
     public PlayerController(PlayerId playerId, CommandDispatcher commandDispatcher) {
         this.playerId = playerId;
         this.commandDispatcher = commandDispatcher;
         this.hand = new ArrayList<>();
+        this.roundNumber = 0;
     }
 
     @Override
     public void process(GameEvent event) {
         if (event instanceof CardsDealt cardsDealt) {
+            incrementRoundNumber();
             updateHand(cardsDealt);
-            passCards(cardsDealt);
+            passCardsIfNecessary(cardsDealt);
         } else if (event instanceof PlayerPassedCards playerPassedCards) {
             removeCardsFromHand(playerPassedCards);
         } else if (event instanceof PlayerHasTakenPassedCards playerHasTakenPassedCards) {
@@ -46,6 +49,10 @@ public class PlayerController implements EventListener<GameEvent> {
         } else if (event instanceof TrickWon trickWon) {
             playFirstCard(trickWon);
         }
+    }
+
+    private void incrementRoundNumber() {
+        roundNumber++;
     }
 
     private void addCardsToHand(PlayerHasTakenPassedCards playerHasTakenPassedCards) {
@@ -73,12 +80,22 @@ public class PlayerController implements EventListener<GameEvent> {
         }
     }
 
+    private void passCardsIfNecessary(CardsDealt cardsDealt) {
+        if (shouldPassCards()) {
+            passCards(cardsDealt);
+        }
+    }
+
     private void passCards(CardsDealt cardsDealt) {
         List<Card> cardsToPass = IntStream.range(0, 3)
                 .mapToObj(hand::get)
                 .collect(Collectors.toList());
 
         commandDispatcher.dispatch(new PassCards(cardsDealt.gameId(), playerId, cardsToPass));
+    }
+
+    private boolean shouldPassCards() {
+        return (roundNumber - 1) % 4 != 3;
     }
 
     private void updateHand(CardsDealt cardsDealt) {

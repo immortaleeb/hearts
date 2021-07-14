@@ -140,6 +140,21 @@ class PlayerControllerTest {
         )));
     }
 
+    @Test
+    void does_not_pass_cards_on_every_4th_round() {
+        // given
+        controller.process(new CardsDealt(gameId, dealtCards));
+        controller.process(new CardsDealt(gameId, dealtCards));
+        controller.process(new CardsDealt(gameId, dealtCards));
+
+        // when
+        controller.process(new CardsDealt(gameId, dealtCards));
+
+        // then
+        assertThat(commandDispatcher.dispatchedCommands(), hasSize(3));
+
+    }
+
     // helper methods
 
     private Map<PlayerId, List<Card>> fixedHands(List<Card> hand) {
