@@ -1,8 +1,7 @@
-package com.github.immortaleeb.hearts.write.infrastructure;
+package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
 import com.github.immortaleeb.hearts.write.shared.Card;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

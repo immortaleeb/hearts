@@ -1,4 +1,4 @@
-package com.github.immortaleeb.hearts.write.infrastructure;
+package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
 import com.github.immortaleeb.hearts.write.shared.Card;
 

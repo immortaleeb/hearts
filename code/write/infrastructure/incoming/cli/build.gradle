@@ -6,6 +6,7 @@ dependencies {
     implementation project(':code:write:application')
     implementation project(':code:write:domain')
     implementation project(':code:write:shared')
+    implementation project(':code:write:infrastructure:outgoing:eventstore:api')
 
     testImplementation(testFixtures(project(':code:write:application')))
 }

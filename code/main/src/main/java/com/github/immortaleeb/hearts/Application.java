@@ -3,12 +3,15 @@ package com.github.immortaleeb.hearts;
 import com.github.immortaleeb.hearts.write.application.CommandHandlerDispatcher;
 import com.github.immortaleeb.hearts.write.application.StartGame;
 import com.github.immortaleeb.hearts.write.domain.*;
-import com.github.immortaleeb.hearts.write.infrastructure.*;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventDispatcher;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventListenerRegistry;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.InMemoryEventStore;
+import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerController;
+import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerInputHandler;
+import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.SimplePlayerInputHandler;
+import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.StdinPlayerInputHandler;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
 import java.util.Arrays;
