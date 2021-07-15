@@ -48,7 +48,7 @@ public class SimplePlayerInputHandler implements PlayerInputHandler {
     }
 
     @Override
-    public Card chooseCardToPlay(List<Card> playableCards) {
+    public Card chooseCardToPlay(List<Card> hand, List<Card> playableCards) {
         return playableCards.get(0);
     }
 

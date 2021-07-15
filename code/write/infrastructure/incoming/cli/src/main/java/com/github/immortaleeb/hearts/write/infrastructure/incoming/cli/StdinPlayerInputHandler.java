@@ -3,16 +3,15 @@ package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.PlayerId;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.*;
 
 public class StdinPlayerInputHandler implements PlayerInputHandler {
 
     private static final int CARDS_TO_PASS = 3;
+
+    private final StdinReader stdinReader = new StdinReader();
+    private final CardSelector cardsToPassSelector = new CardSelector(stdinReader, 3, "Which card do you want to pass? ");
+    private final CardSelector cardToPlaySelector = new CardSelector(stdinReader, 1, "Which card do you want to play? ");
 
     @Override
     public void showDealtCards(List<Card> hand) {
@@ -54,64 +53,20 @@ public class StdinPlayerInputHandler implements PlayerInputHandler {
 
     @Override
     public List<Card> chooseCardsToPass(List<Card> hand) {
-        List<Card> passableCards = new ArrayList<>(hand);
-        List<Card> cardsToPass = new ArrayList<>();
-
         System.out.println("Select " + CARDS_TO_PASS + " cards to pass");
-
-        for (int i = 0; i < CARDS_TO_PASS; i++) {
-            Card selectedCard = promptSelectCard(passableCards, "Please choose a card to pass: ");
-            passableCards.remove(selectedCard);
-            cardsToPass.add(selectedCard);
-        }
-
-        return cardsToPass;
+        return cardsToPassSelector.selectCards(sortedHand(hand), hand);
     }
 
     @Override
-    public Card chooseCardToPlay(List<Card> playableCards) {
-        System.out.println("Which card will you play?");
-        return promptSelectCard(new ArrayList<>(playableCards), "Please choose a card to play: ");
+    public Card chooseCardToPlay(List<Card> hand, List<Card> playableCards) {
+        System.out.println("Your turn to play a card");
+        return cardToPlaySelector.selectSingleCard(sortedHand(hand), playableCards);
     }
 
-    private Card promptSelectCard(List<Card> hand, String prompt) {
-        hand.sort(Card.compareBySuiteAndRank());
-        printCards(hand);
-
-        System.out.print(prompt);
-        int selectedCardNumber = readNumber(number -> number > 0 && number <= hand.size());
-
-        Card selectedCard = hand.get(selectedCardNumber - 1);
-        System.out.println("Selected " + selectedCard);
-
-        return selectedCard;
-    }
-
-    private void printCards(List<Card> cards) {
-        for (int i = 1; i <= cards.size(); i++) {
-            Card card = cards.get(i - 1);
-            System.out.println(i + ". " + card);
-        }
-    }
-
-    private int readNumber(Predicate<Integer> validateNumber) {
-        return readValue(Integer::parseInt, validateNumber);
-    }
-
-    private <T> T readValue(Function<String, T> mapper, Predicate<T> validate) {
-        Scanner scanner = new Scanner(System.in);
-
-        T value = mapper.apply(scanner.nextLine());
-        if (validate.test(value)) {
-            return value;
-        }
-
-        do {
-            System.out.println("Please enter valid input!");
-            value = mapper.apply(scanner.nextLine());
-        } while (!validate.test(value));
-
-        return value;
+    private List<Card> sortedHand(List<Card> hand) {
+        List<Card> sortedHand = new ArrayList<>(hand);
+        sortedHand.sort(Card.compareBySuiteAndRank());
+        return sortedHand;
     }
 
 }

@@ -22,5 +22,5 @@ public interface PlayerInputHandler {
 
     List<Card> chooseCardsToPass(List<Card> hand);
 
-    Card chooseCardToPlay(List<Card> playableCards);
+    Card chooseCardToPlay(List<Card> hand, List<Card> playableCards);
 }

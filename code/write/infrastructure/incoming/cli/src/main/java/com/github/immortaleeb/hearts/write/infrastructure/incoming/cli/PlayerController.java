@@ -148,7 +148,7 @@ public class PlayerController implements EventListener<GameEvent> {
     }
 
     private void playCard(GameId gameId, List<Card> playableCards) {
-        Card cardToPlay = playerInputHandler.chooseCardToPlay(playableCards);
+        Card cardToPlay = playerInputHandler.chooseCardToPlay(hand, playableCards);
         commandDispatcher.dispatch(new PlayCard(gameId, playerId, cardToPlay));
     }
 
