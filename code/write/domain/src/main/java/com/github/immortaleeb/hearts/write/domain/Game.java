@@ -171,7 +171,6 @@ public class Game {
 
     public void loadFromHistory(List<GameEvent> events) {
         for (GameEvent event : events) {
-            System.out.println(event);
             apply(event);
         }
     }

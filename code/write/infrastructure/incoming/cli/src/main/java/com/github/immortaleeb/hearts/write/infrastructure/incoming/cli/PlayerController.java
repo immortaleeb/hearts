@@ -34,6 +34,7 @@ public class PlayerController implements EventListener<GameEvent> {
     @Override
     public void process(GameEvent event) {
         if (event instanceof CardsDealt cardsDealt) {
+            showDealtCards(cardsDealt);
             incrementRoundNumber();
             updateHand(cardsDealt);
             passCardsIfNecessary(cardsDealt);
@@ -44,11 +45,38 @@ public class PlayerController implements EventListener<GameEvent> {
         } else if (event instanceof StartedPlaying startedPlaying) {
             playOpeningCard(startedPlaying);
         } else if (event instanceof CardPlayed cardPlayed) {
+            showPlayedCard(cardPlayed);
             playCardFromHand(cardPlayed);
             removeCardFromHand(cardPlayed);
         } else if (event instanceof TrickWon trickWon) {
+            showPlayerWonTrick(trickWon);
             playCardFromHand(trickWon);
+        } else if (event instanceof RoundEnded roundEnded) {
+            showRoundEnded(roundEnded);
+        } else if (event instanceof GameEnded gameEnded) {
+            showGameEnded(gameEnded);
         }
+    }
+
+    private void showGameEnded(GameEnded gameEnded) {
+        playerInputHandler.showGameEnded(gameEnded.scores());
+    }
+
+    private void showRoundEnded(RoundEnded roundEnded) {
+        playerInputHandler.showRoundEnded(roundEnded.scores());
+    }
+
+    private void showPlayerWonTrick(TrickWon trickWon) {
+        playerInputHandler.showPlayerWonTrick(trickWon.wonBy());
+    }
+
+    private void showPlayedCard(CardPlayed cardPlayed) {
+        playerInputHandler.showPlayedCard(cardPlayed.playedBy(), cardPlayed.card());
+    }
+
+    private void showDealtCards(CardsDealt cardsDealt) {
+        List<Card> playerHand = getCardsForPlayer(cardsDealt);
+        playerInputHandler.showDealtCards(playerHand);
     }
 
     private void incrementRoundNumber() {
@@ -58,6 +86,7 @@ public class PlayerController implements EventListener<GameEvent> {
     private void addCardsToHand(PlayerHasTakenPassedCards playerHasTakenPassedCards) {
         if (playerHasTakenPassedCards.toPlayer().equals(playerId)) {
             hand.addAll(playerHasTakenPassedCards.cards());
+            playerInputHandler.showReceivedCards(playerHasTakenPassedCards.fromPlayer(), playerHasTakenPassedCards.cards());
         }
     }
 
@@ -95,8 +124,13 @@ public class PlayerController implements EventListener<GameEvent> {
     }
 
     private void updateHand(CardsDealt cardsDealt) {
+        List<Card> playerHand = getCardsForPlayer(cardsDealt);
+        hand.addAll(playerHand);
+    }
+
+    private List<Card> getCardsForPlayer(CardsDealt cardsDealt) {
         Map<PlayerId, List<Card>> playerHands = cardsDealt.playerHands();
-        hand.addAll(playerHands.get(playerId));
+        return playerHands.get(playerId);
     }
 
     private void playOpeningCard(StartedPlaying startedPlaying) {

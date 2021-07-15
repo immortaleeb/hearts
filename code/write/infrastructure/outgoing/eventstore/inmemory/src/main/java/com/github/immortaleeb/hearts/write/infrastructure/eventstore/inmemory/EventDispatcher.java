@@ -35,7 +35,6 @@ public class EventDispatcher {
     }
 
     private <E extends GameEvent> void dispatch(E event) {
-        System.out.println(event);
         Class<E> eventClass = (Class<E>) event.getClass();
         registry.findListeners(eventClass).forEach(listener -> listener.process(event));
     }
