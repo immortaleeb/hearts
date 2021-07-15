@@ -1,12 +1,13 @@
 plugins {
     id 'java-library'
+    id 'java-test-fixtures'
 }
 
 dependencies {
-    implementation project(':code:write:application:api')
+    api project(':code:write:application:api')
+
     implementation project(':code:write:domain')
     implementation project(':code:write:shared')
-    implementation project(':code:write:infrastructure:outgoing:eventstore:api')
 
     testImplementation(testFixtures(project(':code:write:application:api')))
 }

@@ -5,7 +5,7 @@ plugins {
 mainClassName = 'com.github.immortaleeb.hearts.Application'
 
 dependencies {
-    implementation project(':code:write:application')
+    implementation project(':code:write:application:usecase')
     implementation project(':code:write:domain')
     implementation project(':code:write:shared')
 

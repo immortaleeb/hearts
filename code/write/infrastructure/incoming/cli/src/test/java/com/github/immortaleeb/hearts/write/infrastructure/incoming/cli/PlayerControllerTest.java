@@ -1,10 +1,10 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
-import com.github.immortaleeb.hearts.write.application.PassCards;
-import com.github.immortaleeb.hearts.write.application.PlayCard;
+import com.github.immortaleeb.hearts.write.application.api.PassCards;
+import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;
-import com.github.immortaleeb.hearts.write.fixtures.GameFixtures;
-import com.github.immortaleeb.hearts.write.fixtures.PlayerIdFixtures;
+import com.github.immortaleeb.hearts.write.application.fixtures.GameFixtures;
+import com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.shared.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.github.immortaleeb.hearts.write.fixtures.CardFixtures.twoOfClubs;
+import static com.github.immortaleeb.hearts.write.application.fixtures.CardFixtures.twoOfClubs;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.hamcrest.MatcherAssert.assertThat;

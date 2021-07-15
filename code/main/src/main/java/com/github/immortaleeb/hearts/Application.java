@@ -1,7 +1,7 @@
 package com.github.immortaleeb.hearts;
 
-import com.github.immortaleeb.hearts.write.application.CommandHandlerDispatcher;
-import com.github.immortaleeb.hearts.write.application.StartGame;
+import com.github.immortaleeb.hearts.write.application.usecase.CommandHandlerDispatcher;
+import com.github.immortaleeb.hearts.write.application.api.StartGame;
 import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;

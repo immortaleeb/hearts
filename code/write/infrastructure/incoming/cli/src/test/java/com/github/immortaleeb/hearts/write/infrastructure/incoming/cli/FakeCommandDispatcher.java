@@ -1,6 +1,6 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
-import com.github.immortaleeb.hearts.write.application.*;
+import com.github.immortaleeb.hearts.write.application.api.*;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 
 import java.util.ArrayList;

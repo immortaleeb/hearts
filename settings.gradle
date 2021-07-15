@@ -1,7 +1,8 @@
 rootProject.name = 'hearts'
 
 include ':code:main',
-        ':code:write:application',
+        ':code:write:application:api',
+        ':code:write:application:usecase',
         ':code:write:domain',
         ':code:write:infrastructure:incoming:cli',
         ':code:write:infrastructure:outgoing:eventsourcing',

@@ -1,8 +1,8 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
-import com.github.immortaleeb.hearts.write.application.CommandDispatcher;
-import com.github.immortaleeb.hearts.write.application.PassCards;
-import com.github.immortaleeb.hearts.write.application.PlayCard;
+import com.github.immortaleeb.hearts.write.application.api.CommandDispatcher;
+import com.github.immortaleeb.hearts.write.application.api.PassCards;
+import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventListener;
 import com.github.immortaleeb.hearts.write.shared.*;
