@@ -5,31 +5,36 @@ import com.github.immortaleeb.lobby.domain.LobbyEvent;
 import com.github.immortaleeb.lobby.domain.LobbyRepository;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableList;
 
 public class FakeLobbyRepository implements LobbyRepository {
 
-    private final List<Lobby.Snapshot> savedSnapshots = new ArrayList<>();
+    private final Map<LobbyId, Lobby.Snapshot> savedSnapshots = new HashMap<>();
     private final List<LobbyEvent> raisedEvents = new ArrayList<>();
 
     public void givenExisting(Lobby.Snapshot existingLobby) {
-        savedSnapshots.add(existingLobby);
+        savedSnapshots.put(existingLobby.id(), existingLobby);
+    }
+
+    @Override
+    public List<Lobby> findAll() {
+        return savedSnapshots.values()
+                .stream()
+                .map(Lobby::restoreFrom)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Lobby> find(LobbyId lobbyId) {
-        return savedSnapshots.stream()
-                .filter(snapshot -> snapshot.id().equals(lobbyId))
-                .findFirst()
+        return Optional.ofNullable(savedSnapshots.get(lobbyId))
                 .map(Lobby::restoreFrom);
     }
 
     public void save(Lobby lobby) {
-        savedSnapshots.add(lobby.snapshot());
+        savedSnapshots.put(lobby.id(), lobby.snapshot());
         raisedEvents.addAll(lobby.raisedEvents());
     }
 
