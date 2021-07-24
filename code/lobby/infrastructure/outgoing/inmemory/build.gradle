@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':code:lobby:domain')
+    implementation project(':code:lobby:shared')
+}

@@ -15,6 +15,11 @@ import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerInp
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.SimplePlayerInputHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.StdinPlayerInputHandler;
 import com.github.immortaleeb.common.shared.PlayerId;
+import com.github.immortaleeb.infrastructure.outgoing.inmemory.InMemoryLobbyRepository;
+import com.github.immortaleeb.lobby.application.api.command.CreateLobby;
+import com.github.immortaleeb.lobby.application.api.command.JoinLobby;
+import com.github.immortaleeb.lobby.application.usecase.command.LobbyCommandHandlers;
+import com.github.immortaleeb.lobby.shared.LobbyId;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,12 +31,16 @@ public class Application {
     public static void main(String[] args) {
         EventListenerRegistry eventListenerRegistry = new EventListenerRegistry();
         EventDispatcher eventDispatcher = new EventDispatcher(eventListenerRegistry);
-        EventStore eventStore = new InMemoryEventStore(eventDispatcher);
-        GameRepository gameRepository = new EventSourcedGameRepository(eventStore);
 
         CommandHandlerRegistry commandHandlerRegistry = new CommandHandlerRegistry();
-        CommandHandlerDispatcher dispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
+        CommandHandlerDispatcher commandDispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
 
+        EventStore eventStore = new InMemoryEventStore(eventDispatcher);
+
+        InMemoryLobbyRepository lobbyRepository = new InMemoryLobbyRepository();
+        LobbyCommandHandlers.registerAll(commandHandlerRegistry, lobbyRepository);
+
+        GameRepository gameRepository = new EventSourcedGameRepository(eventStore);
         GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository);
 
         List<PlayerId> players = Arrays.asList(
@@ -39,6 +48,11 @@ public class Application {
                 PlayerId.generate(),
                 PlayerId.generate(),
                 PlayerId.generate());
+
+        LobbyId lobbyId = commandDispatcher.dispatch(new CreateLobby("My Lobby", players.get(0)));
+        commandDispatcher.dispatch(new JoinLobby(lobbyId, players.get(1)));
+        commandDispatcher.dispatch(new JoinLobby(lobbyId, players.get(2)));
+        commandDispatcher.dispatch(new JoinLobby(lobbyId, players.get(3)));
 
         List<PlayerInputHandler> playerInputHandlers = List.of(
                 new StdinPlayerInputHandler(),
@@ -48,7 +62,7 @@ public class Application {
         );
 
         List<PlayerController> playerControllers = IntStream.range(0, players.size())
-                .mapToObj(playerIndex -> new PlayerController(players.get(playerIndex), dispatcher, playerInputHandlers.get(playerIndex)))
+                .mapToObj(playerIndex -> new PlayerController(players.get(playerIndex), commandDispatcher, playerInputHandlers.get(playerIndex)))
                 .collect(Collectors.toList());
 
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardsDealt.class, controller::process));
@@ -60,7 +74,7 @@ public class Application {
         playerControllers.forEach(controller -> eventListenerRegistry.register(RoundEnded.class, controller::process));
         playerControllers.forEach(controller -> eventListenerRegistry.register(GameEnded.class, controller::process));
 
-        dispatcher.dispatch(new StartGame(players));
+        commandDispatcher.dispatch(new StartGame(players));
 
     }
 }

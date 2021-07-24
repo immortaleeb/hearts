@@ -12,4 +12,9 @@ dependencies {
     implementation project(':code:hearts:write:infrastructure:incoming:cli')
     implementation project(':code:hearts:write:infrastructure:outgoing:eventsourcing')
     implementation project(':code:hearts:write:infrastructure:outgoing:eventstore:inmemory')
+
+    implementation project(':code:lobby:application:usecase')
+    implementation project(':code:lobby:domain')
+    implementation project(':code:lobby:shared')
+    implementation project(':code:lobby:infrastructure:outgoing:inmemory')
 }

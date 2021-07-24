@@ -14,4 +14,5 @@ include ':code:main',
         ':code:lobby:application:api',
         ':code:lobby:application:usecase',
         ':code:lobby:domain',
+        ':code:lobby:infrastructure:outgoing:inmemory',
         ':code:lobby:shared'
