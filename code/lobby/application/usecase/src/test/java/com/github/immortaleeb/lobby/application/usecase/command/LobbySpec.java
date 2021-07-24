@@ -3,9 +3,10 @@ package com.github.immortaleeb.lobby.application.usecase.command;
 import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
+import com.github.immortaleeb.lobby.repository.FakeLobbyRepository;
 import org.junit.jupiter.api.BeforeEach;
 
-public class LobbySpec {
+abstract class LobbySpec {
 
     protected CommandDispatcher dispatcher;
     protected FakeLobbyRepository lobbyRepository;

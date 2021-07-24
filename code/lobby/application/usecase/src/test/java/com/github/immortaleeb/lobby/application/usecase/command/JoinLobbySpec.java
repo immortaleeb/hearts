@@ -5,12 +5,12 @@ import com.github.immortaleeb.lobby.application.api.command.JoinLobby;
 import com.github.immortaleeb.lobby.domain.Lobby;
 import com.github.immortaleeb.lobby.domain.PlayerJoinedLobby;
 import com.github.immortaleeb.lobby.shared.LobbyFull;
-import com.github.immortaleeb.lobby.shared.LobbyId;
 import com.github.immortaleeb.lobby.shared.PlayerAlreadyJoinedLobby;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.github.immortaleeb.lobby.fixtures.LobbyFixtures.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JoinLobbySpec extends LobbySpec {
 
-    private static final LobbyId LOBBY_ID = LobbyId.generate();
-    private static final PlayerId PLAYER_1 = PlayerId.generate();
     private static final PlayerId PLAYER_2 = PlayerId.generate();
     private static final PlayerId PLAYER_3 = PlayerId.generate();
     private static final PlayerId PLAYER_4 = PlayerId.generate();
@@ -57,7 +55,10 @@ class JoinLobbySpec extends LobbySpec {
     }
 
     private static Lobby.Snapshot lobbyWithPlayers(PlayerId... players) {
-        return new Lobby.Snapshot(LOBBY_ID, "Existing lobby", players[0], List.of(players));
+        return existingLobby()
+                .withCreatedBy(players[0])
+                .withPlayers(List.of(players))
+                .build();
     }
 
 }

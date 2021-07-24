@@ -1,4 +1,4 @@
-package com.github.immortaleeb.lobby.application.usecase.command;
+package com.github.immortaleeb.lobby.repository;
 
 import com.github.immortaleeb.lobby.domain.Lobby;
 import com.github.immortaleeb.lobby.domain.LobbyEvent;
