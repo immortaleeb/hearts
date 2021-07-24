@@ -1,11 +1,11 @@
 rootProject.name = 'hearts'
 
 include ':code:main',
-        ':code:write:application:api',
-        ':code:write:application:usecase',
-        ':code:write:domain',
-        ':code:write:infrastructure:incoming:cli',
-        ':code:write:infrastructure:outgoing:eventsourcing',
-        ':code:write:infrastructure:outgoing:eventstore:api',
-        ':code:write:infrastructure:outgoing:eventstore:inmemory',
-        ':code:write:shared'
+        ':code:hearts:write:application:api',
+        ':code:hearts:write:application:usecase',
+        ':code:hearts:write:domain',
+        ':code:hearts:write:infrastructure:incoming:cli',
+        ':code:hearts:write:infrastructure:outgoing:eventsourcing',
+        ':code:hearts:write:infrastructure:outgoing:eventstore:api',
+        ':code:hearts:write:infrastructure:outgoing:eventstore:inmemory',
+        ':code:hearts:write:shared'

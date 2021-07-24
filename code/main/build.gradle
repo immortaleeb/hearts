@@ -5,11 +5,11 @@ plugins {
 mainClassName = 'com.github.immortaleeb.hearts.Application'
 
 dependencies {
-    implementation project(':code:write:application:usecase')
-    implementation project(':code:write:domain')
-    implementation project(':code:write:shared')
+    implementation project(':code:hearts:write:application:usecase')
+    implementation project(':code:hearts:write:domain')
+    implementation project(':code:hearts:write:shared')
 
-    implementation project(':code:write:infrastructure:incoming:cli')
-    implementation project(':code:write:infrastructure:outgoing:eventsourcing')
-    implementation project(':code:write:infrastructure:outgoing:eventstore:inmemory')
+    implementation project(':code:hearts:write:infrastructure:incoming:cli')
+    implementation project(':code:hearts:write:infrastructure:outgoing:eventsourcing')
+    implementation project(':code:hearts:write:infrastructure:outgoing:eventstore:inmemory')
 }

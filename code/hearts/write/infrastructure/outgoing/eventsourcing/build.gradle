@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':code:hearts:write:domain')
+    implementation project(':code:hearts:write:infrastructure:outgoing:eventstore:api')
+    implementation project(':code:hearts:write:shared')
+}
