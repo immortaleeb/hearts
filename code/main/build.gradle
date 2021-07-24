@@ -1,8 +1,10 @@
 plugins {
     id 'application'
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-mainClassName = 'com.github.immortaleeb.hearts.Application'
+mainClassName = 'com.github.immortaleeb.hearts.WebApplication'
 
 dependencies {
     implementation project(':code:hearts:write:application:usecase')
@@ -16,5 +18,8 @@ dependencies {
     implementation project(':code:lobby:application:usecase')
     implementation project(':code:lobby:domain')
     implementation project(':code:lobby:shared')
+    implementation project(':code:lobby:infrastructure:incoming:rest')
     implementation project(':code:lobby:infrastructure:outgoing:inmemory')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
