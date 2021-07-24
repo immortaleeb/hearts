@@ -1,7 +1,7 @@
 package com.github.immortaleeb.hearts.write.application.fixtures;
 
 import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Suite;
 
 import java.util.HashMap;

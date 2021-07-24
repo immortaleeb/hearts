@@ -1,6 +1,6 @@
 package com.github.immortaleeb.hearts.write.domain;
 
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 
 import java.util.List;
 import java.util.Map;

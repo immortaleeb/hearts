@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.write.domain;
 
+import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.*;
 
 import java.util.ArrayList;

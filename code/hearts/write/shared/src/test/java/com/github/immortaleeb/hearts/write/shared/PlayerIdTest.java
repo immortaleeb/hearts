@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.write.shared;
 
+import com.github.immortaleeb.common.shared.PlayerId;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

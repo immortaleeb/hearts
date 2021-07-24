@@ -1,5 +1,6 @@
 package com.github.immortaleeb.hearts.write.application.scenarios;
 
+import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.shared.*;

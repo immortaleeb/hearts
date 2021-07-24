@@ -19,7 +19,7 @@ import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.CardNotInHand;
 import com.github.immortaleeb.hearts.write.shared.InvalidCardPlayed;
 import com.github.immortaleeb.hearts.write.shared.NotPlayersTurn;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.Rank;
 import com.github.immortaleeb.hearts.write.shared.Suite;
 import com.github.immortaleeb.hearts.write.application.fixtures.CardFixtures;

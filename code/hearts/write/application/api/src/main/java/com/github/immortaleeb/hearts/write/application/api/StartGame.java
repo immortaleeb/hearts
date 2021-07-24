@@ -1,7 +1,7 @@
 package com.github.immortaleeb.hearts.write.application.api;
 
 import com.github.immortaleeb.common.application.api.Command;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 
 import java.util.List;
 

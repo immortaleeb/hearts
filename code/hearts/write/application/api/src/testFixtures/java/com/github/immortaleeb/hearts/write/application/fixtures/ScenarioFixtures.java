@@ -14,7 +14,7 @@ import com.github.immortaleeb.hearts.write.application.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
 import com.github.immortaleeb.hearts.write.shared.GameId;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 
 import java.util.List;
 import java.util.function.Function;

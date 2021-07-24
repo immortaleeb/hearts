@@ -14,7 +14,7 @@ import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerCon
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerInputHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.SimplePlayerInputHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.StdinPlayerInputHandler;
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 
 import java.util.Arrays;
 import java.util.List;

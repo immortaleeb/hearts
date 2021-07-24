@@ -1,6 +1,6 @@
 package com.github.immortaleeb.hearts.write.application.fixtures;
 
-import com.github.immortaleeb.hearts.write.shared.PlayerId;
+import com.github.immortaleeb.common.shared.PlayerId;
 
 import java.util.Arrays;
 import java.util.List;
