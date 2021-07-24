@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api project(':code:lobby:application:api')
+    implementation project(':code:common:shared')
+
+    implementation project(':code:lobby:domain')
+    implementation project(':code:lobby:shared')
+}

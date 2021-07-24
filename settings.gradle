@@ -10,4 +10,8 @@ include ':code:main',
         ':code:hearts:write:infrastructure:outgoing:eventsourcing',
         ':code:hearts:write:infrastructure:outgoing:eventstore:api',
         ':code:hearts:write:infrastructure:outgoing:eventstore:inmemory',
-        ':code:hearts:write:shared'
+        ':code:hearts:write:shared',
+        ':code:lobby:application:api',
+        ':code:lobby:application:usecase',
+        ':code:lobby:domain',
+        ':code:lobby:shared'
