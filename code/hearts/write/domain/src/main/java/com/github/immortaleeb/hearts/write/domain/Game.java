@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 public class Game {
 
+    private static final int NUMBER_OF_PLAYERS = 4;
     private static final int CARDS_PER_HAND = 13;
     private static final int CARDS_TO_PASS = 3;
     private static final Card OPENING_CARD = Card.of(Suite.CLUBS, Rank.TWO);
@@ -273,6 +274,10 @@ public class Game {
     }
 
     public static Game startWith(List<PlayerId> players) {
+        if (players.size() != NUMBER_OF_PLAYERS) {
+            throw new WrongNumberOfPlayers("The game can only be started when there are exactly %d players".formatted(NUMBER_OF_PLAYERS));
+        }
+
         Game game = new Game(GameId.generate());
         game.applyNewEvent(new GameStarted(game.id, players));
 

@@ -1,18 +1,22 @@
 package com.github.immortaleeb.hearts.write.application.usecase;
 
+import static com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures.generatePlayers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.application.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
 import com.github.immortaleeb.hearts.write.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 import com.github.immortaleeb.common.shared.PlayerId;
+import com.github.immortaleeb.hearts.write.shared.WrongNumberOfPlayers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -25,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class StartGameSpec extends GameSpec {
 
@@ -85,6 +90,20 @@ class StartGameSpec extends GameSpec {
         Map<PlayerId, List<Card>> otherGamePlayerHands = getSingleEvent(otherGameId, CardsDealt.class).playerHands();
 
         assertThat(gamePlayerHands, is(not(equalTo(otherGamePlayerHands))));
+    }
+
+    @Test
+    void startGame_fails_when_player_count_is_less_than_4() {
+        List<PlayerId> players = generatePlayers(3);
+
+        assertThrows(WrongNumberOfPlayers.class, () -> startGameWith(players));
+    }
+
+    @Test
+    void startGame_fails_when_player_count_is_more_than_4() {
+        List<PlayerId> players = generatePlayers(5);
+
+        assertThrows(WrongNumberOfPlayers.class, () -> startGameWith(players));
     }
 
     // helper methods
