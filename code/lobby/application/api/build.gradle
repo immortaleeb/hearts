@@ -5,4 +5,5 @@ plugins {
 dependencies {
     api project(':code:common:application:api')
     implementation project(':code:common:shared')
+    implementation project(':code:lobby:shared')
 }
