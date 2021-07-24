@@ -1,0 +1,143 @@
+<html>
+    <head>
+        <style>
+            *[data-page] {
+                display: none;
+            }
+        </style>
+        <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
+    </head>
+    <body>
+        <script>
+            const State = {
+                playerId: uuidv4(),
+                currentPage: "list-lobbies",
+                currentLobby: null
+            };
+
+            const Pages = {
+                listLobbies: 'list-lobbies',
+                lobby: 'lobby'
+            };
+
+            const API = {
+                baseUrl: 'http://localhost:8080/api/v1',
+
+                createLobby: async (name) => {
+                    const response = await fetch(`${API.baseUrl}/lobbies`, {
+                        method: 'POST',
+                        body: JSON.stringify({ name }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Player-Id': State.playerId
+                        }
+                    });
+                    return await response.json();
+                },
+
+                listLobbies: async () => {
+                    const response = await fetch(`${API.baseUrl}/lobbies`);
+                    return await response.json();
+                },
+
+                getLobbyDetails: async (id) => {
+                    const response = await fetch(`${API.baseUrl}/lobbies/${id}`);
+                    return await response.json();
+                },
+
+                joinLobby: async (id) => {
+                    return await fetch(`${API.baseUrl}/lobbies/${id}/join`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Player-Id': State.playerId
+                        }
+                    });
+                }
+            };
+        </script>
+
+        <div data-page="list-lobbies" data-load="refreshLobbies()">
+            <table id="lobbies">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Created by</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <button onclick="createLobby()">Create lobby</button>
+        </div>
+
+        <div data-page="lobby" data-load="refreshLobby()">
+            <p>Players</p>
+            <ol data-list="players">
+            </ol>
+
+            <button onclick="gotoPage(Pages.listLobbies)">Back to lobby overview</button>
+        </div>
+
+        <script>
+            function hideAllPages() {
+                document.querySelectorAll("[data-page]").forEach(page => page.style.display = 'none');
+            }
+
+            function gotoPage(pageId) {
+                hideAllPages();
+                let page = document.querySelector(`[data-page=${pageId}]`);
+
+                page.style.display = 'block';
+                State.currentPage = pageId;
+
+                page.dataset.load && eval(page.dataset.load);
+            }
+
+            function createLobby() {
+                let lobbyName = prompt("Please enter a name for your new lobby");
+
+                if (lobbyName) {
+                    API.createLobby(lobbyName)
+                        .then(response => {
+                            alert(`Created lobby with id ${response.id}`);
+                            refreshLobbies();
+                        });
+                }
+            }
+
+            function refreshLobbies() {
+                const lobbiesBody = document.querySelector('#lobbies tbody');
+
+                API.listLobbies().then(lobbies => {
+                    lobbiesBody.innerHTML = '';
+
+                    lobbies.forEach(({id, name, created_by}) => {
+                        lobbiesBody.innerHTML += `<tr><td>${name}</td><td>${created_by}</td><td><button onclick="joinLobby('${id}')">Join</button></td></tr>`;
+                    });
+                });
+            }
+
+            function refreshLobby() {
+                const playerList = document.querySelector('[data-list=players]');
+                API.getLobbyDetails(State.currentLobby).then(lobbyDetails => {
+                    playerList.innerHTML = '';
+
+                    lobbyDetails.players.forEach(player => {
+                        playerList.innerHTML += `<li>${player}</li>`
+                    });
+                })
+            }
+
+            function joinLobby(lobbyId) {
+                API.joinLobby(lobbyId).then(() => {
+                    State.currentLobby = lobbyId;
+                    gotoPage(Pages.lobby);
+                });
+            }
+
+            gotoPage(Pages.listLobbies)
+        </script>
+    </body>
+</html>
