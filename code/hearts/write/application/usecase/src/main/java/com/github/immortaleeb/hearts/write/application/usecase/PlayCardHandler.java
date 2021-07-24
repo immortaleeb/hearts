@@ -1,10 +1,11 @@
 package com.github.immortaleeb.hearts.write.application.usecase;
 
+import com.github.immortaleeb.common.application.api.NoResultCommandHandler;
 import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
 
-class PlayCardHandler {
+class PlayCardHandler implements NoResultCommandHandler<PlayCard> {
 
     private final GameRepository gameRepository;
 
@@ -12,7 +13,8 @@ class PlayCardHandler {
         this.gameRepository = gameRepository;
     }
 
-    void handle(PlayCard command) {
+    @Override
+    public void handleNoResult(PlayCard command) {
         Game game = gameRepository.load(command.gameId());
         game.playCard(command.player(), command.card());
         gameRepository.save(game);

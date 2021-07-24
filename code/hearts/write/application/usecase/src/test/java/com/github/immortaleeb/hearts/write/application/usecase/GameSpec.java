@@ -1,5 +1,7 @@
 package com.github.immortaleeb.hearts.write.application.usecase;
 
+import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
+import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
 import com.github.immortaleeb.hearts.write.application.api.PassCards;
 import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
@@ -28,6 +30,7 @@ abstract class GameSpec {
     protected GameId gameId;
     protected List<PlayerId> players;
     protected FakeGameRepository gameRepository;
+    protected CommandHandlerRegistry registry;
     protected CommandHandlerDispatcher dispatcher;
 
     @BeforeEach
@@ -39,7 +42,10 @@ abstract class GameSpec {
         game.loadFromHistory(given().toList());
 
         gameRepository = new FakeGameRepository(game);
-        dispatcher = new CommandHandlerDispatcher(gameRepository);
+        registry = new CommandHandlerRegistry();
+        dispatcher = new CommandHandlerDispatcher(registry);
+
+        GameCommandHandlers.registerAll(registry, gameRepository);
     }
 
     protected abstract Events given();

@@ -1,5 +1,7 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
+import com.github.immortaleeb.common.application.api.Command;
+import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.api.*;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 
@@ -11,19 +13,14 @@ public class FakeCommandDispatcher implements CommandDispatcher {
     private final List<Command> dispatchedCommands = new ArrayList<>();
 
     @Override
-    public GameId dispatch(StartGame startGame) {
-        dispatchedCommands.add(startGame);
-        return GameId.generate();
-    }
+    public <R, C extends Command> R dispatch(C command) {
+        dispatchedCommands.add(command);
 
-    @Override
-    public void dispatch(PassCards passCards) {
-        dispatchedCommands.add(passCards);
-    }
+        if (command instanceof StartGame) {
+            return (R) GameId.generate();
+        }
 
-    @Override
-    public void dispatch(PlayCard playCard) {
-        dispatchedCommands.add(playCard);
+        return null;
     }
 
     public List<Command> dispatchedCommands() {
@@ -36,5 +33,4 @@ public class FakeCommandDispatcher implements CommandDispatcher {
         }
         return dispatchedCommands.get(dispatchedCommands.size() - 1);
     }
-
 }

@@ -1,6 +1,6 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
-import com.github.immortaleeb.hearts.write.application.api.CommandDispatcher;
+import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.api.PassCards;
 import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;

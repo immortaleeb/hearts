@@ -1,11 +1,12 @@
 package com.github.immortaleeb.hearts.write.application.usecase;
 
+import com.github.immortaleeb.common.application.api.CommandHandler;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
 import com.github.immortaleeb.hearts.write.shared.GameId;
 
-class StartGameHandler {
+class StartGameHandler implements CommandHandler<GameId, StartGame> {
 
     private final GameRepository gameRepository;
 
@@ -13,6 +14,7 @@ class StartGameHandler {
         this.gameRepository = gameRepository;
     }
 
+    @Override
     public GameId handle(StartGame startGame) {
         Game game = Game.startWith(startGame.players());
         gameRepository.save(game);

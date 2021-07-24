@@ -4,6 +4,8 @@ plugins {
 }
 
 dependencies {
+    api project(':code:common:application:api')
+
     implementation project(':code:hearts:write:domain')
     implementation project(':code:hearts:write:shared')
 

@@ -1,6 +1,8 @@
 package com.github.immortaleeb.hearts;
 
-import com.github.immortaleeb.hearts.write.application.usecase.CommandHandlerDispatcher;
+import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
+import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
+import com.github.immortaleeb.hearts.write.application.usecase.*;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
 import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
@@ -26,7 +28,11 @@ public class Application {
         EventDispatcher eventDispatcher = new EventDispatcher(eventListenerRegistry);
         EventStore eventStore = new InMemoryEventStore(eventDispatcher);
         GameRepository gameRepository = new EventSourcedGameRepository(eventStore);
-        CommandHandlerDispatcher dispatcher = new CommandHandlerDispatcher(gameRepository);
+
+        CommandHandlerRegistry commandHandlerRegistry = new CommandHandlerRegistry();
+        CommandHandlerDispatcher dispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
+
+        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository);
 
         List<PlayerId> players = Arrays.asList(
                 PlayerId.generate(),
