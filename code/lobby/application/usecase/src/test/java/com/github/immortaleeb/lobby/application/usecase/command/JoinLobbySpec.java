@@ -19,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JoinLobbySpec extends LobbySpec {
 
-    private static final PlayerId PLAYER_2 = PlayerId.generate();
-    private static final PlayerId PLAYER_3 = PlayerId.generate();
-    private static final PlayerId PLAYER_4 = PlayerId.generate();
     private static final PlayerId PLAYER_5 = PlayerId.generate();
 
     @Test

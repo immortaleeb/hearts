@@ -2,7 +2,7 @@ package com.github.immortaleeb.lobby.application.usecase.query;
 
 import com.github.immortaleeb.lobby.application.api.query.GetLobbyDetails;
 import com.github.immortaleeb.lobby.domain.Lobby;
-import com.github.immortaleeb.lobby.repository.FakeLobbyRepository;
+import com.github.immortaleeb.lobby.fakes.FakeLobbyRepository;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import com.github.immortaleeb.lobby.shared.LobbyNotFound;
 import org.hamcrest.CoreMatchers;

@@ -1,4 +1,4 @@
-package com.github.immortaleeb.lobby.repository;
+package com.github.immortaleeb.lobby.fakes;
 
 import com.github.immortaleeb.lobby.domain.Lobby;
 import com.github.immortaleeb.lobby.domain.LobbyEvent;
@@ -12,7 +12,8 @@ import static java.util.Collections.unmodifiableList;
 
 public class FakeLobbyRepository implements LobbyRepository {
 
-    private final Map<LobbyId, Lobby.Snapshot> savedSnapshots = new HashMap<>();
+    private LobbyId lastSavedId = null;
+    private final Map<LobbyId, Lobby.Snapshot> savedSnapshots = new LinkedHashMap<>();
     private final List<LobbyEvent> raisedEvents = new ArrayList<>();
 
     public void givenExisting(Lobby.Snapshot existingLobby) {
@@ -36,14 +37,15 @@ public class FakeLobbyRepository implements LobbyRepository {
     public void save(Lobby lobby) {
         savedSnapshots.put(lobby.id(), lobby.snapshot());
         raisedEvents.addAll(lobby.raisedEvents());
+        lastSavedId = lobby.id();
     }
 
     public Lobby.Snapshot lastSaved() {
-        if (savedSnapshots.isEmpty()) {
+        if (lastSavedId == null) {
             throw new IllegalStateException("No snapshots were saved");
         }
 
-        return savedSnapshots.get(savedSnapshots.size() - 1);
+        return savedSnapshots.get(lastSavedId);
     }
 
     public List<LobbyEvent> raisedEvents() {

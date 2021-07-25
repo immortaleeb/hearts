@@ -46,7 +46,7 @@ class LobbyController {
         commandDispatcher.dispatch(new JoinLobby(lobbyId, playerId));
     }
 
-    public static record CreateLobbyRequest(String name) {}
-    public static record CreateLobbyResponse(LobbyId id, String name, PlayerId createdBy) {}
+    record CreateLobbyRequest(String name) {}
+    record CreateLobbyResponse(LobbyId id, String name, PlayerId createdBy) {}
 
 }

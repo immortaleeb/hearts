@@ -16,6 +16,7 @@ import com.github.immortaleeb.lobby.application.api.query.ListLobbies;
 import com.github.immortaleeb.lobby.application.usecase.command.LobbyCommandHandlers;
 import com.github.immortaleeb.lobby.application.usecase.query.GetLobbyDetailsHandler;
 import com.github.immortaleeb.lobby.application.usecase.query.ListLobbiesHandler;
+import com.github.immortaleeb.lobby.domain.GameStarter;
 import com.github.immortaleeb.lobby.domain.LobbyRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -52,19 +53,27 @@ public class WebApplication {
         return new InMemoryLobbyRepository();
     }
 
-    @Bean
-    public CommandHandlerRegistry commandHandlerRegistry(LobbyRepository lobbyRepository, GameRepository gameRepository) {
-        CommandHandlerRegistry commandHandlerRegistry = new CommandHandlerRegistry();
-
-        LobbyCommandHandlers.registerAll(commandHandlerRegistry, lobbyRepository);
-        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository);
-
-        return commandHandlerRegistry;
+    public GameStarter gameStarter(CommandDispatcher commandDispatcher) {
+        return new GameDomainGameStarter(commandDispatcher);
     }
 
     @Bean
-    public CommandDispatcher commandDispatcher(CommandHandlerRegistry commandHandlerRegistry) {
-        return new CommandHandlerDispatcher(commandHandlerRegistry);
+    public CommandHandlerRegistry commandHandlerRegistry() {
+        return new CommandHandlerRegistry();
+    }
+
+    @Bean
+    public CommandDispatcher commandDispatcher(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository) {
+        CommandHandlerDispatcher dispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
+
+        initializeCommandHandlers(commandHandlerRegistry, lobbyRepository, gameRepository, gameStarter(dispatcher));
+
+        return dispatcher;
+    }
+
+    private void initializeCommandHandlers(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository, GameStarter gameStarter) {
+        LobbyCommandHandlers.registerAll(commandHandlerRegistry, lobbyRepository, gameStarter);
+        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository);
     }
 
     @Bean
