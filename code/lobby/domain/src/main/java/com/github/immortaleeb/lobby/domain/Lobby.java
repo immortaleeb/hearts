@@ -1,7 +1,7 @@
 package com.github.immortaleeb.lobby.domain;
 
 import com.github.immortaleeb.common.shared.PlayerId;
-import com.github.immortaleeb.lobby.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyFull;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import com.github.immortaleeb.lobby.shared.PlayerAlreadyJoinedLobby;
@@ -19,7 +19,7 @@ public class Lobby {
     private final String name;
     private final PlayerId createdBy;
     private final List<PlayerId> players;
-    private GameId game;
+    private LobbyGameId game;
 
     private final List<LobbyEvent> raisedEvents = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class Lobby {
         return new Lobby(snapshot.id, snapshot.name, snapshot.createdBy, snapshot.players);
     }
 
-    public record Snapshot(LobbyId id, String name, PlayerId createdBy, List<PlayerId> players, GameId game) {}
+    public record Snapshot(LobbyId id, String name, PlayerId createdBy, List<PlayerId> players, LobbyGameId game) {}
 
     public Snapshot snapshot() {
         return new Snapshot(id, name, createdBy, unmodifiableList(players), game);

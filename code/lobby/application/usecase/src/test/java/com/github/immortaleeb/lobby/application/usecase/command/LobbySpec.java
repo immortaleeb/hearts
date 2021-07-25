@@ -5,12 +5,12 @@ import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
 import com.github.immortaleeb.lobby.fakes.FakeGameStarter;
 import com.github.immortaleeb.lobby.fakes.FakeLobbyRepository;
-import com.github.immortaleeb.lobby.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import org.junit.jupiter.api.BeforeEach;
 
 abstract class LobbySpec {
 
-    protected static final GameId GAME_ID = GameId.of("60e1c43c-c252-4642-ab23-5d9604b441e4");
+    protected static final LobbyGameId GAME_ID = LobbyGameId.of("60e1c43c-c252-4642-ab23-5d9604b441e4");
 
     protected CommandDispatcher dispatcher;
     protected FakeLobbyRepository lobbyRepository;

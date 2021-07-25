@@ -3,8 +3,9 @@ package com.github.immortaleeb.hearts;
 import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
+import com.github.immortaleeb.hearts.write.shared.GameId;
 import com.github.immortaleeb.lobby.domain.GameStarter;
-import com.github.immortaleeb.lobby.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 
 import java.util.List;
 
@@ -16,9 +17,9 @@ public class GameDomainGameStarter implements GameStarter {
     }
 
     @Override
-    public GameId startGame(List<PlayerId> players) {
-        com.github.immortaleeb.hearts.write.shared.GameId gameId = commandDispatcher.dispatch(new StartGame(players));
-        return GameId.of(gameId.asString());
+    public LobbyGameId startGame(List<PlayerId> players) {
+        GameId gameId = commandDispatcher.dispatch(new StartGame(players));
+        return LobbyGameId.of(gameId.asString());
     }
 
 }

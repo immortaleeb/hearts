@@ -7,7 +7,7 @@ import com.github.immortaleeb.lobby.application.api.command.JoinLobby;
 import com.github.immortaleeb.lobby.application.api.command.StartGame;
 import com.github.immortaleeb.lobby.application.api.query.GetLobbyDetails;
 import com.github.immortaleeb.lobby.application.api.query.ListLobbies;
-import com.github.immortaleeb.lobby.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,12 +50,12 @@ class LobbyController {
 
     @PostMapping("/api/v1/lobbies/{lobbyId}/start")
     public StartGameResponse startGame(@PathParam("lobbyId") LobbyId lobbyId) {
-        GameId gameId = commandDispatcher.dispatch(new StartGame(lobbyId));
+        LobbyGameId gameId = commandDispatcher.dispatch(new StartGame(lobbyId));
         return new StartGameResponse(gameId);
     }
 
     record CreateLobbyRequest(String name) {}
     record CreateLobbyResponse(LobbyId id, String name, PlayerId createdBy) {}
-    record StartGameResponse(GameId id) { }
+    record StartGameResponse(LobbyGameId id) { }
 
 }

@@ -3,10 +3,10 @@ package com.github.immortaleeb.lobby.shared;
 import java.util.Objects;
 import java.util.UUID;
 
-public class GameId {
+public class LobbyGameId {
     private final UUID uuid;
 
-    private GameId(UUID uuid) {
+    private LobbyGameId(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -14,12 +14,12 @@ public class GameId {
         return uuid.toString();
     }
 
-    public static GameId generate() {
-        return new GameId(UUID.randomUUID());
+    public static LobbyGameId generate() {
+        return new LobbyGameId(UUID.randomUUID());
     }
 
-    public static GameId of(String gameId) {
-        return new GameId(UUID.fromString(gameId));
+    public static LobbyGameId of(String gameId) {
+        return new LobbyGameId(UUID.fromString(gameId));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class GameId {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameId gameId = (GameId) o;
+        LobbyGameId gameId = (LobbyGameId) o;
         return Objects.equals(uuid, gameId.uuid);
     }
 

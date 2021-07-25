@@ -5,10 +5,10 @@ import com.github.immortaleeb.lobby.application.api.command.StartGame;
 import com.github.immortaleeb.lobby.domain.GameStarter;
 import com.github.immortaleeb.lobby.domain.Lobby;
 import com.github.immortaleeb.lobby.domain.LobbyRepository;
-import com.github.immortaleeb.lobby.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyNotFound;
 
-public class StartGameCommandHandler implements CommandHandler<GameId, StartGame> {
+public class StartGameCommandHandler implements CommandHandler<LobbyGameId, StartGame> {
 
     private final LobbyRepository lobbyRepository;
     private final GameStarter gameStarter;
@@ -19,13 +19,13 @@ public class StartGameCommandHandler implements CommandHandler<GameId, StartGame
     }
 
     @Override
-    public GameId handle(StartGame command) {
+    public LobbyGameId handle(StartGame command) {
         Lobby lobby = lobbyRepository.find(command.lobbyId())
                 .orElseThrow(() -> new LobbyNotFound("Could not find lobby with id " + command.lobbyId()));
         return startGame(lobby);
     }
 
-    private GameId startGame(Lobby existingLobby) {
+    private LobbyGameId startGame(Lobby existingLobby) {
         existingLobby.start(gameStarter);
         lobbyRepository.save(existingLobby);
         return existingLobby.snapshot().game();

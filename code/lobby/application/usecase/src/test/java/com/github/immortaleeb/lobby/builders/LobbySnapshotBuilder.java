@@ -2,7 +2,7 @@ package com.github.immortaleeb.lobby.builders;
 
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.lobby.domain.Lobby;
-import com.github.immortaleeb.lobby.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class LobbySnapshotBuilder {
     private String name;
     private PlayerId createdBy;
     private List<PlayerId> players;
-    private GameId game;
+    private LobbyGameId game;
 
     public LobbySnapshotBuilder withId(LobbyId id) {
         this.id = id;
@@ -35,7 +35,7 @@ public class LobbySnapshotBuilder {
         return this;
     }
 
-    public LobbySnapshotBuilder withGame(GameId game) {
+    public LobbySnapshotBuilder withGame(LobbyGameId game) {
         this.game = game;
         return this;
     }
