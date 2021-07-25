@@ -95,26 +95,44 @@
         </div>
 
         <script>
-            function hideAllPages() {
-                document.querySelectorAll("[data-page]").forEach(page => page.style.display = 'none');
+            function hidePage(pageId) {
+                const page = document.querySelector(`[data-page=${pageId}]`);
+
+                if (page.dataset.bind) {
+                    const lifecycleClass = eval(page.dataset.bind);
+                    lifecycleClass.onunload && lifecycleClass.onunload();
+                }
+
+                page.style.display = 'none';
             }
 
-            function gotoPage(pageId) {
-                hideAllPages();
-                let page = document.querySelector(`[data-page=${pageId}]`);
-
-                page.style.display = 'block';
-                State.currentPage = pageId;
+            function showPage(pageId) {
+                const page = document.querySelector(`[data-page=${pageId}]`);
 
                 if (page.dataset.bind) {
                     const lifecycleClass = eval(page.dataset.bind);
                     lifecycleClass.onload && lifecycleClass.onload();
                 }
+
+                page.style.display = 'block';
+            }
+
+            function gotoPage(pageId) {
+                hidePage(State.currentPage);
+                showPage(pageId);
+                State.currentPage = pageId;
             }
 
             class LobbyOverviewPage {
+                static refreshInterval = null;
+
                 static onload() {
+                    this.refreshInterval = setInterval(() => this.refreshLobbies(), 5000);
                     this.refreshLobbies();
+                }
+
+                static onunload() {
+                    clearInterval(this.refreshInterval);
                 }
 
                 static refreshLobbies() {
@@ -154,8 +172,15 @@
             }
 
             class LobbyPage {
+                static refreshInterval = null;
+
                 static onload() {
+                    this.refreshInterval = setInterval(() => this.refreshLobby(), 5000);
                     this.refreshLobby();
+                }
+
+                static onunload() {
+                    clearInterval(this.refreshInterval);
                 }
 
                 static refreshLobby() {
