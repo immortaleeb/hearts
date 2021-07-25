@@ -10,8 +10,16 @@ public class GameId {
         this.uuid = uuid;
     }
 
+    public String asString() {
+        return uuid.toString();
+    }
+
     public static GameId generate() {
         return new GameId(UUID.randomUUID());
+    }
+
+    public static GameId of(String gameId) {
+        return new GameId(UUID.fromString(gameId));
     }
 
     @Override
@@ -33,7 +41,7 @@ public class GameId {
 
     @Override
     public String toString() {
-        return uuid.toString();
+        return asString();
     }
 
 }
