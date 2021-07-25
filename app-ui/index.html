@@ -65,7 +65,7 @@
             };
         </script>
 
-        <div data-page="list-lobbies" data-load="refreshLobbies()">
+        <div data-page="list-lobbies" data-bind="LobbyOverviewPage">
             <table id="lobbies">
                 <thead>
                 <tr>
@@ -78,19 +78,19 @@
                 </tbody>
             </table>
 
-            <button onclick="createLobby()">Create lobby</button>
+            <button onclick="LobbyOverviewPage.createLobby()">Create lobby</button>
         </div>
 
-        <div data-page="lobby" data-load="refreshLobby()">
+        <div data-page="lobby" data-bind="LobbyPage">
             <p>Players</p>
             <ol data-list="players">
             </ol>
 
             <button onclick="gotoPage(Pages.listLobbies)">Back to lobby overview</button>
-            <button onclick="startGame(State.currentLobby)">Start game</button>
+            <button onclick="LobbyPage.startGame(State.currentLobby)">Start game</button>
         </div>
 
-        <div data-page="game" data-load="refreshGame()">
+        <div data-page="game" data-bind="GamePage">
             <p>Current game: <span data-content="game-id"></span></p>
         </div>
 
@@ -106,66 +106,87 @@
                 page.style.display = 'block';
                 State.currentPage = pageId;
 
-                page.dataset.load && eval(page.dataset.load);
-            }
-
-            function createLobby() {
-                let lobbyName = prompt("Please enter a name for your new lobby");
-
-                if (lobbyName) {
-                    API.createLobby(lobbyName)
-                        .then(response => {
-                            alert(`Created lobby with id ${response.id}`);
-                            refreshLobbies();
-                        });
+                if (page.dataset.bind) {
+                    const lifecycleClass = eval(page.dataset.bind);
+                    lifecycleClass.onload && lifecycleClass.onload();
                 }
             }
 
-            function refreshLobbies() {
-                const lobbiesBody = document.querySelector('#lobbies tbody');
+            class LobbyOverviewPage {
+                static onload() {
+                    this.refreshLobbies();
+                }
 
-                API.listLobbies().then(lobbies => {
-                    lobbiesBody.innerHTML = '';
+                static refreshLobbies() {
+                    const lobbiesBody = document.querySelector('#lobbies tbody');
 
-                    lobbies.forEach(({id, name, created_by}) => {
-                        lobbiesBody.innerHTML += `<tr>
+                    API.listLobbies().then(lobbies => {
+                        lobbiesBody.innerHTML = '';
+
+                        lobbies.forEach(({id, name, created_by}) => {
+                            lobbiesBody.innerHTML += `<tr>
                             <td>${name}</td>
                             <td>${created_by}</td>
-                            <td><button onclick="joinLobby('${id}')">Join</button></td>
+                            <td><button onclick="LobbyOverviewPage.joinLobby('${id}')">Join</button></td>
                             </tr>`;
+                        });
                     });
-                });
-            }
+                }
 
-            function refreshLobby() {
-                const playerList = document.querySelector('[data-list=players]');
-                API.getLobbyDetails(State.currentLobby).then(lobbyDetails => {
-                    playerList.innerHTML = '';
+                static createLobby() {
+                    let lobbyName = prompt("Please enter a name for your new lobby");
 
-                    lobbyDetails.players.forEach(player => {
-                        playerList.innerHTML += `<li>${player}</li>`
+                    if (lobbyName) {
+                        API.createLobby(lobbyName)
+                            .then(response => {
+                                alert(`Created lobby with id ${response.id}`);
+                                this.refreshLobbies();
+                            });
+                    }
+                }
+
+                static joinLobby(lobbyId) {
+                    API.joinLobby(lobbyId).then(() => {
+                        State.currentLobby = lobbyId;
+                        gotoPage(Pages.lobby);
                     });
-                })
+                }
             }
 
-            function joinLobby(lobbyId) {
-                API.joinLobby(lobbyId).then(() => {
-                    State.currentLobby = lobbyId;
-                    gotoPage(Pages.lobby);
-                });
+            class LobbyPage {
+                static onload() {
+                    this.refreshLobby();
+                }
+
+                static refreshLobby() {
+                    const playerList = document.querySelector('[data-list=players]');
+                    API.getLobbyDetails(State.currentLobby).then(lobbyDetails => {
+                        playerList.innerHTML = '';
+
+                        lobbyDetails.players.forEach(player => {
+                            playerList.innerHTML += `<li>${player}</li>`
+                        });
+                    })
+                }
+
+                static startGame(lobbyId) {
+                    API.startGame(lobbyId).then(({id}) => {
+                        State.currentGame = id;
+                        gotoPage(Pages.game);
+                    });
+                }
             }
 
-            function startGame(lobbyId) {
-                API.startGame(lobbyId).then(({id}) => {
-                    State.currentGame = id;
-                    gotoPage(Pages.game);
-                });
-            }
+            class GamePage {
+                static onload() {
+                    this.refreshGame();
+                }
 
-            function refreshGame() {
-                document.querySelectorAll("[data-content=game-id]").forEach(element => {
-                    element.innerHTML = State.currentGame;
-                });
+                static refreshGame() {
+                    document.querySelectorAll("[data-content=game-id]").forEach(element => {
+                        element.innerHTML = State.currentGame;
+                    });
+                }
             }
 
             gotoPage(Pages.listLobbies)
