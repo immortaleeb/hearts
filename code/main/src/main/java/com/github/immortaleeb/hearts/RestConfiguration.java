@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,12 +49,16 @@ public class RestConfiguration implements WebMvcConfigurer {
 
     private SimpleModule customSerialization() {
         var simpleModule = new SimpleModule();
+
         simpleModule.addSerializer(LobbyId.class, new SimpleSerializer<>(LobbyId::asString));
         simpleModule.addDeserializer(LobbyId.class, new SimpleDeserializer<>(LobbyId::of));
         simpleModule.addSerializer(PlayerId.class, new SimpleSerializer<>(PlayerId::asString));
         simpleModule.addDeserializer(PlayerId.class, new SimpleDeserializer<>(PlayerId::of));
         simpleModule.addSerializer(GameId.class, new SimpleSerializer<>(GameId::asString));
         simpleModule.addDeserializer(GameId.class, new SimpleDeserializer<>(GameId::of));
+        simpleModule.addSerializer(LobbyGameId.class, new SimpleSerializer<>(LobbyGameId::asString));
+        simpleModule.addDeserializer(LobbyGameId.class, new SimpleDeserializer<>(LobbyGameId::of));
+
         return simpleModule;
     }
 
