@@ -12,12 +12,14 @@
             const State = {
                 playerId: uuidv4(),
                 currentPage: "list-lobbies",
-                currentLobby: null
+                currentLobby: null,
+                currentGame: null,
             };
 
             const Pages = {
                 listLobbies: 'list-lobbies',
-                lobby: 'lobby'
+                lobby: 'lobby',
+                game: 'game'
             };
 
             const API = {
@@ -52,6 +54,13 @@
                             'X-Player-Id': State.playerId
                         }
                     });
+                },
+
+                startGame: async (id) => {
+                    const response = await fetch(`${API.baseUrl}/lobbies/${id}/start`, {
+                        method: 'POST'
+                    });
+                    return await response.json();
                 }
             };
         </script>
@@ -78,6 +87,11 @@
             </ol>
 
             <button onclick="gotoPage(Pages.listLobbies)">Back to lobby overview</button>
+            <button onclick="startGame(State.currentLobby)">Start game</button>
+        </div>
+
+        <div data-page="game" data-load="refreshGame()">
+            <p>Current game: <span data-content="game-id"></span></p>
         </div>
 
         <script>
@@ -114,7 +128,11 @@
                     lobbiesBody.innerHTML = '';
 
                     lobbies.forEach(({id, name, created_by}) => {
-                        lobbiesBody.innerHTML += `<tr><td>${name}</td><td>${created_by}</td><td><button onclick="joinLobby('${id}')">Join</button></td></tr>`;
+                        lobbiesBody.innerHTML += `<tr>
+                            <td>${name}</td>
+                            <td>${created_by}</td>
+                            <td><button onclick="joinLobby('${id}')">Join</button></td>
+                            </tr>`;
                     });
                 });
             }
@@ -134,6 +152,19 @@
                 API.joinLobby(lobbyId).then(() => {
                     State.currentLobby = lobbyId;
                     gotoPage(Pages.lobby);
+                });
+            }
+
+            function startGame(lobbyId) {
+                API.startGame(lobbyId).then(({id}) => {
+                    State.currentGame = id;
+                    gotoPage(Pages.game);
+                });
+            }
+
+            function refreshGame() {
+                document.querySelectorAll("[data-content=game-id]").forEach(element => {
+                    element.innerHTML = State.currentGame;
                 });
             }
 
