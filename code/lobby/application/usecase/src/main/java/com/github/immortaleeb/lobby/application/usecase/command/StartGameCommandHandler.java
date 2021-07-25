@@ -26,7 +26,7 @@ public class StartGameCommandHandler implements CommandHandler<LobbyGameId, Star
     }
 
     private LobbyGameId startGame(Lobby existingLobby) {
-        existingLobby.start(gameStarter);
+        existingLobby.startGame(gameStarter);
         lobbyRepository.save(existingLobby);
         return existingLobby.snapshot().game();
     }

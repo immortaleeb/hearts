@@ -2,6 +2,7 @@ package com.github.immortaleeb.lobby.builders;
 
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.lobby.domain.Lobby;
+import com.github.immortaleeb.lobby.domain.LobbyState;
 import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public class LobbySnapshotBuilder {
 
     private LobbyId id;
+    private LobbyState state;
     private String name;
     private PlayerId createdBy;
     private List<PlayerId> players;
@@ -17,6 +19,11 @@ public class LobbySnapshotBuilder {
 
     public LobbySnapshotBuilder withId(LobbyId id) {
         this.id = id;
+        return this;
+    }
+
+    public LobbySnapshotBuilder withState(LobbyState state) {
+        this.state = state;
         return this;
     }
 
@@ -41,7 +48,7 @@ public class LobbySnapshotBuilder {
     }
 
     public Lobby.Snapshot build() {
-        return new Lobby.Snapshot(id, name, createdBy, players, game);
+        return new Lobby.Snapshot(id, state, name, createdBy, players, game);
     }
 
 }
