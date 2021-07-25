@@ -20,7 +20,7 @@ public class ListLobbiesHandler implements ListLobbies {
         return lobbyRepository.findAll()
                 .stream()
                 .map(Lobby::snapshot)
-                .map(snapshot -> new LobbySummary(snapshot.id(), snapshot.name(), snapshot.createdBy()))
+                .map(snapshot -> new LobbySummary(snapshot.id(), snapshot.state(), snapshot.name(), snapshot.createdBy()))
                 .collect(Collectors.toList());
     }
 

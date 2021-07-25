@@ -5,6 +5,7 @@ import com.github.immortaleeb.lobby.domain.Lobby;
 import com.github.immortaleeb.lobby.fakes.FakeLobbyRepository;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import com.github.immortaleeb.lobby.shared.LobbyNotFound;
+import com.github.immortaleeb.lobby.shared.LobbyState;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,10 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.github.immortaleeb.lobby.fixtures.LobbyFixtures.*;
+import static com.github.immortaleeb.lobby.shared.LobbyState.WAITING_FOR_PLAYERS;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GetLobbyDetailsHandlerTest {
@@ -40,8 +45,8 @@ class GetLobbyDetailsHandlerTest {
 
         GetLobbyDetails.LobbyDetails lobbyDetails = getLobbyDetails.getDetails(existingLobby.id());
 
-        MatcherAssert.assertThat(lobbyDetails, CoreMatchers.is(CoreMatchers.equalTo(new GetLobbyDetails.LobbyDetails(
-                LOBBY_ID, "Existing lobby", PLAYER_1, List.of(PLAYER_1)
+        assertThat(lobbyDetails, is(equalTo(new GetLobbyDetails.LobbyDetails(
+                LOBBY_ID, WAITING_FOR_PLAYERS, "Existing lobby", PLAYER_1, List.of(PLAYER_1)
         ))));
     }
 }

@@ -6,7 +6,7 @@ import com.github.immortaleeb.lobby.shared.LobbyId;
 
 import java.util.List;
 
-import static com.github.immortaleeb.lobby.domain.LobbyState.WAITING_FOR_PLAYERS;
+import static com.github.immortaleeb.lobby.shared.LobbyState.WAITING_FOR_PLAYERS;
 
 public class LobbyFixtures {
 

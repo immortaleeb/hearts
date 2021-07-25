@@ -2,14 +2,13 @@ package com.github.immortaleeb.lobby.application.usecase.command;
 
 import com.github.immortaleeb.lobby.application.api.command.StartGame;
 import com.github.immortaleeb.lobby.domain.GameStarted;
-import com.github.immortaleeb.lobby.domain.LobbyState;
 import com.github.immortaleeb.lobby.fakes.FakeGameStarter;
 import com.github.immortaleeb.lobby.shared.LobbyNotFound;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.github.immortaleeb.lobby.domain.LobbyState.PLAYING;
+import static com.github.immortaleeb.lobby.shared.LobbyState.PLAYING;
 import static com.github.immortaleeb.lobby.fixtures.LobbyFixtures.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

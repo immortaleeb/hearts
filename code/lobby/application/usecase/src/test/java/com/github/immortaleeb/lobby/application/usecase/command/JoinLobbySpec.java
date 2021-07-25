@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.github.immortaleeb.lobby.domain.LobbyState.READY_TO_PLAY;
-import static com.github.immortaleeb.lobby.domain.LobbyState.WAITING_FOR_PLAYERS;
+import static com.github.immortaleeb.lobby.shared.LobbyState.READY_TO_PLAY;
+import static com.github.immortaleeb.lobby.shared.LobbyState.WAITING_FOR_PLAYERS;
 import static com.github.immortaleeb.lobby.fixtures.LobbyFixtures.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

@@ -3,7 +3,6 @@ package com.github.immortaleeb.lobby.application.usecase.query;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.lobby.application.api.query.ListLobbies;
 import com.github.immortaleeb.lobby.domain.Lobby;
-import com.github.immortaleeb.lobby.domain.LobbyState;
 import com.github.immortaleeb.lobby.fakes.FakeLobbyRepository;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.github.immortaleeb.lobby.domain.LobbyState.WAITING_FOR_PLAYERS;
+import static com.github.immortaleeb.lobby.shared.LobbyState.WAITING_FOR_PLAYERS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,9 +46,9 @@ class ListLobbiesHandlerTest {
 
         // then
         assertThat(lobbies, is(equalTo(List.of(
-                new ListLobbies.LobbySummary(lobbyId1, "Lobby 1", player1),
-                new ListLobbies.LobbySummary(lobbyId2, "Lobby 2", player2),
-                new ListLobbies.LobbySummary(lobbyId3, "Lobby 3", player3)
+                new ListLobbies.LobbySummary(lobbyId1, WAITING_FOR_PLAYERS, "Lobby 1", player1),
+                new ListLobbies.LobbySummary(lobbyId2, WAITING_FOR_PLAYERS, "Lobby 2", player2),
+                new ListLobbies.LobbySummary(lobbyId3, WAITING_FOR_PLAYERS, "Lobby 3", player3)
         ))));
     }
 }

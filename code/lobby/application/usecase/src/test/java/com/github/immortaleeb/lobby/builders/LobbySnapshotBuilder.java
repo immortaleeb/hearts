@@ -2,7 +2,7 @@ package com.github.immortaleeb.lobby.builders;
 
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.lobby.domain.Lobby;
-import com.github.immortaleeb.lobby.domain.LobbyState;
+import com.github.immortaleeb.lobby.shared.LobbyState;
 import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 

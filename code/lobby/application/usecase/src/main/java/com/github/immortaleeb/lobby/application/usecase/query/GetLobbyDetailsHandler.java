@@ -18,7 +18,7 @@ public class GetLobbyDetailsHandler implements GetLobbyDetails {
     public LobbyDetails getDetails(LobbyId lobbyId) {
         return lobbyRepository.find(lobbyId)
                 .map(Lobby::snapshot)
-                .map(snapshot -> new LobbyDetails(snapshot.id(), snapshot.name(), snapshot.createdBy(), snapshot.players()))
+                .map(snapshot -> new LobbyDetails(snapshot.id(), snapshot.state(), snapshot.name(), snapshot.createdBy(), snapshot.players()))
                 .orElseThrow(() -> new LobbyNotFound("Could not find lobby with id " + lobbyId.asString()));
     }
 }

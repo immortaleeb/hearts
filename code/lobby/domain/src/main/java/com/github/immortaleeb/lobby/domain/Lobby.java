@@ -1,15 +1,12 @@
 package com.github.immortaleeb.lobby.domain;
 
 import com.github.immortaleeb.common.shared.PlayerId;
-import com.github.immortaleeb.lobby.shared.LobbyGameId;
-import com.github.immortaleeb.lobby.shared.LobbyFull;
-import com.github.immortaleeb.lobby.shared.LobbyId;
-import com.github.immortaleeb.lobby.shared.PlayerAlreadyJoinedLobby;
+import com.github.immortaleeb.lobby.shared.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.immortaleeb.lobby.domain.LobbyState.*;
+import static com.github.immortaleeb.lobby.shared.LobbyState.*;
 import static java.util.Collections.unmodifiableList;
 
 public class Lobby {

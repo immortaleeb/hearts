@@ -1,4 +1,4 @@
-package com.github.immortaleeb.lobby.domain;
+package com.github.immortaleeb.lobby.shared;
 
 public enum LobbyState {
     WAITING_FOR_PLAYERS,
