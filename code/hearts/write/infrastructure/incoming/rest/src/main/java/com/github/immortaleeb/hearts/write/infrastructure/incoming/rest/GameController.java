@@ -3,7 +3,7 @@ package com.github.immortaleeb.hearts.write.infrastructure.incoming.rest;
 import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.GameId;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

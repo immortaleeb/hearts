@@ -11,10 +11,10 @@ import com.github.immortaleeb.hearts.write.domain.RoundEnded;
 import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventListener;
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.GameId;
-import com.github.immortaleeb.hearts.write.shared.Rank;
-import com.github.immortaleeb.hearts.write.shared.Suite;
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.Rank;
+import com.github.immortaleeb.hears.common.shared.Suite;
 
 import java.util.ArrayList;
 import java.util.List;

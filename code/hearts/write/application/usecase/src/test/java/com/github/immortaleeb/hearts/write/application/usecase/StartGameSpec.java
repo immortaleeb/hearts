@@ -9,12 +9,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures;
 import com.github.immortaleeb.hearts.write.application.util.Events;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.GameId;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.shared.WrongNumberOfPlayers;
 import org.hamcrest.Description;
@@ -29,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 class StartGameSpec extends GameSpec {
 

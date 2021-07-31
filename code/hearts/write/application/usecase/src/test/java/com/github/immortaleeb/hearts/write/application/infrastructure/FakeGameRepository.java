@@ -3,7 +3,7 @@ package com.github.immortaleeb.hearts.write.application.infrastructure;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.GameId;
 
 import java.util.ArrayList;
 import java.util.HashMap;

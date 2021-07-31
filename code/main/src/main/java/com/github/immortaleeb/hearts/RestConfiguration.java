@@ -2,11 +2,10 @@ package com.github.immortaleeb.hearts;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.immortaleeb.common.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.GameId;
 import com.github.immortaleeb.lobby.shared.LobbyGameId;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import org.springframework.context.annotation.Bean;

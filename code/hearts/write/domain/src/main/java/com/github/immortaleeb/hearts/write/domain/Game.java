@@ -1,6 +1,10 @@
 package com.github.immortaleeb.hearts.write.domain;
 
 import com.github.immortaleeb.common.shared.PlayerId;
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.Rank;
+import com.github.immortaleeb.hears.common.shared.Suite;
 import com.github.immortaleeb.hearts.write.shared.*;
 
 import java.util.ArrayList;

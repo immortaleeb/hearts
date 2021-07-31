@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     api project(':code:common:shared')
+    api project(':code:hearts:common:shared')
 }

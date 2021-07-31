@@ -1,12 +1,15 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
 import com.github.immortaleeb.common.shared.PlayerId;
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.Rank;
+import com.github.immortaleeb.hears.common.shared.Suite;
 import com.github.immortaleeb.hearts.write.application.api.PassCards;
 import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.application.fixtures.GameFixtures;
 import com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures;
-import com.github.immortaleeb.hearts.write.shared.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

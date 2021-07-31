@@ -1,6 +1,6 @@
 package com.github.immortaleeb.hearts.write.domain;
 
-import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hears.common.shared.Card;
 import com.github.immortaleeb.hearts.write.shared.CardsNotInHand;
 import com.github.immortaleeb.hearts.write.shared.IncorrectNumberOfCardsPassed;
 import com.github.immortaleeb.hearts.write.shared.PlayerAlreadyPassedCards;

@@ -1,4 +1,4 @@
-package com.github.immortaleeb.hearts.write.shared;
+package com.github.immortaleeb.hears.common.shared;
 
 import java.util.Comparator;
 import java.util.Objects;

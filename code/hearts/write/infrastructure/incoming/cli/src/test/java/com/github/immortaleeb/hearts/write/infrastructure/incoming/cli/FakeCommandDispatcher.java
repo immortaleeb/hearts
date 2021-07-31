@@ -3,7 +3,7 @@ package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 import com.github.immortaleeb.common.application.api.Command;
 import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.hearts.write.application.api.*;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.GameId;
 
 import java.util.ArrayList;
 import java.util.List;

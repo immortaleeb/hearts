@@ -1,8 +1,8 @@
 package com.github.immortaleeb.hearts.write.domain;
 
-import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hears.common.shared.Card;
 import com.github.immortaleeb.common.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.shared.Suite;
+import com.github.immortaleeb.hears.common.shared.Suite;
 
 import java.util.Comparator;
 import java.util.function.Predicate;

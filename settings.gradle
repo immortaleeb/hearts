@@ -3,6 +3,7 @@ rootProject.name = 'hearts'
 include ':code:main',
         ':code:common:application:api',
         ':code:common:shared',
+        ':code:hearts:common:shared',
         ':code:hearts:write:application:api',
         ':code:hearts:write:application:usecase',
         ':code:hearts:write:domain',

@@ -4,7 +4,7 @@ import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.GameId;
 
 public class EventSourcedGameRepository implements GameRepository {
 

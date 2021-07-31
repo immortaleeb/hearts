@@ -4,7 +4,7 @@ import com.github.immortaleeb.common.application.api.CommandHandler;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.GameId;
 
 class StartGameHandler implements CommandHandler<GameId, StartGame> {
 

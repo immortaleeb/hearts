@@ -9,8 +9,8 @@ import com.github.immortaleeb.hearts.write.application.infrastructure.FakeGameRe
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures;
-import com.github.immortaleeb.hearts.write.shared.Card;
-import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.GameId;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hearts.write.application.util.Events;
 import org.junit.jupiter.api.BeforeEach;

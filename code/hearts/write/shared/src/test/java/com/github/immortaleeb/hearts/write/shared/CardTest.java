@@ -1,5 +1,8 @@
 package com.github.immortaleeb.hearts.write.shared;
 
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.Rank;
+import com.github.immortaleeb.hears.common.shared.Suite;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

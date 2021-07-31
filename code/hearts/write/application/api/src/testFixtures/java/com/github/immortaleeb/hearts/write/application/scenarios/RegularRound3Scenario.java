@@ -1,9 +1,12 @@
 package com.github.immortaleeb.hearts.write.application.scenarios;
 
 import com.github.immortaleeb.common.shared.PlayerId;
+import com.github.immortaleeb.hears.common.shared.Card;
+import com.github.immortaleeb.hears.common.shared.GameId;
+import com.github.immortaleeb.hears.common.shared.Rank;
+import com.github.immortaleeb.hears.common.shared.Suite;
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
-import com.github.immortaleeb.hearts.write.shared.*;
 import com.github.immortaleeb.hearts.write.application.fixtures.CardFixtures;
 import com.github.immortaleeb.hearts.write.application.fixtures.GameFixtures;
 
