@@ -21,7 +21,7 @@ public class RoundScenarioEvents {
             .addAll(eventsForCardsDealt(gameId))
             .addAll(eventsForCardsPassed(gameId))
             .addAll(eventsForAllTricks())
-            .add(eventForRoundEnded());
+            .add(eventForRoundEnded(gameId));
     }
 
     public Events eventsForCardsDealt(GameId gameId) {
@@ -34,11 +34,11 @@ public class RoundScenarioEvents {
         Events events = Events.none();
 
         for (CardPass cardPass : passedCards.cardPasses()) {
-            events.add(new PlayerPassedCards(cardPass.fromPlayer(), cardPass.toPlayer(), cardPass.cards()));
+            events.add(new PlayerPassedCards(gameId, cardPass.fromPlayer(), cardPass.toPlayer(), cardPass.cards()));
         }
 
         for (CardPass cardPass : passedCards.cardPasses()) {
-            events.add(new PlayerHasTakenPassedCards(cardPass.fromPlayer(), cardPass.toPlayer(), cardPass.cards()));
+            events.add(new PlayerHasTakenPassedCards(gameId, cardPass.fromPlayer(), cardPass.toPlayer(), cardPass.cards()));
         }
 
         return events.add(new StartedPlaying(gameId, roundScenario.leadingPlayer()));
@@ -69,8 +69,8 @@ public class RoundScenarioEvents {
             .add(trick.trickWon());
     }
 
-    private RoundEnded eventForRoundEnded() {
-        return new RoundEnded(roundScenario.roundScore());
+    private RoundEnded eventForRoundEnded(GameId gameId) {
+        return new RoundEnded(gameId, roundScenario.roundScore());
     }
 
     public static RoundScenarioEvents eventsFor(RoundScenario roundScenario) {

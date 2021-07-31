@@ -84,7 +84,7 @@ class PlayerControllerTest {
     void plays_first_card_in_hand_when_player_won_trick() {
         // given
         controller.process(new CardsDealt(gameId, dealtCards));
-        controller.process(new PlayerPassedCards(player1, player4, List.of(
+        controller.process(new PlayerPassedCards(gameId, player1, player4, List.of(
                 Card.of(Suite.HEARTS, Rank.TWO),
                 Card.of(Suite.HEARTS, Rank.THREE),
                 Card.of(Suite.HEARTS, Rank.FOUR)
@@ -103,7 +103,7 @@ class PlayerControllerTest {
     void plays_next_card_in_hand_after_playing_previous_card() {
         // given
         controller.process(new CardsDealt(gameId, dealtCards));
-        controller.process(new PlayerPassedCards(player1, player4, List.of(
+        controller.process(new PlayerPassedCards(gameId, player1, player4, List.of(
                 Card.of(Suite.HEARTS, Rank.TWO),
                 Card.of(Suite.HEARTS, Rank.THREE),
                 Card.of(Suite.HEARTS, Rank.FOUR)
@@ -129,8 +129,8 @@ class PlayerControllerTest {
         );
 
         controller.process(new CardsDealt(gameId, fixedHands(fixedHand)));
-        controller.process(new PlayerPassedCards(player1, player4, fixedHand));
-        controller.process(new PlayerHasTakenPassedCards(player4, player1, List.of(
+        controller.process(new PlayerPassedCards(gameId, player1, player4, fixedHand));
+        controller.process(new PlayerHasTakenPassedCards(gameId, player4, player1, List.of(
                 Card.of(Suite.DIAMONDS, Rank.NINE),
                 Card.of(Suite.DIAMONDS, Rank.QUEEN),
                 Card.of(Suite.DIAMONDS, Rank.KING)

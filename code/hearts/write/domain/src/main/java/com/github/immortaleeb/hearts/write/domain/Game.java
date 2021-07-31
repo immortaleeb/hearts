@@ -70,7 +70,7 @@ public class Game {
 
         PlayerId playerToPassToId = choosePlayerToPassTo(fromPlayerId);
 
-        applyNewEvent(new PlayerPassedCards(fromPlayerId, playerToPassToId, cards));
+        applyNewEvent(new PlayerPassedCards(id, fromPlayerId, playerToPassToId, cards));
 
         takePassedCards(playerToPassToId);
         takePassedCards(fromPlayerId);
@@ -112,10 +112,10 @@ public class Game {
         }
 
         if (tricksPlayed == TRICKS_PER_ROUND) {
-            applyNewEvent(new RoundEnded(scoreCalculator.countRoundScores(table.wonTricks())));
+            applyNewEvent(new RoundEnded(id, scoreCalculator.countRoundScores(table.wonTricks())));
 
             if (scoreboard.largestScore().score() >= SCORE_FOR_GAME_END) {
-                applyNewEvent(new GameEnded(scoreboard.toMap()));
+                applyNewEvent(new GameEnded(id, scoreboard.toMap()));
             } else {
                 dealCards();
             }
@@ -231,7 +231,7 @@ public class Game {
 
         if (toPlayer.hasPassedCards() && table.hasCardsPassedTo(toPlayerId)) {
             PlayerId fromPlayer = choosePlayerToReceiveFrom(toPlayerId);
-            applyNewEvent(new PlayerHasTakenPassedCards(fromPlayer, toPlayerId, table.cardsPassedTo(toPlayerId)));
+            applyNewEvent(new PlayerHasTakenPassedCards(id, fromPlayer, toPlayerId, table.cardsPassedTo(toPlayerId)));
         }
     }
 
