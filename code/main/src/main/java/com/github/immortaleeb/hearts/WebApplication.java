@@ -3,13 +3,16 @@ package com.github.immortaleeb.hearts;
 import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
-import com.github.immortaleeb.hearts.common.infrastructure.projection.inmemory.InMemoryGameSummaryStore;
-import com.github.immortaleeb.hearts.common.projection.api.GameSummaryStore;
+import com.github.immortaleeb.hearts.common.infrastructure.projection.inmemory.InMemoryProjectionStore;
+import com.github.immortaleeb.hearts.common.projection.api.ProjectionStore;
 import com.github.immortaleeb.hearts.read.infrastructure.rest.GameSummaryProjectionReadRepository;
+import com.github.immortaleeb.hearts.read.infrastructure.rest.PlayerHandProjectionReadRepository;
+import com.github.immortaleeb.hearts.read.infrastructure.rest.PlayerHandReadRepository;
 import com.github.immortaleeb.hearts.write.application.usecase.GameCommandHandlers;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
 import com.github.immortaleeb.hearts.write.domain.GameSummaryWriteRepository;
+import com.github.immortaleeb.hearts.write.domain.PlayerHandWriteRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventDispatcher;
@@ -17,6 +20,7 @@ import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.Ev
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.InMemoryEventStore;
 import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.GameProjectionsHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.GameSummaryProjectionWriteRepository;
+import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.PlayerHandProjectionWriteRepository;
 import com.github.immortaleeb.infrastructure.outgoing.inmemory.InMemoryLobbyRepository;
 import com.github.immortaleeb.lobby.application.api.query.GetLobbyDetails;
 import com.github.immortaleeb.lobby.application.api.query.ListLobbies;
@@ -70,35 +74,46 @@ public class WebApplication {
     }
 
     @Bean
-    public GameSummaryStore gameSummaryStore() {
-        return new InMemoryGameSummaryStore();
+    public ProjectionStore gameSummaryStore() {
+        return new InMemoryProjectionStore();
     }
 
     @Bean
-    public GameSummaryProjectionReadRepository gameSummaryReadRepository(GameSummaryStore gameSummaryStore) {
-        return new GameSummaryProjectionReadRepository(gameSummaryStore);
+    public GameSummaryProjectionReadRepository gameSummaryReadRepository(ProjectionStore projectionStore) {
+        return new GameSummaryProjectionReadRepository(projectionStore);
     }
 
     @Bean
-    public GameSummaryWriteRepository gameSummaryWriteRepository(GameSummaryStore gameSummaryStore) {
-        return new GameSummaryProjectionWriteRepository(gameSummaryStore);
+    public GameSummaryWriteRepository gameSummaryWriteRepository(ProjectionStore projectionStore) {
+        return new GameSummaryProjectionWriteRepository(projectionStore);
+    }
+
+    @Bean
+    public PlayerHandWriteRepository playerHandWriteRepository(ProjectionStore projectionStore) {
+        return new PlayerHandProjectionWriteRepository(projectionStore);
+    }
+
+    @Bean
+    public PlayerHandReadRepository playerHandReadRepository(ProjectionStore projectionStore) {
+        return new PlayerHandProjectionReadRepository(projectionStore);
     }
 
     @Bean
     public CommandDispatcher commandDispatcher(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository,
-     GameSummaryWriteRepository gameSummaryWriteRepository, EventListenerRegistry eventListenerRegistry) {
+     GameSummaryWriteRepository gameSummaryWriteRepository, PlayerHandWriteRepository playerHandWriteRepository, EventListenerRegistry eventListenerRegistry) {
         CommandHandlerDispatcher dispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
 
         initializeEventListeners(eventListenerRegistry, dispatcher);
-        initializeCommandHandlers(commandHandlerRegistry, lobbyRepository, gameRepository, gameStarter(dispatcher), gameSummaryWriteRepository);
+        initializeCommandHandlers(commandHandlerRegistry, lobbyRepository, gameRepository, gameStarter(dispatcher), gameSummaryWriteRepository,
+            playerHandWriteRepository);
 
         return dispatcher;
     }
 
     private void initializeCommandHandlers(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository,
-        GameStarter gameStarter, GameSummaryWriteRepository gameSummaryWriteRepository) {
+        GameStarter gameStarter, GameSummaryWriteRepository gameSummaryWriteRepository, PlayerHandWriteRepository playerHandWriteRepository) {
         LobbyCommandHandlers.registerAll(commandHandlerRegistry, lobbyRepository, gameStarter);
-        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository, gameSummaryWriteRepository);
+        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository, gameSummaryWriteRepository, playerHandWriteRepository);
     }
 
     private void initializeEventListeners(EventListenerRegistry eventListenerRegistry, CommandHandlerDispatcher dispatcher) {

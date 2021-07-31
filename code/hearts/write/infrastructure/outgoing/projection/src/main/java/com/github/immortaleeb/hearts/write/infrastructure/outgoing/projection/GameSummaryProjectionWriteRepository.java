@@ -2,27 +2,27 @@ package com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection;
 
 import com.github.immortaleeb.hears.common.shared.GameId;
 import com.github.immortaleeb.hears.common.shared.GameSummary;
-import com.github.immortaleeb.hearts.common.projection.api.GameSummaryStore;
+import com.github.immortaleeb.hearts.common.projection.api.ProjectionStore;
 import com.github.immortaleeb.hearts.write.domain.GameSummaryWriteRepository;
 
 import java.util.Optional;
 
 public class GameSummaryProjectionWriteRepository implements GameSummaryWriteRepository {
 
-    private final GameSummaryStore gameSummaryStore;
+    private final ProjectionStore projectionStore;
 
-    public GameSummaryProjectionWriteRepository(GameSummaryStore gameSummaryStore) {
-        this.gameSummaryStore = gameSummaryStore;
+    public GameSummaryProjectionWriteRepository(ProjectionStore projectionStore) {
+        this.projectionStore = projectionStore;
     }
 
     @Override
     public Optional<GameSummary> findById(GameId gameId) {
-        return gameSummaryStore.findById(gameId);
+        return projectionStore.findById(gameId);
     }
 
     @Override
     public void save(GameSummary gameSummary) {
-        gameSummaryStore.save(gameSummary);
+        projectionStore.save(gameSummary);
     }
 
 }

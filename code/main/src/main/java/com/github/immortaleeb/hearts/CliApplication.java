@@ -3,8 +3,8 @@ package com.github.immortaleeb.hearts;
 import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
 import com.github.immortaleeb.common.shared.PlayerId;
-import com.github.immortaleeb.hearts.common.infrastructure.projection.inmemory.InMemoryGameSummaryStore;
-import com.github.immortaleeb.hearts.common.projection.api.GameSummaryStore;
+import com.github.immortaleeb.hearts.common.infrastructure.projection.inmemory.InMemoryProjectionStore;
+import com.github.immortaleeb.hearts.common.projection.api.ProjectionStore;
 import com.github.immortaleeb.hearts.write.application.usecase.GameCommandHandlers;
 import com.github.immortaleeb.hearts.write.domain.*;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
@@ -19,6 +19,7 @@ import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerInp
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.SimplePlayerInputHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.StdinPlayerInputHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.GameSummaryProjectionWriteRepository;
+import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.PlayerHandProjectionWriteRepository;
 import com.github.immortaleeb.infrastructure.outgoing.inmemory.InMemoryLobbyRepository;
 import com.github.immortaleeb.lobby.application.api.command.CreateLobby;
 import com.github.immortaleeb.lobby.application.api.command.JoinLobby;
@@ -42,15 +43,16 @@ public class CliApplication {
         CommandHandlerDispatcher commandDispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
 
         EventStore eventStore = new InMemoryEventStore(eventDispatcher);
-        GameSummaryStore gameSummaryStore = new InMemoryGameSummaryStore();
+        ProjectionStore projectionStore = new InMemoryProjectionStore();
 
         InMemoryLobbyRepository lobbyRepository = new InMemoryLobbyRepository();
         GameStarter gameStarter = new GameDomainGameStarter(commandDispatcher);
         LobbyCommandHandlers.registerAll(commandHandlerRegistry, lobbyRepository, gameStarter);
 
         GameRepository gameRepository = new EventSourcedGameRepository(eventStore);
-        GameSummaryWriteRepository gameSummaryWriteRepository = new GameSummaryProjectionWriteRepository(gameSummaryStore);
-        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository, gameSummaryWriteRepository);
+        GameSummaryWriteRepository gameSummaryWriteRepository = new GameSummaryProjectionWriteRepository(projectionStore);
+        PlayerHandWriteRepository playerHandWriteRepository = new PlayerHandProjectionWriteRepository(projectionStore);
+        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository, gameSummaryWriteRepository, playerHandWriteRepository);
 
         List<PlayerId> players = Arrays.asList(
                 PlayerId.generate(),

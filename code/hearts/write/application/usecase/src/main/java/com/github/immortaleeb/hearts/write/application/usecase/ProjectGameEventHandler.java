@@ -2,15 +2,16 @@ package com.github.immortaleeb.hearts.write.application.usecase;
 
 import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.CARDS_DEALT;
 import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.GAME_ENDED;
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.GAME_STARTED;
 import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.PASSING_CARDS;
 import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.PLAYING_CARDS;
-import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.GAME_STARTED;
 import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.ROUND_ENDED;
 
 import com.github.immortaleeb.common.application.api.NoResultCommandHandler;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hears.common.shared.Card;
 import com.github.immortaleeb.hears.common.shared.GameSummary;
+import com.github.immortaleeb.hears.common.shared.PlayerHand;
 import com.github.immortaleeb.hearts.write.application.api.ProjectGameEvent;
 import com.github.immortaleeb.hearts.write.domain.CardPlayed;
 import com.github.immortaleeb.hearts.write.domain.CardsDealt;
@@ -18,32 +19,43 @@ import com.github.immortaleeb.hearts.write.domain.GameEnded;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
 import com.github.immortaleeb.hearts.write.domain.GameSummaryWriteRepository;
+import com.github.immortaleeb.hearts.write.domain.PlayerHandWriteRepository;
 import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
 import com.github.immortaleeb.hearts.write.domain.PlayerPassedCards;
 import com.github.immortaleeb.hearts.write.domain.RoundEnded;
 import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
 import com.github.immortaleeb.hearts.write.domain.TrickWon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ProjectGameEventHandler implements NoResultCommandHandler<ProjectGameEvent> {
 
-    private final GameSummaryWriteRepository repository;
+    private final GameSummaryWriteRepository gameSummaryWriteRepository;
+    private final PlayerHandWriteRepository playerHandWriteRepository;
 
-    public ProjectGameEventHandler(GameSummaryWriteRepository repository) {
-        this.repository = repository;
+    public ProjectGameEventHandler(GameSummaryWriteRepository gameSummaryWriteRepository,
+        PlayerHandWriteRepository playerHandWriteRepository) {
+        this.gameSummaryWriteRepository = gameSummaryWriteRepository;
+        this.playerHandWriteRepository = playerHandWriteRepository;
     }
 
     @Override
     public void handleNoResult(ProjectGameEvent command) {
-        GameSummary summary = repository.findById(command.gameEvent().gameId()).orElse(null);
+        projectGameSummary(command.gameEvent());
+        projectPlayerHand(command.gameEvent());
+    }
 
-        GameSummary newSummary = project(summary, command.gameEvent());
+    private void projectGameSummary(GameEvent gameEvent) {
+        GameSummary summary = gameSummaryWriteRepository.findById(gameEvent.gameId()).orElse(null);
 
-        repository.save(newSummary);
+        GameSummary newSummary = project(summary, gameEvent);
+
+        gameSummaryWriteRepository.save(newSummary);
     }
 
     private GameSummary project(GameSummary summary, GameEvent event) {
@@ -113,6 +125,41 @@ public class ProjectGameEventHandler implements NoResultCommandHandler<ProjectGa
 
     private GameSummary.Table clearedTable() {
         return new GameSummary.Table(new HashMap<>());
+    }
+
+    private void projectPlayerHand(GameEvent gameEvent) {
+        if (gameEvent instanceof CardsDealt cardsDealt) {
+            cardsDealt.playerHands().forEach((player, dealtCards) -> {
+                playerHandWriteRepository.save(new PlayerHand(player, new ArrayList<>(dealtCards)));
+            });
+        } else if (gameEvent instanceof PlayerPassedCards playerPassedCards) {
+            updateHand(playerPassedCards.fromPlayer(), hand -> removeFromHand(hand, playerPassedCards.passedCards()));
+        } else if (gameEvent instanceof PlayerHasTakenPassedCards playerHasTakenPassedCards) {
+            updateHand(playerHasTakenPassedCards.toPlayer(), hand -> addToHand(hand, playerHasTakenPassedCards.cards()));
+        } else if (gameEvent instanceof CardPlayed cardPlayed) {
+            updateHand(cardPlayed.playedBy(), hand -> removeFromHand(hand, List.of(cardPlayed.card())));
+        }
+    }
+
+    private PlayerHand addToHand(PlayerHand playerHand, List<Card> cards) {
+        List<Card> newCards = new ArrayList<>(playerHand.cards());
+        newCards.addAll(cards);
+        return new PlayerHand(playerHand.player(), newCards);
+    }
+
+    private PlayerHand removeFromHand(PlayerHand playerHand, List<Card> cards) {
+        List<Card> newCards = new ArrayList<>(playerHand.cards());
+        newCards.removeAll(cards);
+        return new PlayerHand(playerHand.player(), newCards);
+    }
+
+    private void updateHand(PlayerId playerId, Function<PlayerHand, PlayerHand> update) {
+        PlayerHand playerHand = playerHandWriteRepository.findById(playerId)
+            .orElseThrow(() -> new IllegalArgumentException("Could not find player hand for player " + playerId));
+
+        PlayerHand newPlayerHand = update.apply(playerHand);
+
+        playerHandWriteRepository.save(newPlayerHand);
     }
 
 }
