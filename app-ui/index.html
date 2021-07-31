@@ -61,7 +61,21 @@
                         method: 'POST'
                     });
                     return await response.json();
-                }
+                },
+
+                getGameSummary: async (id) => {
+                    const response = await fetch(`${API.baseUrl}/games/${id}`);
+                    return await response.json();
+                },
+
+                getPlayerHand: async () => {
+                    const response = await fetch(`${API.baseUrl}/hand`, {
+                        headers: {
+                            'X-Player-Id': State.playerId
+                        }
+                    });
+                    return await response.json();
+                },
             };
         </script>
 
@@ -91,7 +105,9 @@
         </div>
 
         <div data-page="game" data-bind="GamePage">
-            <p>Current game: <span data-content="game-id"></span></p>
+            <p>Current game: <span data-content="game-id"></span> - <span data-content="game-state"></span></p>
+            <ol data-list="player-hand">
+            </ol>
         </div>
 
         <script>
@@ -208,13 +224,37 @@
             }
 
             class GamePage {
+                static refreshInterval = null;
+
                 static onload() {
+                    this.refreshInterval = setInterval(() => this.refreshGame(), 2000);
                     this.refreshGame();
                 }
 
+                static onunload() {
+                    clearInterval(this.refreshInterval);
+                }
+
                 static refreshGame() {
-                    document.querySelectorAll("[data-content=game-id]").forEach(element => {
+                    const gameIdElements = document.querySelectorAll("[data-content=game-id]");
+                    gameIdElements.forEach(element => {
                         element.innerHTML = State.currentGame;
+                    });
+
+                    const gameStateElements = document.querySelectorAll("[data-content=game-state]");
+                    API.getGameSummary(State.currentGame).then(summary => {
+                        gameStateElements.forEach(element => {
+                            element.innerHTML = summary.state;
+                        });
+                    });
+
+                    const playerHand = document.querySelector("[data-list=player-hand]");
+                    API.getPlayerHand().then(hand => {
+                        playerHand.innerHTML = '';
+
+                        hand.cards.forEach(card => {
+                            playerHand.innerHTML += `<li>${card.rank} OF ${card.suite}</li>`
+                        });
                     });
                 }
             }
