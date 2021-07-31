@@ -5,13 +5,24 @@ import com.github.immortaleeb.common.shared.PlayerId;
 import java.util.List;
 import java.util.Map;
 
-public record GameSummary(GameId id, List<PlayerId> players, Map<PlayerId, Integer> cardsInHand, Table table) {
+public record GameSummary(GameId id, GameState state, List<PlayerId> players, Map<PlayerId, Integer> cardsInHand, Table table) {
 
     public record Table(Map<PlayerId, Card> playedCards) { }
+
+    public enum GameState {
+        GAME_STARTED,
+        CARDS_DEALT,
+        PASSING_CARDS,
+        PLAYING_CARDS,
+        ROUND_ENDED,
+        GAME_ENDED,
+        ;
+    }
 
     public Builder toBuilder() {
         return newBuilder()
             .withGameId(id)
+            .withState(state)
             .withPlayers(players)
             .withCardsInHand(cardsInHand)
             .withTable(table);
@@ -23,12 +34,18 @@ public record GameSummary(GameId id, List<PlayerId> players, Map<PlayerId, Integ
 
     public static class Builder {
         private GameId gameId;
+        private GameState state;
         private List<PlayerId> players;
         private Map<PlayerId, Integer> cardsInHand;
         private Table table;
 
         public Builder withGameId(GameId gameId) {
             this.gameId = gameId;
+            return this;
+        }
+
+        public Builder withState(GameState state) {
+            this.state = state;
             return this;
         }
 
@@ -48,7 +65,7 @@ public record GameSummary(GameId id, List<PlayerId> players, Map<PlayerId, Integ
         }
 
         public GameSummary build() {
-            return new GameSummary(gameId, players, cardsInHand, table);
+            return new GameSummary(gameId, state, players, cardsInHand, table);
         }
     }
 

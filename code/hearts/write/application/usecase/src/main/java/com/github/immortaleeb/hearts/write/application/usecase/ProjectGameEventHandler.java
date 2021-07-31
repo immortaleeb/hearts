@@ -1,5 +1,12 @@
 package com.github.immortaleeb.hearts.write.application.usecase;
 
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.CARDS_DEALT;
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.GAME_ENDED;
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.PASSING_CARDS;
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.PLAYING_CARDS;
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.GAME_STARTED;
+import static com.github.immortaleeb.hears.common.shared.GameSummary.GameState.ROUND_ENDED;
+
 import com.github.immortaleeb.common.application.api.NoResultCommandHandler;
 import com.github.immortaleeb.common.shared.PlayerId;
 import com.github.immortaleeb.hears.common.shared.Card;
@@ -45,7 +52,7 @@ public class ProjectGameEventHandler implements NoResultCommandHandler<ProjectGa
                 .stream()
                 .collect(Collectors.toMap(Function.identity(), player -> 0));
 
-            return new GameSummary(gameStarted.gameId(), gameStarted.players(), cardsInHand, clearedTable());
+            return new GameSummary(gameStarted.gameId(), GAME_STARTED, gameStarted.players(), cardsInHand, clearedTable());
         } else if (event instanceof CardsDealt cardsDealt) {
             Map<PlayerId, Integer> cardsInHand = cardsDealt.playerHands()
                 .entrySet()
@@ -53,10 +60,12 @@ public class ProjectGameEventHandler implements NoResultCommandHandler<ProjectGa
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size()));
 
             return summary.toBuilder()
+                .withState(CARDS_DEALT)
                 .withCardsInHand(cardsInHand)
                 .build();
         } else if (event instanceof PlayerPassedCards playerPassedCards) {
             return summary.toBuilder()
+                .withState(PASSING_CARDS)
                 .withCardsInHand(incrementCards(summary.cardsInHand(), playerPassedCards.fromPlayer(), -playerPassedCards.passedCards().size()))
                 .build();
         } else if (event instanceof PlayerHasTakenPassedCards playerHasTakenPassedCards) {
@@ -64,8 +73,9 @@ public class ProjectGameEventHandler implements NoResultCommandHandler<ProjectGa
                 .withCardsInHand(incrementCards(summary.cardsInHand(), playerHasTakenPassedCards.toPlayer(), playerHasTakenPassedCards.cards().size()))
                 .build();
         } else if (event instanceof StartedPlaying startedPlaying) {
-            // nothing to do
-            return summary;
+            return summary.toBuilder()
+                .withState(PLAYING_CARDS)
+                .build();
         } else if (event instanceof CardPlayed cardPlayed) {
             return summary.toBuilder()
                 .withTable(addCardToTable(summary.table(), cardPlayed.playedBy(), cardPlayed.card()))
@@ -77,11 +87,13 @@ public class ProjectGameEventHandler implements NoResultCommandHandler<ProjectGa
                 .build();
         } else if (event instanceof RoundEnded roundEnded) {
             return summary.toBuilder()
+                .withState(ROUND_ENDED)
                 .withTable(clearedTable())
                 .build();
         } else if (event instanceof GameEnded gameEnded) {
-            // nothing to
-            return summary;
+            return summary.toBuilder()
+                .withState(GAME_ENDED)
+                .build();
         }
 
         return summary;
