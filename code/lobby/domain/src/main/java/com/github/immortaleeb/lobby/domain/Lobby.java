@@ -22,12 +22,13 @@ public class Lobby {
 
     private final List<LobbyEvent> raisedEvents = new ArrayList<>();
 
-    private Lobby(LobbyId id, LobbyState state, String name, PlayerId createdBy, List<PlayerId> players) {
+    private Lobby(LobbyId id, LobbyState state, String name, PlayerId createdBy, List<PlayerId> players, LobbyGameId game) {
         this.id = id;
         this.state = state;
         this.name = name;
         this.createdBy = createdBy;
         this.players = new ArrayList<>(players);
+        this.game = game;
     }
 
     public LobbyId id() {
@@ -67,13 +68,13 @@ public class Lobby {
     }
 
     public static Lobby create(String name, PlayerId createdBy) {
-        Lobby lobby = new Lobby(LobbyId.generate(), WAITING_FOR_PLAYERS, name, createdBy, List.of(createdBy));
+        Lobby lobby = new Lobby(LobbyId.generate(), WAITING_FOR_PLAYERS, name, createdBy, List.of(createdBy), null);
         lobby.raisedEvents.add(new LobbyCreated(lobby.id, lobby.name, lobby.createdBy));
         return lobby;
     }
 
     public static Lobby restoreFrom(Snapshot snapshot) {
-        return new Lobby(snapshot.id, snapshot.state, snapshot.name, snapshot.createdBy, snapshot.players);
+        return new Lobby(snapshot.id, snapshot.state, snapshot.name, snapshot.createdBy, snapshot.players, snapshot.game);
     }
 
     public record Snapshot(LobbyId id, LobbyState state, String name, PlayerId createdBy, List<PlayerId> players, LobbyGameId game) {}

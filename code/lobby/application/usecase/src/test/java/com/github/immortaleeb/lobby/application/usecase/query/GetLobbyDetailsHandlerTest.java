@@ -5,9 +5,6 @@ import com.github.immortaleeb.lobby.domain.Lobby;
 import com.github.immortaleeb.lobby.fakes.FakeLobbyRepository;
 import com.github.immortaleeb.lobby.shared.LobbyId;
 import com.github.immortaleeb.lobby.shared.LobbyNotFound;
-import com.github.immortaleeb.lobby.shared.LobbyState;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +43,7 @@ class GetLobbyDetailsHandlerTest {
         GetLobbyDetails.LobbyDetails lobbyDetails = getLobbyDetails.getDetails(existingLobby.id());
 
         assertThat(lobbyDetails, is(equalTo(new GetLobbyDetails.LobbyDetails(
-                LOBBY_ID, WAITING_FOR_PLAYERS, "Existing lobby", PLAYER_1, List.of(PLAYER_1)
-        ))));
+                LOBBY_ID, WAITING_FOR_PLAYERS, "Existing lobby", PLAYER_1, List.of(PLAYER_1),
+            snapshot.game()))));
     }
 }
