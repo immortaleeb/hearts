@@ -3,13 +3,20 @@ package com.github.immortaleeb.hearts;
 import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerDispatcher;
 import com.github.immortaleeb.common.application.api.CommandHandlerRegistry;
+import com.github.immortaleeb.hearts.common.infrastructure.projection.inmemory.InMemoryGameSummaryStore;
+import com.github.immortaleeb.hearts.common.projection.api.GameSummaryStore;
+import com.github.immortaleeb.hearts.read.infrastructure.rest.GameSummaryProjectionReadRepository;
 import com.github.immortaleeb.hearts.write.application.usecase.GameCommandHandlers;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
+import com.github.immortaleeb.hearts.write.domain.GameStarted;
+import com.github.immortaleeb.hearts.write.domain.GameSummaryWriteRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventDispatcher;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventListenerRegistry;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.InMemoryEventStore;
+import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.GameProjectionsHandler;
+import com.github.immortaleeb.hearts.write.infrastructure.outgoing.projection.GameSummaryProjectionWriteRepository;
 import com.github.immortaleeb.infrastructure.outgoing.inmemory.InMemoryLobbyRepository;
 import com.github.immortaleeb.lobby.application.api.query.GetLobbyDetails;
 import com.github.immortaleeb.lobby.application.api.query.ListLobbies;
@@ -63,17 +70,40 @@ public class WebApplication {
     }
 
     @Bean
-    public CommandDispatcher commandDispatcher(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository) {
+    public GameSummaryStore gameSummaryStore() {
+        return new InMemoryGameSummaryStore();
+    }
+
+    @Bean
+    public GameSummaryProjectionReadRepository gameSummaryReadRepository(GameSummaryStore gameSummaryStore) {
+        return new GameSummaryProjectionReadRepository(gameSummaryStore);
+    }
+
+    @Bean
+    public GameSummaryWriteRepository gameSummaryWriteRepository(GameSummaryStore gameSummaryStore) {
+        return new GameSummaryProjectionWriteRepository(gameSummaryStore);
+    }
+
+    @Bean
+    public CommandDispatcher commandDispatcher(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository,
+     GameSummaryWriteRepository gameSummaryWriteRepository, EventListenerRegistry eventListenerRegistry) {
         CommandHandlerDispatcher dispatcher = new CommandHandlerDispatcher(commandHandlerRegistry);
 
-        initializeCommandHandlers(commandHandlerRegistry, lobbyRepository, gameRepository, gameStarter(dispatcher));
+        initializeEventListeners(eventListenerRegistry, dispatcher);
+        initializeCommandHandlers(commandHandlerRegistry, lobbyRepository, gameRepository, gameStarter(dispatcher), gameSummaryWriteRepository);
 
         return dispatcher;
     }
 
-    private void initializeCommandHandlers(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository, GameStarter gameStarter) {
+    private void initializeCommandHandlers(CommandHandlerRegistry commandHandlerRegistry, LobbyRepository lobbyRepository, GameRepository gameRepository,
+        GameStarter gameStarter, GameSummaryWriteRepository gameSummaryWriteRepository) {
         LobbyCommandHandlers.registerAll(commandHandlerRegistry, lobbyRepository, gameStarter);
-        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository);
+        GameCommandHandlers.registerAll(commandHandlerRegistry, gameRepository, gameSummaryWriteRepository);
+    }
+
+    private void initializeEventListeners(EventListenerRegistry eventListenerRegistry, CommandHandlerDispatcher dispatcher) {
+        GameProjectionsHandler gameProjectionsHandler = new GameProjectionsHandler(dispatcher);
+        eventListenerRegistry.register(GameStarted.class, gameProjectionsHandler::process);
     }
 
     @Bean

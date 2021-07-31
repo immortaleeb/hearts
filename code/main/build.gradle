@@ -7,14 +7,19 @@ plugins {
 mainClassName = 'com.github.immortaleeb.hearts.WebApplication'
 
 dependencies {
+    implementation project(':code:hearts:read:infrastructure:incoming:rest')
+
     implementation project(':code:hearts:write:application:usecase')
     implementation project(':code:hearts:write:domain')
     implementation project(':code:hearts:write:shared')
+
+    implementation project(':code:hearts:common:infrastructure:projection:inmemory')
 
     implementation project(':code:hearts:write:infrastructure:incoming:cli')
     implementation project(':code:hearts:write:infrastructure:incoming:rest')
     implementation project(':code:hearts:write:infrastructure:outgoing:eventsourcing')
     implementation project(':code:hearts:write:infrastructure:outgoing:eventstore:inmemory')
+    implementation project(':code:hearts:write:infrastructure:outgoing:projection')
 
     implementation project(':code:lobby:application:usecase')
     implementation project(':code:lobby:domain')

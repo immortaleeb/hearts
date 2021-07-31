@@ -1,0 +1,26 @@
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+dependencies {
+//    implementation project(':code:hearts:write:application:api')
+//    implementation project(':code:hearts:write:domain')
+//    implementation project(':code:common:shared')
+//    implementation project(':code:hearts:common:shared')
+    implementation project(':code:hearts:common:infrastructure:projection:api')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks {
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
+}

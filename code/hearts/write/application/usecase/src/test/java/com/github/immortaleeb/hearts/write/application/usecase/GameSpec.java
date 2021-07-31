@@ -6,6 +6,7 @@ import com.github.immortaleeb.hearts.write.application.api.PassCards;
 import com.github.immortaleeb.hearts.write.application.api.PlayCard;
 import com.github.immortaleeb.hearts.write.application.api.StartGame;
 import com.github.immortaleeb.hearts.write.application.infrastructure.FakeGameRepository;
+import com.github.immortaleeb.hearts.write.application.infrastructure.FakeGameSummaryWriteRepository;
 import com.github.immortaleeb.hearts.write.domain.Game;
 import com.github.immortaleeb.hearts.write.domain.GameEvent;
 import com.github.immortaleeb.hearts.write.application.fixtures.PlayerIdFixtures;
@@ -45,7 +46,7 @@ abstract class GameSpec {
         registry = new CommandHandlerRegistry();
         dispatcher = new CommandHandlerDispatcher(registry);
 
-        GameCommandHandlers.registerAll(registry, gameRepository);
+        GameCommandHandlers.registerAll(registry, gameRepository, new FakeGameSummaryWriteRepository());
     }
 
     protected abstract Events given();

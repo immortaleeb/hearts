@@ -1,0 +1,13 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':code:hearts:common:infrastructure:projection:api')
+    implementation project(':code:common:application:api')
+
+    implementation project(':code:hearts:write:shared')
+    implementation project(':code:hearts:write:domain')
+    implementation project(':code:hearts:write:application:api')
+    implementation project(':code:hearts:write:infrastructure:outgoing:eventstore:api')
+}
