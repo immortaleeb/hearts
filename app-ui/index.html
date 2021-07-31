@@ -186,11 +186,16 @@
                 static refreshLobby() {
                     const playerList = document.querySelector('[data-list=players]');
                     API.getLobbyDetails(State.currentLobby).then(lobbyDetails => {
-                        playerList.innerHTML = '';
+                        if (lobbyDetails.state === 'PLAYING') {
+                            State.currentGame = lobbyDetails.game;
+                            gotoPage(Pages.game);
+                        } else {
+                            playerList.innerHTML = '';
 
-                        lobbyDetails.players.forEach(player => {
-                            playerList.innerHTML += `<li>${player}</li>`
-                        });
+                            lobbyDetails.players.forEach(player => {
+                                playerList.innerHTML += `<li>${player}</li>`
+                            });
+                        }
                     })
                 }
 
