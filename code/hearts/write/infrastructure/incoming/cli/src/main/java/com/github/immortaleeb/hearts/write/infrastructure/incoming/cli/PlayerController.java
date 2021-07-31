@@ -1,12 +1,20 @@
 package com.github.immortaleeb.hearts.write.infrastructure.incoming.cli;
 
-import com.github.immortaleeb.common.application.api.CommandDispatcher;
 import com.github.immortaleeb.common.shared.PlayerId;
-import com.github.immortaleeb.hearts.write.application.api.PassCards;
-import com.github.immortaleeb.hearts.write.application.api.PlayCard;
-import com.github.immortaleeb.hearts.write.domain.*;
+import com.github.immortaleeb.hearts.write.domain.CardPlayed;
+import com.github.immortaleeb.hearts.write.domain.CardsDealt;
+import com.github.immortaleeb.hearts.write.domain.GameEnded;
+import com.github.immortaleeb.hearts.write.domain.GameEvent;
+import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
+import com.github.immortaleeb.hearts.write.domain.PlayerPassedCards;
+import com.github.immortaleeb.hearts.write.domain.RoundEnded;
+import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventListener;
-import com.github.immortaleeb.hearts.write.shared.*;
+import com.github.immortaleeb.hearts.write.shared.Card;
+import com.github.immortaleeb.hearts.write.shared.GameId;
+import com.github.immortaleeb.hearts.write.shared.Rank;
+import com.github.immortaleeb.hearts.write.shared.Suite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +24,15 @@ public class PlayerController implements EventListener<GameEvent> {
 
     private static final Card OPENING_CARD = Card.of(Suite.CLUBS, Rank.TWO);
 
-    private final CommandDispatcher commandDispatcher;
+    private final HeartsWriteApi heartsWriteApi;
     private final PlayerInputHandler playerInputHandler;
 
     private final PlayerId playerId;
     private final List<Card> hand;
     private int roundNumber;
 
-    public PlayerController(PlayerId playerId, CommandDispatcher commandDispatcher, PlayerInputHandler playerInputHandler) {
-        this.commandDispatcher = commandDispatcher;
+    public PlayerController(PlayerId playerId, HeartsWriteApi heartsWriteApi, PlayerInputHandler playerInputHandler) {
+        this.heartsWriteApi = heartsWriteApi;
         this.playerInputHandler = playerInputHandler;
 
         this.playerId = playerId;
@@ -117,7 +125,7 @@ public class PlayerController implements EventListener<GameEvent> {
 
     private void passCards(CardsDealt cardsDealt) {
         List<Card> cardsToPass = playerInputHandler.chooseCardsToPass(hand);
-        commandDispatcher.dispatch(new PassCards(cardsDealt.gameId(), playerId, cardsToPass));
+        heartsWriteApi.passCards(cardsDealt.gameId(), playerId, cardsToPass);
     }
 
     private boolean shouldPassCards() {
@@ -150,7 +158,7 @@ public class PlayerController implements EventListener<GameEvent> {
 
     private void playCard(GameId gameId, List<Card> playableCards) {
         Card cardToPlay = playerInputHandler.chooseCardToPlay(hand, playableCards);
-        commandDispatcher.dispatch(new PlayCard(gameId, playerId, cardToPlay));
+        heartsWriteApi.playCard(gameId, playerId, cardToPlay);
     }
 
 }

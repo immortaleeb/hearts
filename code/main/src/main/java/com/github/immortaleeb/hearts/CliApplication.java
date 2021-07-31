@@ -10,6 +10,8 @@ import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventSt
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventDispatcher;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventListenerRegistry;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.InMemoryEventStore;
+import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.HeartsWriteApi;
+import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.InMemoryHeartsWriteApi;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerController;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.PlayerInputHandler;
 import com.github.immortaleeb.hearts.write.infrastructure.incoming.cli.SimplePlayerInputHandler;
@@ -56,6 +58,8 @@ public class CliApplication {
         commandDispatcher.dispatch(new JoinLobby(lobbyId, players.get(2)));
         commandDispatcher.dispatch(new JoinLobby(lobbyId, players.get(3)));
 
+        HeartsWriteApi heartsWriteApi = new InMemoryHeartsWriteApi(commandDispatcher);
+
         List<PlayerInputHandler> playerInputHandlers = List.of(
                 new StdinPlayerInputHandler(),
                 new SimplePlayerInputHandler(),
@@ -64,7 +68,8 @@ public class CliApplication {
         );
 
         List<PlayerController> playerControllers = IntStream.range(0, players.size())
-                .mapToObj(playerIndex -> new PlayerController(players.get(playerIndex), commandDispatcher, playerInputHandlers.get(playerIndex)))
+                .mapToObj(playerIndex -> new PlayerController(players.get(playerIndex), heartsWriteApi,
+                    playerInputHandlers.get(playerIndex)))
                 .collect(Collectors.toList());
 
         playerControllers.forEach(controller -> eventListenerRegistry.register(CardsDealt.class, controller::process));

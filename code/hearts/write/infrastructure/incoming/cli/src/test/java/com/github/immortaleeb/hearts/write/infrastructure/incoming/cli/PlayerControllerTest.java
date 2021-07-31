@@ -34,7 +34,8 @@ class PlayerControllerTest {
     @BeforeEach
     void setUp() {
         commandDispatcher = new FakeCommandDispatcher();
-        controller = new PlayerController(player1, commandDispatcher, new SimplePlayerInputHandler());
+        HeartsWriteApi heartsWriteApi = new InMemoryHeartsWriteApi(commandDispatcher);
+        controller = new PlayerController(player1, heartsWriteApi, new SimplePlayerInputHandler());
     }
 
     @Test
