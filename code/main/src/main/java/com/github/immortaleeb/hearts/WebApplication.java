@@ -9,10 +9,18 @@ import com.github.immortaleeb.hearts.read.infrastructure.rest.GameSummaryProject
 import com.github.immortaleeb.hearts.read.infrastructure.rest.PlayerHandProjectionReadRepository;
 import com.github.immortaleeb.hearts.read.infrastructure.rest.PlayerHandReadRepository;
 import com.github.immortaleeb.hearts.write.application.usecase.GameCommandHandlers;
+import com.github.immortaleeb.hearts.write.domain.CardPlayed;
+import com.github.immortaleeb.hearts.write.domain.CardsDealt;
+import com.github.immortaleeb.hearts.write.domain.GameEnded;
 import com.github.immortaleeb.hearts.write.domain.GameRepository;
 import com.github.immortaleeb.hearts.write.domain.GameStarted;
 import com.github.immortaleeb.hearts.write.domain.GameSummaryWriteRepository;
 import com.github.immortaleeb.hearts.write.domain.PlayerHandWriteRepository;
+import com.github.immortaleeb.hearts.write.domain.PlayerHasTakenPassedCards;
+import com.github.immortaleeb.hearts.write.domain.PlayerPassedCards;
+import com.github.immortaleeb.hearts.write.domain.RoundEnded;
+import com.github.immortaleeb.hearts.write.domain.StartedPlaying;
+import com.github.immortaleeb.hearts.write.domain.TrickWon;
 import com.github.immortaleeb.hearts.write.infrastructure.eventsourcing.EventSourcedGameRepository;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.api.EventStore;
 import com.github.immortaleeb.hearts.write.infrastructure.eventstore.inmemory.EventDispatcher;
@@ -119,6 +127,15 @@ public class WebApplication {
     private void initializeEventListeners(EventListenerRegistry eventListenerRegistry, CommandHandlerDispatcher dispatcher) {
         GameProjectionsHandler gameProjectionsHandler = new GameProjectionsHandler(dispatcher);
         eventListenerRegistry.register(GameStarted.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(GameStarted.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(CardsDealt.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(PlayerPassedCards.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(PlayerHasTakenPassedCards.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(StartedPlaying.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(CardPlayed.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(TrickWon.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(RoundEnded.class, gameProjectionsHandler::process);
+        eventListenerRegistry.register(GameEnded.class, gameProjectionsHandler::process);
     }
 
     @Bean
